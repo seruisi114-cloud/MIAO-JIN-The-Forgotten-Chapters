@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import * as THREE from "three";
 import { MoonlitParticleField } from "./MoonlitParticleField";
+import { MoonlitGuardianEcho } from "./MoonlitGuardianEcho";
 import { MoonlitShaderPlane } from "./MoonlitShaderPlane";
 
 type MoonlitSceneCanvasProps = {
@@ -46,6 +47,7 @@ export function MoonlitSceneCanvas({ playing, onReady }: MoonlitSceneCanvasProps
         }}
       >
         <MoonlitShaderPlane playing={playing} reducedMotion={reducedMotion} />
+        <MoonlitGuardianEcho playing={playing} reducedMotion={reducedMotion} />
         <MoonlitParticleField playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
       </Canvas>
     </div>
