@@ -126,7 +126,7 @@ export function CreatorArchiveCore({ chapterPositions, activeIndex, skipIntro = 
 
       <Sparkles count={34} scale={[2.1, 1.7, 2.1]} size={0.7} speed={isHovered ? 0.18 : 0.075} color="#c3a76e" opacity={isHovered ? 0.5 : 0.3} noise={0.35} />
 
-      <Html center position={[0, 1.66, 0]} distanceFactor={9.2} style={{ pointerEvents: "none" }}>
+      <Html center position={[0, 1.66, 0]} distanceFactor={9.2} zIndexRange={[90, 60]} style={{ pointerEvents: "none" }}>
         <div className={`creator-archive-inscription${isHovered ? " is-awake" : ""}`}>
           <p>创作者档案</p>
           <strong>金淼</strong>

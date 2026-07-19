@@ -10,6 +10,7 @@ import { chapter01 } from "@/config/chapters";
 
 type StatuePlaceholderProps = {
   state: "dormant" | "awakened";
+  labelPlacement: "left" | "right" | "bottom";
   position: [number, number, number];
   chapter: string;
   revealDelay: number;
@@ -35,7 +36,7 @@ const robeProfile = [
   new THREE.Vector2(0.04, 1.62),
 ];
 
-export function StatuePlaceholder({ state, position, chapter, revealDelay, index, activating, skipIntro = false, onHoverChange, onActivate, onActivationPosition }: StatuePlaceholderProps) {
+export function StatuePlaceholder({ state, labelPlacement, position, chapter, revealDelay, index, activating, skipIntro = false, onHoverChange, onActivate, onActivationPosition }: StatuePlaceholderProps) {
   const rootRef = useRef<THREE.Group>(null);
   const materialRef = useRef<THREE.MeshStandardMaterial>(null);
   const outlineMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
@@ -59,6 +60,11 @@ export function StatuePlaceholder({ state, position, chapter, revealDelay, index
   const previousOrigin = useRef<TransitionOrigin>({ x: -100, y: -100 });
   const [isHovered, setIsHovered] = useState(false);
   const isMoonlit = state === "awakened";
+  const labelPosition: [number, number, number] = labelPlacement === "left"
+    ? [-1.38, 0.34, 0.02]
+    : labelPlacement === "right"
+      ? [1.38, 0.34, 0.02]
+      : [0, -0.58, 0.12];
   const shellStars = useMemo(() => {
     const random = (() => {
       let state = (index * 719 + 1907) >>> 0;
@@ -153,7 +159,16 @@ export function StatuePlaceholder({ state, position, chapter, revealDelay, index
 
   return (
     <group ref={rootRef} position={position}>
-      <group onPointerEnter={(event) => handlePointer(event, true)} onPointerLeave={(event) => handlePointer(event, false)} onClick={handleClick}>
+      <mesh
+        position={[0, 0.98, 0.04]}
+        onPointerEnter={(event) => handlePointer(event, true)}
+        onPointerLeave={(event) => handlePointer(event, false)}
+        onClick={handleClick}
+      >
+        <boxGeometry args={[1.28, 2.12, 1.08]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} colorWrite={false} />
+      </mesh>
+      <group>
         <mesh position={[0, 0.12, 0]}>
           <cylinderGeometry args={[0.48, 0.6, 0.24, 48]} />
           <meshPhysicalMaterial color={isMoonlit ? "#121824" : "#171b25"} roughness={0.54} metalness={0.22} clearcoat={0.12} emissive={isMoonlit ? "#263653" : "#26334a"} emissiveIntensity={0.08} />
@@ -246,8 +261,8 @@ export function StatuePlaceholder({ state, position, chapter, revealDelay, index
           <StatueCrack />
         </Html>
       ) : null}
-      <Html center position={[0.72, 0.14, 0]} distanceFactor={8.5} style={{ pointerEvents: "none" }}>
-        <div className={`sanctuary-label sanctuary-label--chapter${isHovered ? " is-hovered" : ""}`}>
+      <Html center position={labelPosition} distanceFactor={9.2} zIndexRange={[30, 10]} style={{ pointerEvents: "none" }}>
+        <div className={`sanctuary-label sanctuary-label--chapter sanctuary-label--${labelPlacement}${isHovered ? " is-hovered" : ""}`}>
           <span>{chapter}</span>
           <small>{isMoonlit ? `《${chapter01.title}》` : "未命名篇章"}</small>
         </div>

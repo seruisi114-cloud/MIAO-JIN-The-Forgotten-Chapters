@@ -1047,6 +1047,38 @@ select {
   display: block;
 }
 
+.sanctuary-label--left {
+  min-width: 9.5rem;
+  text-align: right;
+}
+
+.sanctuary-label--right {
+  min-width: 9.5rem;
+  text-align: left;
+}
+
+.sanctuary-label--bottom {
+  min-width: 10rem;
+  text-align: center;
+}
+
+.sanctuary-label--left::before,
+.sanctuary-label--right::after,
+.sanctuary-label--bottom::before,
+.sanctuary-label--bottom::after {
+  display: none;
+}
+
+.sanctuary-label--left::after {
+  left: calc(100% + 0.55rem);
+  width: 1.8rem;
+}
+
+.sanctuary-label--right::before {
+  right: calc(100% + 0.55rem);
+  width: 1.8rem;
+}
+
 .sanctuary-label--chapter small {
   color: rgba(183, 164, 123, 0.35);
   font-size: 0.58rem;
@@ -2040,6 +2072,14 @@ select {
   .creator-archive-inscription {
     width: min(58vw, 18rem);
     transform: translateY(-0.4rem) scale(0.82);
+  }
+
+  .sanctuary-label--left,
+  .sanctuary-label--right,
+  .sanctuary-label--bottom {
+    min-width: 7.5rem;
+    font-size: 0.58rem;
+    text-align: center;
   }
 }
 

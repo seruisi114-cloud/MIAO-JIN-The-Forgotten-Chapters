@@ -5,7 +5,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { CelestialVaultRuins } from "./CelestialVaultRuins";
 import { CreatorArchiveCore } from "./CreatorArchiveCore";
-import { DormantNebula } from "./DormantNebula";
 import { SanctuaryFloor } from "./SanctuaryFloor";
 import { SanctuaryLighting } from "./SanctuaryLighting";
 import { SanctuaryParticles } from "./SanctuaryParticles";
@@ -16,11 +15,9 @@ import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverl
 import { chapter01 } from "@/config/chapters";
 
 const chapterPositions: Array<[number, number, number]> = [
-  [0, 0, -2.75],
-  [-3.05, 0, -0.5],
-  [3.05, 0, -0.5],
-  [-2.1, 0, 2.25],
-  [2.1, 0, 2.25],
+  [-4.15, 0, -1.4],
+  [4.15, 0, -1.4],
+  [0, 0, 4.3],
 ];
 
 type SanctuaryCanvasProps = {
@@ -57,12 +54,10 @@ function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex
       <CelestialVaultRuins reducedMotion={reducedMotion} />
       <SanctuaryFloor skipIntro={restoring} />
       <SanctuaryPillars skipIntro={restoring} />
+      <StatuePlaceholder state="awakened" labelPlacement="left" position={chapterPositions[0]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <StatuePlaceholder state="dormant" labelPlacement="right" position={chapterPositions[1]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <StatuePlaceholder state="dormant" labelPlacement="bottom" position={chapterPositions[2]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <CreatorArchiveCore chapterPositions={chapterPositions} activeIndex={activeIndex} skipIntro={restoring} onOpenCreatorNote={onOpenCreatorNote} />
-      <StatuePlaceholder state="awakened" position={chapterPositions[1]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <StatuePlaceholder state="dormant" position={chapterPositions[2]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <StatuePlaceholder state="dormant" position={chapterPositions[3]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <DormantNebula position={chapterPositions[0]} seed={301} revealDelay={8.1} index={0} skipIntro={restoring} onHoverChange={onActiveChange} />
-      <DormantNebula position={chapterPositions[4]} seed={719} revealDelay={8.8} index={4} skipIntro={restoring} onHoverChange={onActiveChange} />
       <SanctuaryParticles reducedMotion={reducedMotion} skipIntro={restoring} />
     </group>
   );
@@ -70,26 +65,35 @@ function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex
 
 export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote }: SanctuaryCanvasProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [compactLayout, setCompactLayout] = useState(false);
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(query.matches);
+    const update = () => {
+      setReducedMotion(query.matches);
+      setCompactLayout(window.innerWidth / Math.max(window.innerHeight, 1) < 1.15);
+    };
     update();
     query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
+    window.addEventListener("resize", update, { passive: true });
+    return () => {
+      query.removeEventListener("change", update);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   return (
     <Canvas
+      key={`${compactLayout ? "compact" : "wide"}-${restoring ? "restored" : "initial"}`}
       dpr={[1, 1.5]}
-      camera={{ position: [0, 4.05, 10.4], rotation: [-0.34, 0, 0], fov: 43, near: 0.1, far: 90 }}
+      camera={{ position: compactLayout ? [0, 5.65, 15.2] : [0, 4.65, 12.25], fov: compactLayout ? 47 : 43, near: 0.1, far: 90 }}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       onCreated={({ camera, gl, scene }) => {
-        camera.position.set(0, 4.05, 10.4);
+        camera.position.set(0, compactLayout ? 5.65 : 4.65, compactLayout ? 15.2 : 12.25);
         camera.rotation.set(0, 0, 0);
-        camera.lookAt(0, 0, 0);
+        camera.lookAt(0, compactLayout ? 0.55 : 0.42, 0.35);
         if (camera instanceof THREE.PerspectiveCamera) {
-          camera.fov = 43;
+          camera.fov = compactLayout ? 47 : 43;
           camera.zoom = 1;
           camera.updateProjectionMatrix();
         }

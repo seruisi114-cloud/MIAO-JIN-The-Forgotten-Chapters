@@ -5,11 +5,9 @@ type FlowingGoldenStreamsProps = {
 };
 
 const streams = [
-  { index: 0, path: "M500 420 C493 356 519 278 500 172", echo: "M496 420 C520 348 470 278 504 172", duration: "15s" },
-  { index: 1, path: "M500 420 C428 406 354 338 250 304", echo: "M500 424 C416 375 352 369 250 300", duration: "13s" },
-  { index: 2, path: "M500 420 C572 406 646 338 750 304", echo: "M500 424 C584 375 648 369 750 300", duration: "14s" },
-  { index: 3, path: "M500 420 C466 472 402 506 348 568", echo: "M497 420 C450 454 420 532 352 570", duration: "16s" },
-  { index: 4, path: "M500 420 C534 472 598 506 652 568", echo: "M503 420 C550 454 580 532 648 570", duration: "17s" },
+  { index: 1, x: 230, y: 246, path: "M500 420 C410 386 342 292 230 246", echo: "M500 425 C404 364 334 318 230 242", duration: "15s" },
+  { index: 2, x: 770, y: 246, path: "M500 420 C590 386 658 292 770 246", echo: "M500 425 C596 364 666 318 770 242", duration: "16s" },
+  { index: 3, x: 500, y: 618, path: "M500 420 C476 486 524 548 500 618", echo: "M495 420 C532 486 470 552 505 618", duration: "17s" },
 ];
 
 export function FlowingGoldenStreams({ activeIndex }: FlowingGoldenStreamsProps) {
@@ -45,7 +43,7 @@ export function FlowingGoldenStreams({ activeIndex }: FlowingGoldenStreamsProps)
               <mpath href={`#sanctuary-stream-${stream.index}`} />
             </animateMotion>
           </circle>
-          <circle className="golden-stream-destination" cx={stream.index === 0 ? 500 : stream.index === 1 ? 250 : stream.index === 2 ? 750 : stream.index === 3 ? 348 : 652} cy={stream.index === 0 ? 172 : stream.index < 3 ? 304 : 568} r="2.2" />
+          <circle className="golden-stream-destination" cx={stream.x} cy={stream.y} r="2.2" />
         </g>
       ))}
     </svg>
