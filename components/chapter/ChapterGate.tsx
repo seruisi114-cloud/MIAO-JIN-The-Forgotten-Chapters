@@ -43,8 +43,8 @@ export function ChapterGate({ onMusicCue, onComplete }: ChapterGateProps) {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const musicTimer = window.setTimeout(() => void onMusicCue(), reducedMotion ? 220 : 2700);
-    const completeTimer = window.setTimeout(onComplete, reducedMotion ? 950 : 5000);
+    const musicTimer = window.setTimeout(() => void onMusicCue(), reducedMotion ? 180 : 1600);
+    const completeTimer = window.setTimeout(onComplete, reducedMotion ? 850 : 3600);
     return () => {
       window.clearTimeout(musicTimer);
       window.clearTimeout(completeTimer);

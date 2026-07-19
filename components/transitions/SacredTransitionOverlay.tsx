@@ -31,6 +31,7 @@ export function SacredTransitionOverlay({ phase, origin }: SacredTransitionOverl
 
   return (
     <div className={`sacred-transition-overlay sacred-transition-overlay--${phase}`} style={style} aria-hidden="true">
+      <i className="sacred-transition-black" />
       <i className="sacred-transition-seep" />
       <i className="sacred-transition-bloom" />
       <span className="sacred-transition-dust">

@@ -1778,6 +1778,18 @@ select {
   opacity: 0;
 }
 
+.sacred-transition-black {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at var(--sacred-origin-x) var(--sacred-origin-y), rgba(5, 9, 18, 0.94), #010207 48%),
+    #010207;
+  opacity: 0;
+}
+
 .sacred-transition-seep,
 .sacred-transition-bloom {
   position: absolute;
@@ -1833,11 +1845,11 @@ select {
 }
 
 .sacred-transition-overlay--covering .sacred-transition-seep {
-  animation: sacred-seep-open 1.65s 1.05s both cubic-bezier(0.2, 0.68, 0.22, 1);
+  animation: sacred-seep-open 1.7s 1s both cubic-bezier(0.2, 0.68, 0.22, 1);
 }
 
 .sacred-transition-overlay--covering .sacred-transition-bloom {
-  animation: sacred-bloom-cover 1.8s 1.85s both cubic-bezier(0.2, 0.7, 0.18, 1);
+  animation: sacred-bloom-cover 2.05s 1.72s both cubic-bezier(0.2, 0.7, 0.18, 1);
 }
 
 .sacred-transition-overlay--covering .sacred-transition-dust i {
@@ -1845,7 +1857,11 @@ select {
 }
 
 .sacred-transition-overlay--covering::before {
-  animation: sacred-overlay-cover 1.15s 2.65s both ease-in-out;
+  animation: sacred-overlay-cover 1.2s 3.18s both ease-in-out;
+}
+
+.sacred-transition-overlay--covering .sacred-transition-black {
+  animation: guardian-black-ritual 1.08s both cubic-bezier(0.36, 0.02, 0.18, 1);
 }
 
 .sacred-transition-overlay--releasing {
@@ -1901,6 +1917,12 @@ select {
   0% { opacity: 0; transform: translate(-50%, -50%) scale(0.04, 0.08); }
   36% { opacity: 0.68; }
   100% { opacity: 0.96; transform: translate(-50%, -50%) scale(1.1, 1.08); }
+}
+
+@keyframes guardian-black-ritual {
+  0% { opacity: 0; }
+  12%, 72% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 @keyframes sacred-bloom-cover {
@@ -2582,7 +2604,7 @@ select {
   inset: 0;
   pointer-events: none;
   background: #010207;
-  animation: chapter-black-release 1.25s both ease-in-out;
+  opacity: 0;
 }
 
 .chapter-gate-space {
@@ -2616,7 +2638,7 @@ select {
   aspect-ratio: 1;
   background: radial-gradient(circle, rgba(242, 242, 236, 0.96), rgba(220, 226, 235, 0.24) 18%, rgba(195, 164, 105, 0.08) 42%, transparent 72%);
   filter: blur(2px);
-  animation: chapter-light-core 3.7s 1s both cubic-bezier(0.2, 0.65, 0.22, 1);
+  animation: chapter-light-core 3.1s 0.28s both cubic-bezier(0.2, 0.65, 0.22, 1);
 }
 
 .chapter-gate-light i:nth-child(2),
@@ -2625,15 +2647,15 @@ select {
   aspect-ratio: 1;
   border: 1px solid rgba(201, 173, 116, 0.24);
   box-shadow: 0 0 4rem rgba(185, 158, 105, 0.04), inset 0 0 3rem rgba(219, 225, 235, 0.025);
-  animation: chapter-light-ring 3.4s 1.15s both ease-out;
+  animation: chapter-light-ring 3s 0.38s both ease-out;
 }
 
 .chapter-gate-light i:nth-child(3) {
   width: min(58vw, 39rem);
   border-style: dashed;
   border-color: rgba(201, 173, 116, 0.13);
-  animation-delay: 1.42s;
-  animation-duration: 3.1s;
+  animation-delay: 0.62s;
+  animation-duration: 2.7s;
 }
 
 .chapter-gate-dust {
@@ -2652,7 +2674,7 @@ select {
   border-radius: 50%;
   background: rgba(218, 194, 142, 0.76);
   box-shadow: 0 0 0.55rem rgba(188, 158, 99, 0.26);
-  animation: chapter-dust-gather 2.8s calc(1s + var(--gate-delay)) both cubic-bezier(0.25, 0.7, 0.2, 1);
+  animation: chapter-dust-gather 2.45s calc(0.18s + var(--gate-delay)) both cubic-bezier(0.25, 0.7, 0.2, 1);
 }
 
 .chapter-gate-dust i:nth-child(5n) {
@@ -2666,7 +2688,7 @@ select {
   text-align: center;
   color: rgba(237, 234, 225, 0.86);
   font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
-  animation: chapter-copy-reveal 3.6s 1.12s both ease-in-out;
+  animation: chapter-copy-reveal 3.15s 0.22s both ease-in-out;
 }
 
 .chapter-gate-copy p,

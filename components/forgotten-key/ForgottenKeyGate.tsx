@@ -75,7 +75,7 @@ export function ForgottenKeyGate() {
       activationTimerRef.current = null;
       setActiveStatueId(null);
       setPhase("chapterOpening");
-    }, 3800);
+    }, 4400);
   }, [leaveSanctuaryForChapter]);
 
   const enterChapterWorld = useCallback(() => setPhase("chapterWorld"), []);

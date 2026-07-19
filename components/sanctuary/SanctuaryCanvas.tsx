@@ -10,7 +10,7 @@ import { SanctuaryLighting } from "./SanctuaryLighting";
 import { SanctuaryParticles } from "./SanctuaryParticles";
 import { SanctuaryPillars } from "./SanctuaryPillars";
 import { StarDome } from "./StarDome";
-import { StatuePlaceholder } from "./StatuePlaceholder";
+import { MemoryGuardianStatue } from "./MemoryGuardianStatue";
 import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
 import { chapter01 } from "@/config/chapters";
 
@@ -54,9 +54,9 @@ function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex
       <CelestialVaultRuins reducedMotion={reducedMotion} />
       <SanctuaryFloor skipIntro={restoring} />
       <SanctuaryPillars skipIntro={restoring} />
-      <StatuePlaceholder state="awakened" labelPlacement="left" position={chapterPositions[0]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <StatuePlaceholder state="dormant" labelPlacement="right" position={chapterPositions[1]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <StatuePlaceholder state="dormant" labelPlacement="bottom" position={chapterPositions[2]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <MemoryGuardianStatue state="awakened" labelPlacement="left" position={chapterPositions[0]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <MemoryGuardianStatue state="dormant" labelPlacement="right" position={chapterPositions[1]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <MemoryGuardianStatue state="dormant" labelPlacement="bottom" position={chapterPositions[2]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <CreatorArchiveCore chapterPositions={chapterPositions} activeIndex={activeIndex} skipIntro={restoring} onOpenCreatorNote={onOpenCreatorNote} />
       <SanctuaryParticles reducedMotion={reducedMotion} skipIntro={restoring} />
     </group>
