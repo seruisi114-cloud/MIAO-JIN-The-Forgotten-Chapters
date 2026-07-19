@@ -1945,16 +1945,16 @@ select {
 }
 
 .sacred-transition-overlay--covering .sacred-transition-black {
-  animation: guardian-black-ritual 1.08s both cubic-bezier(0.36, 0.02, 0.18, 1);
+  animation: guardian-black-ritual 0.22s both ease-out;
 }
 
 .sacred-transition-overlay--releasing {
-  background: rgba(232, 234, 230, 0.96);
-  animation: sacred-overlay-release 1.25s both ease-in-out;
+  background: #010207;
+  animation: sacred-overlay-release 0.9s both ease-in-out;
 }
 
 .sacred-transition-overlay--releasing::before {
-  opacity: 0.92;
+  opacity: 0;
 }
 
 .sacred-transition-overlay--returning::before {
@@ -2005,8 +2005,7 @@ select {
 
 @keyframes guardian-black-ritual {
   0% { opacity: 0; }
-  12%, 72% { opacity: 1; }
-  100% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 @keyframes sacred-bloom-cover {

@@ -9,6 +9,8 @@ import { chapter01 } from "@/config/chapters";
 import { archiveCoreVertexShader, dormantCrystalFragmentShader, frozenNebulaFragmentShader, moonPlanetFragmentShader } from "@/three/shaders/archiveCore";
 import { GoldenStarRibbon } from "./GoldenStarRibbon";
 
+const MOON_CORE_Y = 1.32;
+
 type ChapterArchiveCoreProps = {
   kind: "moon-planet" | "relic-core" | "frozen-nebula";
   labelPlacement: "left" | "right" | "top" | "bottom";
@@ -72,7 +74,7 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
       const angle = random() * Math.PI * 2;
       const radius = isMoonPlanet ? 0.72 + random() * 0.86 : isFrozenNebula ? 0.54 + random() * 0.78 : 0.48 + random() * 0.58;
       positions[i * 3] = Math.cos(angle) * radius;
-      positions[i * 3 + 1] = 0.95 + (random() - 0.5) * (isMoonPlanet ? 1.35 : isFrozenNebula ? 1.4 : 1.08);
+      positions[i * 3 + 1] = (isMoonPlanet ? MOON_CORE_Y : 0.95) + (random() - 0.5) * (isMoonPlanet ? 1.35 : isFrozenNebula ? 1.4 : 1.08);
       positions[i * 3 + 2] = Math.sin(angle) * radius * 0.48;
     }
     return positions;
@@ -121,7 +123,7 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
     if (lightRef.current) lightRef.current.intensity = THREE.MathUtils.damp(lightRef.current.intensity, isMoonPlanet ? (activating ? 3.8 : hovered.current ? 1.25 : 0.44) : isRelicCore ? (hovered.current ? 0.36 : 0.14) : 0.05, 3.1, delta);
 
     if (activating && rootRef.current) {
-      rootRef.current.localToWorld(projectedCenter.current.set(0, 1.03, 0.1));
+      rootRef.current.localToWorld(projectedCenter.current.set(0, MOON_CORE_Y, 0.1));
       projectedCenter.current.project(camera);
       const origin = { x: (projectedCenter.current.x * 0.5 + 0.5) * 100, y: (-projectedCenter.current.y * 0.5 + 0.5) * 100 };
       if (Math.abs(origin.x - previousOrigin.current.x) > 0.18 || Math.abs(origin.y - previousOrigin.current.y) > 0.18) {
@@ -145,7 +147,7 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
 
   return (
     <group ref={rootRef} position={position} scale={skipIntro ? 1 : 0.001}>
-      <mesh position={[0, 1, 0]} onPointerEnter={(event) => handlePointer(event, true)} onPointerLeave={(event) => handlePointer(event, false)} onClick={handleClick}>
+      <mesh position={[0, isMoonPlanet ? MOON_CORE_Y : 1, 0]} onPointerEnter={(event) => handlePointer(event, true)} onPointerLeave={(event) => handlePointer(event, false)} onClick={handleClick}>
         <sphereGeometry args={[1.18, 24, 24]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} colorWrite={false} />
       </mesh>
@@ -170,34 +172,34 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
 
       {isMoonPlanet ? (
         <>
-          <mesh ref={moonCoreRef} position={[0, 1.03, 0]}>
+          <mesh ref={moonCoreRef} position={[0, MOON_CORE_Y, 0]} renderOrder={12}>
             <sphereGeometry args={[0.62, 80, 56]} />
-            <shaderMaterial ref={planetMaterialRef} uniforms={uniforms} vertexShader={archiveCoreVertexShader} fragmentShader={moonPlanetFragmentShader} transparent />
+            <shaderMaterial ref={planetMaterialRef} uniforms={uniforms} vertexShader={archiveCoreVertexShader} fragmentShader={moonPlanetFragmentShader} transparent depthTest={false} depthWrite={false} />
           </mesh>
-          <mesh position={[0, 1.03, 0]} scale={1.025}>
+          <mesh position={[0, MOON_CORE_Y, 0]} scale={1.025} renderOrder={13}>
             <sphereGeometry args={[0.62, 64, 40]} />
-            <meshPhysicalMaterial color="#829ab3" roughness={0.42} metalness={0.03} transmission={0.08} thickness={0.5} ior={1.28} clearcoat={0.46} clearcoatRoughness={0.36} envMapIntensity={0.9} transparent opacity={0.14} depthWrite={false} />
+            <meshPhysicalMaterial color="#829ab3" roughness={0.42} metalness={0.03} transmission={0.08} thickness={0.5} ior={1.28} clearcoat={0.46} clearcoatRoughness={0.36} envMapIntensity={0.9} transparent opacity={0.14} depthTest={false} depthWrite={false} />
           </mesh>
-          <mesh position={[0, 1.03, 0]} scale={1.13}>
+          <mesh position={[0, MOON_CORE_Y, 0]} scale={1.13} renderOrder={11}>
             <sphereGeometry args={[0.62, 48, 32]} />
-            <meshBasicMaterial color="#afcff0" side={THREE.BackSide} transparent opacity={0.085} depthWrite={false} blending={THREE.AdditiveBlending} />
+            <meshBasicMaterial color="#afcff0" side={THREE.BackSide} transparent opacity={0.085} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} />
           </mesh>
-          <group ref={orbitRef} position={[0, 1.03, 0]} rotation={[0.42, 0.12, -0.28]}>
+          <group ref={orbitRef} position={[0, MOON_CORE_Y, 0]} rotation={[0.42, 0.12, -0.28]}>
             {[0.82, 0.96, 1.08].map((radius, ringIndex) => (
               <mesh key={radius} rotation={[Math.PI / 2 + ringIndex * 0.34, ringIndex * 0.72, 0]} scale={[1, 0.62 + ringIndex * 0.05, 1]}>
                 <torusGeometry args={[radius, ringIndex === 0 ? 0.012 : 0.007, 8, 128, Math.PI * (ringIndex === 1 ? 1.48 : 1.72)]} />
-                <meshBasicMaterial color={ringIndex === 2 ? "#d9ca9f" : "#c2a66b"} transparent opacity={activating ? 0.82 - ringIndex * 0.12 : isHovered ? 0.48 - ringIndex * 0.08 : 0.23 - ringIndex * 0.04} depthWrite={false} blending={THREE.AdditiveBlending} />
+                <meshBasicMaterial color={ringIndex === 2 ? "#d9ca9f" : "#c2a66b"} transparent opacity={activating ? 0.82 - ringIndex * 0.12 : isHovered ? 0.48 - ringIndex * 0.08 : 0.23 - ringIndex * 0.04} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} />
               </mesh>
             ))}
           </group>
-          <group position={[0, 1.03, 0]}>
+          <group position={[0, MOON_CORE_Y, 0]}>
             <GoldenStarRibbon active={activating} hovered={isHovered} />
           </group>
-          <mesh position={[0, 1.03, -0.12]} rotation={[0, 0, 0.35]}>
+          <mesh position={[0, MOON_CORE_Y, -0.12]} rotation={[0, 0, 0.35]}>
             <torusGeometry args={[0.88, 0.02, 10, 128, Math.PI * 1.48]} />
-            <meshBasicMaterial ref={haloMaterialRef} color="#d6c18d" transparent opacity={0.19} depthWrite={false} blending={THREE.AdditiveBlending} />
+            <meshBasicMaterial ref={haloMaterialRef} color="#d6c18d" transparent opacity={0.19} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} />
           </mesh>
-          <pointLight ref={lightRef} position={[0, 1.04, 0.42]} color="#b8d8ff" intensity={0.44} distance={4.8} decay={2.1} />
+          <pointLight ref={lightRef} position={[0, MOON_CORE_Y + 0.01, 0.42]} color="#b8d8ff" intensity={0.44} distance={4.8} decay={2.1} />
         </>
       ) : isRelicCore ? (
         <>
@@ -267,7 +269,7 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[particlePositions, 3]} />
         </bufferGeometry>
-        <pointsMaterial color={isMoonPlanet ? "#d7c48d" : isRelicCore ? "#9c7b43" : "#7d90a8"} size={isMoonPlanet ? 0.028 : isFrozenNebula ? 0.022 : 0.018} transparent opacity={isMoonPlanet ? (activating ? 0.88 : isHovered ? 0.58 : 0.32) : isHovered ? 0.24 : 0.09} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
+        <pointsMaterial color={isMoonPlanet ? "#d7c48d" : isRelicCore ? "#9c7b43" : "#7d90a8"} size={isMoonPlanet ? 0.028 : isFrozenNebula ? 0.022 : 0.018} transparent opacity={isMoonPlanet ? (activating ? 0.88 : isHovered ? 0.58 : 0.32) : isHovered ? 0.24 : 0.09} depthTest={!isMoonPlanet} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
       </points>
 
       <Html center position={labelPosition} distanceFactor={9.2} zIndexRange={[30, 10]} style={{ pointerEvents: "none" }}>

@@ -49,7 +49,7 @@ export function ForgottenKeyGate() {
   const returnTimerRef = useRef<number | null>(null);
   const chapterPreparationRef = useRef<Promise<void> | null>(null);
   const awakened = phase !== "locked";
-  const sanctuaryMounted = phase === "sanctuaryTransition" || phase === "sanctuary" || phase === "activatingStatue" || phase === "returnToSanctuary";
+  const sanctuaryMounted = phase === "sanctuaryTransition" || phase === "sanctuary" || phase === "returnToSanctuary";
   const universeMounted = phase !== "locked" && phase !== "sanctuary" && phase !== "activatingStatue" && phase !== "chapterOpening" && phase !== "chapterWorld" && phase !== "returnToSanctuary";
 
   useEffect(
@@ -67,6 +67,8 @@ export function ForgottenKeyGate() {
 
   const beginChapterActivation = useCallback((statueId: number) => {
     if (statueId !== 1 || activationTimerRef.current) return;
+    void import("@/components/chapter/ChapterGate");
+    void import("@/components/chapter/MoonlitStarSeaWorld");
     chapterPreparationRef.current = leaveSanctuaryForChapter(chapter01.id);
     setActiveStatueId(statueId);
     setCreatorNoteOpen(false);
@@ -75,7 +77,7 @@ export function ForgottenKeyGate() {
       activationTimerRef.current = null;
       setActiveStatueId(null);
       setPhase("chapterOpening");
-    }, 4400);
+    }, 1050);
   }, [leaveSanctuaryForChapter]);
 
   const enterChapterWorld = useCallback(() => setPhase("chapterWorld"), []);
@@ -144,7 +146,7 @@ export function ForgottenKeyGate() {
         <SanctuaryScene
           key={`sanctuary-${sanctuaryInstanceKey}`}
           active
-          settled={phase === "sanctuary" || phase === "activatingStatue" || phase === "returnToSanctuary"}
+          settled={phase === "sanctuary" || phase === "returnToSanctuary"}
           restoring={sanctuaryInstanceKey > 0}
           activeStatueId={activeStatueId}
           onBeginChapterActivation={beginChapterActivation}

@@ -60,13 +60,13 @@ export function GoldenStarRibbon({ active, hovered }: GoldenStarRibbonProps) {
 
   return (
     <group ref={rootRef} rotation={[0.38, -0.18, -0.24]}>
-      <Line points={primaryPoints} color="#d4b975" lineWidth={active ? 1.05 : hovered ? 0.78 : 0.5} transparent opacity={active ? 0.82 : hovered ? 0.57 : 0.31} />
-      <Line points={echoPoints} color="#9b7d45" lineWidth={active ? 0.62 : 0.36} transparent opacity={active ? 0.5 : hovered ? 0.33 : 0.16} />
+      <Line points={primaryPoints} color="#d4b975" lineWidth={active ? 1.05 : hovered ? 0.78 : 0.5} transparent opacity={active ? 0.82 : hovered ? 0.57 : 0.31} depthTest={false} depthWrite={false} />
+      <Line points={echoPoints} color="#9b7d45" lineWidth={active ? 0.62 : 0.36} transparent opacity={active ? 0.5 : hovered ? 0.33 : 0.16} depthTest={false} depthWrite={false} />
       <points ref={particleRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[movingPositions, 3]} />
         </bufferGeometry>
-        <pointsMaterial ref={materialRef} color="#ead8a4" size={0.032} sizeAttenuation transparent opacity={0.38} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <pointsMaterial ref={materialRef} color="#ead8a4" size={0.032} sizeAttenuation transparent opacity={0.38} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} />
       </points>
     </group>
   );
