@@ -11,7 +11,7 @@ import { GoldenStarRibbon } from "./GoldenStarRibbon";
 
 type ChapterArchiveCoreProps = {
   kind: "moon-planet" | "relic-core" | "frozen-nebula";
-  labelPlacement: "left" | "right" | "top";
+  labelPlacement: "left" | "right" | "top" | "bottom";
   position: [number, number, number];
   chapter: string;
   revealDelay: number;
@@ -33,6 +33,7 @@ function seededRandom(seed: number) {
 
 export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, revealDelay, index, activating, skipIntro = false, onHoverChange, onActivate, onActivationPosition }: ChapterArchiveCoreProps) {
   const rootRef = useRef<THREE.Group>(null);
+  const moonCoreRef = useRef<THREE.Mesh>(null);
   const orbitRef = useRef<THREE.Group>(null);
   const particleRef = useRef<THREE.Points>(null);
   const relicEnergyRef = useRef<THREE.Group>(null);
@@ -53,7 +54,9 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
     ? [-1.82, 0.25, 0.08]
     : labelPlacement === "right"
       ? [1.82, 0.25, 0.08]
-      : [0, 2.02, 0.08];
+      : labelPlacement === "bottom"
+        ? [0, -0.48, 0.08]
+        : [0, 2.02, 0.08];
 
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
@@ -94,6 +97,10 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
     if (orbitRef.current) {
       orbitRef.current.rotation.y += delta * (activating ? 1.35 : hovered.current ? 0.26 : 0.07);
       orbitRef.current.rotation.z += delta * (activating ? 0.34 : 0.018);
+    }
+    if (moonCoreRef.current) {
+      moonCoreRef.current.rotation.y += delta * (activating ? 0.18 : hovered.current ? 0.065 : 0.026);
+      moonCoreRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.12) * 0.025;
     }
     if (particleRef.current) {
       particleRef.current.rotation.y += delta * (activating ? 0.95 : isMoonPlanet ? 0.055 : 0.018);
@@ -163,7 +170,7 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
 
       {isMoonPlanet ? (
         <>
-          <mesh position={[0, 1.03, 0]}>
+          <mesh ref={moonCoreRef} position={[0, 1.03, 0]}>
             <sphereGeometry args={[0.62, 80, 56]} />
             <shaderMaterial ref={planetMaterialRef} uniforms={uniforms} vertexShader={archiveCoreVertexShader} fragmentShader={moonPlanetFragmentShader} transparent />
           </mesh>

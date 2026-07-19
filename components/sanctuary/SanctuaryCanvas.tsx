@@ -16,9 +16,9 @@ import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverl
 import { chapter01 } from "@/config/chapters";
 
 const chapterPositions: Array<[number, number, number]> = [
-  [0, 2.45, -4.2],
-  [-5.05, -0.05, 1.25],
-  [5.05, -0.05, 1.25],
+  [0, -1.25, 3.4],
+  [-5.2, 0.28, 0.55],
+  [5.2, 0.28, 0.55],
 ];
 
 type SanctuaryCanvasProps = {
@@ -56,7 +56,7 @@ function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex
       <ArchiveOrbitField reducedMotion={reducedMotion} />
       <SanctuaryFloor skipIntro={restoring} />
       <SanctuaryPillars skipIntro={restoring} />
-      <ChapterArchiveCore kind="moon-planet" labelPlacement="top" position={chapterPositions[0]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <ChapterArchiveCore kind="moon-planet" labelPlacement="bottom" position={chapterPositions[0]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <ChapterArchiveCore kind="relic-core" labelPlacement="left" position={chapterPositions[1]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <ChapterArchiveCore kind="frozen-nebula" labelPlacement="right" position={chapterPositions[2]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <CreatorArchiveCore chapterPositions={chapterPositions} activeIndex={activeIndex} skipIntro={restoring} onOpenCreatorNote={onOpenCreatorNote} />
@@ -99,11 +99,11 @@ export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onAct
           camera.zoom = 1;
           camera.updateProjectionMatrix();
         }
-        gl.setClearColor("#050a16", 1);
+        gl.setClearColor("#071126", 1);
         gl.outputColorSpace = "srgb";
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.62;
-        scene.fog = new THREE.FogExp2("#071225", 0.028);
+        gl.toneMappingExposure = 1.72;
+        scene.fog = new THREE.FogExp2("#0a1831", 0.024);
       }}
     >
       <StarDome />

@@ -5,9 +5,9 @@ type GoldenOrnamentsProps = {
 };
 
 const haloPositions = [
-  { index: 1, x: 500, y: 170, radius: 68 },
-  { index: 2, x: 255, y: 392, radius: 70 },
-  { index: 3, x: 745, y: 392, radius: 70 },
+  { index: 1, x: 500, y: 594, radius: 72 },
+  { index: 2, x: 225, y: 360, radius: 70 },
+  { index: 3, x: 775, y: 360, radius: 70 },
 ];
 
 export function GoldenOrnaments({ activeIndex }: GoldenOrnamentsProps) {

@@ -19,7 +19,7 @@ export function CreatorArchiveOverlay({ onOpen }: CreatorArchiveOverlayProps) {
       <i className="creator-archive-divider" aria-hidden="true" />
       <span className="creator-archive-intro">来自东方创作者的一段月光叙事。</span>
       <small className="creator-archive-poem">月光落入沉寂的星海，<br />沉睡的旋律在遗忘之境中醒来。</small>
-      <em>开启完整档案</em>
+      <em>查看完整档案</em>
     </button>
   );
 }

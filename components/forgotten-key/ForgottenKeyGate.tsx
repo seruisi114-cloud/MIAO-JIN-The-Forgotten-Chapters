@@ -61,7 +61,7 @@ export function ForgottenKeyGate() {
   );
 
   useEffect(() => {
-    if (phase !== "sanctuaryTransition" && phase !== "sanctuary") return;
+    if (phase !== "awakening" && phase !== "headphone" && phase !== "title" && phase !== "sanctuaryTransition" && phase !== "sanctuary") return;
     void playSanctuary();
   }, [phase, playSanctuary]);
 
@@ -116,6 +116,7 @@ export function ForgottenKeyGate() {
         return false;
       }
 
+      void playSanctuary();
       setPhase("awakening");
       return true;
     } catch {
