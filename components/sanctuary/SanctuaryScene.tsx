@@ -8,6 +8,7 @@ import { GoldenDustField } from "./GoldenDustField";
 import { GoldenOrnaments } from "./GoldenOrnaments";
 import { SacredMist } from "./SacredMist";
 import { SanctuaryCanvas } from "./SanctuaryCanvas";
+import { CreatorArchiveOverlay } from "./CreatorArchiveOverlay";
 
 type SanctuarySceneProps = {
   active: boolean;
@@ -71,6 +72,7 @@ export function SanctuaryScene({ active, settled, restoring, activeStatueId, onB
       <FlowingGoldenStreams activeIndex={activeIndex} />
       <GoldenOrnaments activeIndex={activeIndex} />
       <GoldenDustField />
+      <CreatorArchiveOverlay onOpen={onOpenCreatorNote} />
       <ForegroundVeil />
       <p className={`sanctuary-unavailable${unavailableMessage ? " is-visible" : ""}`} aria-live="polite">{unavailableMessage}</p>
       <div className="sanctuary-vignette" aria-hidden="true" />

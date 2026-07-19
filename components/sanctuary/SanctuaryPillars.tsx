@@ -29,8 +29,8 @@ export function SanctuaryPillars({ skipIntro = false }: { skipIntro?: boolean })
     <group ref={edgeRef}>
       {Array.from({ length: 13 }, (_, index) => {
         const angle = index / 12 * Math.PI;
-        const x = Math.cos(angle) * 5.05;
-        const z = -Math.sin(angle) * 5.05;
+        const x = Math.cos(angle) * 6.0;
+        const z = -Math.sin(angle) * 6.0;
         const depthOpacity = 0.74 + Math.abs(index - 6) / 6 * 0.2;
         const scale = 0.94 + Math.abs(index - 6) / 6 * 0.05;
         return (

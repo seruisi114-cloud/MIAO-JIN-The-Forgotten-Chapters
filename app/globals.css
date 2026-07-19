@@ -644,7 +644,7 @@ select {
   height: 76%;
   transform: translateX(-50%);
   clip-path: polygon(42% 0, 58% 0, 94% 100%, 6% 100%);
-  background: linear-gradient(180deg, rgba(220, 226, 236, 0.09), rgba(186, 199, 220, 0.035) 52%, transparent 100%);
+  background: linear-gradient(180deg, rgba(220, 226, 236, 0.12), rgba(186, 199, 220, 0.047) 52%, transparent 100%);
   filter: blur(17px);
   mix-blend-mode: screen;
   animation: sanctuary-beam-breathe 8s ease-in-out infinite alternate;
@@ -680,7 +680,7 @@ select {
 }
 
 .ornament-sky-stars {
-  opacity: 0.24;
+  opacity: 0.31;
   animation: sanctuary-sky-glint 7s ease-in-out infinite alternate;
 }
 
@@ -692,6 +692,65 @@ select {
 .ornament-sky-stars line {
   stroke: rgba(209, 216, 229, 0.22);
   stroke-width: 0.42;
+}
+
+.ornament-archive-vault {
+  opacity: 0.42;
+  filter: drop-shadow(0 0 5px rgba(184, 153, 94, 0.1));
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sanctuary-archive-orbit 22s ease-in-out infinite alternate;
+}
+
+.ornament-archive-vault ellipse:first-child {
+  stroke-dasharray: 35 14 4 12;
+}
+
+.ornament-archive-vault ellipse:nth-child(2) {
+  stroke: rgba(207, 183, 132, 0.32);
+  stroke-dasharray: 7 8 22 11;
+}
+
+.ornament-archive-vault circle {
+  fill: rgba(222, 204, 161, 0.5);
+  stroke: none;
+  animation: sanctuary-node-breathe 6.4s ease-in-out infinite alternate;
+}
+
+.ornament-relic-script {
+  opacity: 0.34;
+}
+
+.ornament-relic-script line {
+  stroke: rgba(196, 165, 105, 0.38);
+  stroke-width: 0.55;
+}
+
+.ornament-relic-script circle {
+  stroke: rgba(219, 197, 151, 0.42);
+}
+
+.ornament-energy-veils {
+  opacity: 0.3;
+  filter: drop-shadow(0 0 5px rgba(185, 153, 91, 0.1));
+}
+
+.ornament-energy-veils path {
+  stroke: rgba(199, 168, 107, 0.34);
+  stroke-width: 0.52;
+  stroke-dasharray: 0.03 0.05 0.14 0.08;
+  animation: sanctuary-stream-flow 34s linear infinite;
+}
+
+.ornament-energy-veils path:nth-child(2) {
+  opacity: 0.56;
+  animation-direction: reverse;
+  animation-duration: 41s;
+}
+
+.ornament-energy-veils path:nth-child(3) {
+  opacity: 0.42;
+  animation-duration: 48s;
 }
 
 .ornament-pillar-glints {
@@ -768,7 +827,7 @@ select {
 }
 
 .ornament-floor-chart {
-  opacity: 0.34;
+  opacity: 0.42;
 }
 
 .ornament-floor-chart path:nth-child(1),
@@ -994,6 +1053,17 @@ select {
   to {
     opacity: 0.92;
     transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes sanctuary-archive-orbit {
+  from {
+    opacity: 0.25;
+    transform: scale(0.985) rotate(-0.4deg);
+  }
+  to {
+    opacity: 0.42;
+    transform: scale(1.018) rotate(0.55deg);
   }
 }
 
@@ -2068,7 +2138,158 @@ select {
   color: rgba(232, 231, 224, 0.7);
 }
 
+.creator-archive-overlay {
+  position: absolute;
+  z-index: 8;
+  top: 45%;
+  left: 50%;
+  display: flex;
+  width: clamp(17rem, 24vw, 22rem);
+  min-height: 16rem;
+  padding: 2.15rem 2rem 1.8rem;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  color: rgba(230, 228, 219, 0.72);
+  background:
+    radial-gradient(ellipse at center, rgba(20, 33, 58, 0.78), rgba(7, 12, 24, 0.34) 50%, transparent 74%);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  text-align: center;
+  cursor: pointer;
+  filter: drop-shadow(0 0 2.8rem rgba(160, 183, 220, 0.06));
+  transition: color 1s ease, filter 1s ease, transform 1s ease;
+}
+
+.creator-archive-overlay::before,
+.creator-archive-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0.65rem 0;
+  pointer-events: none;
+  opacity: 0.42;
+  clip-path: polygon(12% 0, 88% 0, 100% 15%, 100% 85%, 88% 100%, 12% 100%, 0 85%, 0 15%);
+  border: 1px solid rgba(195, 165, 105, 0.28);
+  box-shadow: inset 0 0 2.4rem rgba(188, 159, 102, 0.025);
+  transition: inset 1s ease, opacity 1s ease, border-color 1s ease;
+}
+
+.creator-archive-overlay::after {
+  inset: 1.1rem 0.48rem;
+  border-color: rgba(205, 187, 151, 0.11);
+  border-style: dashed;
+}
+
+.creator-archive-overlay:hover,
+.creator-archive-overlay:focus-visible {
+  color: rgba(241, 237, 225, 0.9);
+  outline: none;
+  filter: drop-shadow(0 0 2rem rgba(199, 170, 111, 0.13));
+  transform: translate(-50%, calc(-50% - 0.22rem));
+}
+
+.creator-archive-overlay:hover::before,
+.creator-archive-overlay:focus-visible::before {
+  inset: 0.45rem -0.18rem;
+  opacity: 0.76;
+  border-color: rgba(213, 184, 124, 0.48);
+}
+
+.creator-archive-overlay span,
+.creator-archive-overlay strong,
+.creator-archive-overlay b,
+.creator-archive-overlay small,
+.creator-archive-overlay em {
+  display: block;
+  margin: 0;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.creator-archive-kicker {
+  color: rgba(208, 180, 122, 0.78);
+  font-size: 0.68rem;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+}
+
+.creator-archive-overlay strong {
+  margin-top: 0.58rem;
+  color: rgba(240, 237, 227, 0.92);
+  font-size: clamp(1.04rem, 1.28vw, 1.25rem);
+  letter-spacing: 0.36em;
+  text-indent: 0.36em;
+  text-shadow: 0 0 1.8rem rgba(209, 220, 237, 0.14);
+}
+
+.creator-archive-intro {
+  margin-top: 0.45rem !important;
+  color: rgba(194, 202, 215, 0.5);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+}
+
+.creator-archive-divider {
+  width: 7.8rem;
+  height: 1px;
+  margin: 0.95rem 0 0.75rem;
+  background: linear-gradient(90deg, transparent, rgba(204, 174, 113, 0.62), transparent);
+  box-shadow: 0 0 0.7rem rgba(192, 162, 104, 0.13);
+}
+
+.creator-archive-catalogue {
+  color: rgba(202, 179, 132, 0.48);
+  font-size: 0.54rem;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+}
+
+.creator-archive-overlay b {
+  margin-top: 0.34rem;
+  color: rgba(230, 226, 214, 0.72);
+  font-size: 0.72rem;
+  letter-spacing: 0.17em;
+}
+
+.creator-archive-overlay small {
+  width: 86%;
+  margin-top: 0.78rem;
+  color: rgba(196, 197, 196, 0.45);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  line-height: 1.9;
+}
+
+.creator-archive-overlay em {
+  margin-top: 0.78rem;
+  color: rgba(208, 181, 128, 0.55);
+  font-size: 0.54rem;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  transition: color 0.8s ease, text-shadow 0.8s ease;
+}
+
+.creator-archive-overlay:hover em,
+.creator-archive-overlay:focus-visible em {
+  color: rgba(229, 203, 150, 0.84);
+  text-shadow: 0 0 0.8rem rgba(201, 168, 104, 0.24);
+}
+
 @media (max-width: 760px) {
+  .creator-archive-overlay {
+    top: 44%;
+    width: min(56vw, 17rem);
+    min-height: 13rem;
+    padding: 1.5rem 1.2rem;
+    transform: translate(-50%, -50%) scale(0.83);
+  }
+
+  .creator-archive-overlay:hover,
+  .creator-archive-overlay:focus-visible {
+    transform: translate(-50%, calc(-50% - 0.14rem)) scale(0.83);
+  }
+
   .creator-archive-inscription {
     width: min(58vw, 18rem);
     transform: translateY(-0.4rem) scale(0.82);
@@ -2152,6 +2373,14 @@ select {
   margin: 0;
   font-style: normal;
   font-weight: 400;
+}
+
+.creator-note-copy > small {
+  display: block;
+  margin-top: 1.25rem;
+  color: rgba(188, 196, 209, 0.38);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
 }
 
 .creator-note-archive {

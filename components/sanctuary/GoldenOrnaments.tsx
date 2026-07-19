@@ -5,9 +5,9 @@ type GoldenOrnamentsProps = {
 };
 
 const haloPositions = [
-  { index: 1, x: 230, y: 246, radius: 72 },
-  { index: 2, x: 770, y: 246, radius: 72 },
-  { index: 3, x: 500, y: 618, radius: 66 },
+  { index: 1, x: 265, y: 292, radius: 70 },
+  { index: 2, x: 735, y: 292, radius: 70 },
+  { index: 3, x: 500, y: 505, radius: 68 },
 ];
 
 export function GoldenOrnaments({ activeIndex }: GoldenOrnamentsProps) {
@@ -28,6 +28,38 @@ export function GoldenOrnaments({ activeIndex }: GoldenOrnamentsProps) {
             <circle r={index % 3 === 0 ? 1.25 : 0.8} />
           </g>
         ))}
+      </g>
+      <g className="ornament-archive-vault">
+        <ellipse cx="500" cy="352" rx="188" ry="92" />
+        <ellipse cx="500" cy="352" rx="156" ry="72" />
+        <path d="M316 352 C352 292 648 292 684 352" />
+        <path d="M344 378 C402 424 598 424 656 378" />
+        <path d="M500 272 L500 250 M382 302 L368 282 M618 302 L632 282" />
+        <path d="M322 354 L300 354 M678 354 L700 354" />
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((index) => {
+          const angle = index / 12 * Math.PI * 2;
+          const x = 500 + Math.cos(angle) * 173;
+          const y = 352 + Math.sin(angle) * 82;
+          return <circle key={index} cx={x} cy={y} r={index % 3 === 0 ? 1.8 : 1.1} />;
+        })}
+      </g>
+      <g className="ornament-relic-script">
+        {Array.from({ length: 15 }, (_, index) => {
+          const x = 274 + index * 32.3;
+          const high = index % 4 === 0;
+          return (
+            <g key={index} transform={`translate(${x} 116)`}>
+              <line x1="0" y1={high ? "-8" : "-5"} x2="0" y2={high ? "8" : "5"} />
+              <line x1={high ? "-5" : "-3"} y1="0" x2={high ? "5" : "3"} y2="0" />
+              {index % 3 === 0 ? <circle r="2.2" /> : null}
+            </g>
+          );
+        })}
+      </g>
+      <g className="ornament-energy-veils">
+        <path d="M92 420 C215 350 306 454 414 393 S665 338 908 420" pathLength="1" />
+        <path d="M74 452 C226 510 322 395 456 458 S714 500 926 438" pathLength="1" />
+        <path d="M148 388 C274 322 354 398 432 366 S676 316 852 390" pathLength="1" />
       </g>
       <g className="ornament-pillar-glints">
         {[112, 176, 238, 302, 365, 635, 698, 762, 824, 888].map((x, index) => (

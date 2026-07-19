@@ -61,10 +61,10 @@ export function StatuePlaceholder({ state, labelPlacement, position, chapter, re
   const [isHovered, setIsHovered] = useState(false);
   const isMoonlit = state === "awakened";
   const labelPosition: [number, number, number] = labelPlacement === "left"
-    ? [-1.38, 0.34, 0.02]
+    ? [-1.62, 0.34, 0.02]
     : labelPlacement === "right"
-      ? [1.38, 0.34, 0.02]
-      : [0, -0.58, 0.12];
+      ? [1.62, 0.34, 0.02]
+      : [0, -0.76, 0.12];
   const shellStars = useMemo(() => {
     const random = (() => {
       let state = (index * 719 + 1907) >>> 0;
@@ -96,7 +96,10 @@ export function StatuePlaceholder({ state, labelPlacement, position, chapter, re
       rootRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * 0.42 + position[0]) * 0.018;
     }
     if (materialRef.current) {
-      materialRef.current.emissiveIntensity = THREE.MathUtils.damp(materialRef.current.emissiveIntensity, reveal * (activating ? 0.72 : hovered.current ? 0.32 : isMoonlit ? 0.12 + formation * 0.12 : 0.055), 2.2, delta);
+      const shellGlow = isMoonlit
+        ? activating ? 0.72 : hovered.current ? 0.32 : 0.12 + formation * 0.12
+        : hovered.current ? 0.085 : 0.018;
+      materialRef.current.emissiveIntensity = THREE.MathUtils.damp(materialRef.current.emissiveIntensity, reveal * shellGlow, 2.2, delta);
       materialRef.current.opacity = THREE.MathUtils.damp(materialRef.current.opacity, reveal * (isMoonlit ? 0.22 + formation * 0.66 : hovered.current ? 0.48 : 0.34), 2, delta);
     }
     if (outlineMaterialRef.current) outlineMaterialRef.current.opacity = THREE.MathUtils.damp(outlineMaterialRef.current.opacity, reveal * (isMoonlit ? 0.04 + formation * 0.045 : hovered.current ? 0.16 : 0.1), 2, delta);
@@ -165,7 +168,7 @@ export function StatuePlaceholder({ state, labelPlacement, position, chapter, re
         onPointerLeave={(event) => handlePointer(event, false)}
         onClick={handleClick}
       >
-        <boxGeometry args={[1.28, 2.12, 1.08]} />
+        <boxGeometry args={[1.72, 2.42, 1.44]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} colorWrite={false} />
       </mesh>
       <group>
@@ -193,13 +196,17 @@ export function StatuePlaceholder({ state, labelPlacement, position, chapter, re
           <torusGeometry args={[0.21, 0.055, 16, 48, Math.PI * 1.28]} />
           <meshStandardMaterial color="#343946" roughness={0.72} emissive="#77869e" emissiveIntensity={0.08} />
         </mesh>
-        <pointLight ref={innerLightRef} position={[0, 0.9, 0.2]} color="#d8dbe1" intensity={0} distance={2.4} decay={2.3} />
-        <points ref={shellStarsRef}>
-          <bufferGeometry>
-            <bufferAttribute attach="attributes-position" args={[shellStars, 3]} />
-          </bufferGeometry>
-          <pointsMaterial ref={shellStarMaterialRef} color={isMoonlit ? "#dbe5f4" : "#9fb1ca"} size={isMoonlit ? 0.025 : 0.019} sizeAttenuation transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
-        </points>
+        {isMoonlit ? (
+          <>
+            <pointLight ref={innerLightRef} position={[0, 0.9, 0.2]} color="#d8e5f5" intensity={0} distance={2.6} decay={2.3} />
+            <points ref={shellStarsRef}>
+              <bufferGeometry>
+                <bufferAttribute attach="attributes-position" args={[shellStars, 3]} />
+              </bufferGeometry>
+              <pointsMaterial ref={shellStarMaterialRef} color="#dbe5f4" size={0.025} sizeAttenuation transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+            </points>
+          </>
+        ) : null}
         {isMoonlit ? (
           <>
             <mesh position={[0, 1.12, -0.17]} rotation={[0, 0, -0.2]}>
@@ -255,7 +262,9 @@ export function StatuePlaceholder({ state, labelPlacement, position, chapter, re
         <ringGeometry args={[0.48, 0.5, 72]} />
         <meshBasicMaterial ref={rippleMaterialRef} color="#d8dce5" transparent opacity={0} depthWrite={false} />
       </mesh>
-      <Sparkles count={activating ? 36 : isMoonlit ? 24 : 10} scale={[1.15, 1.9, 0.85]} size={activating ? 1.1 : isMoonlit ? 0.72 : 0.48} speed={activating ? 0.45 : isHovered ? 0.18 : 0.05} color={isMoonlit ? "#bda56f" : "#91a4c0"} opacity={activating ? 0.8 : isHovered ? 0.48 : isMoonlit ? 0.22 : 0.12} noise={0.4} />
+      {isMoonlit ? (
+        <Sparkles count={activating ? 42 : 30} scale={[1.2, 2.05, 0.9]} size={activating ? 1.1 : 0.72} speed={activating ? 0.45 : isHovered ? 0.18 : 0.05} color="#bda56f" opacity={activating ? 0.8 : isHovered ? 0.48 : 0.24} noise={0.4} />
+      ) : null}
       {activating ? (
         <Html center position={[0, 0.96, 0.4]} distanceFactor={8.5} style={{ pointerEvents: "none" }}>
           <StatueCrack />

@@ -41,11 +41,11 @@ export function SanctuaryFloor({ skipIntro = false }: { skipIntro?: boolean }) {
   return (
     <group>
       <mesh position={[0, -0.2, 0]} receiveShadow>
-        <cylinderGeometry args={[5.6, 5.9, 0.38, 128]} />
+        <cylinderGeometry args={[6.28, 6.58, 0.38, 128]} />
         <meshPhysicalMaterial map={marbleTexture} bumpMap={marbleTexture} bumpScale={0.018} color="#182235" roughness={0.34} metalness={0.32} clearcoat={0.3} clearcoatRoughness={0.66} />
       </mesh>
       <mesh position={[0, 0.006, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <circleGeometry args={[5.58, 128]} />
+        <circleGeometry args={[6.26, 128]} />
         <meshPhysicalMaterial map={marbleTexture} bumpMap={marbleTexture} bumpScale={0.012} color="#1b2940" roughness={0.4} metalness={0.22} clearcoat={0.26} clearcoatRoughness={0.58} emissive="#111d35" emissiveIntensity={0.18} />
       </mesh>
 
@@ -58,8 +58,8 @@ export function SanctuaryFloor({ skipIntro = false }: { skipIntro?: boolean }) {
         {[
           { radius: 2.2, start: 0.25, length: Math.PI * 1.52, opacity: 0.46 },
           { radius: 3.48, start: -0.42, length: Math.PI * 1.34, opacity: 0.36 },
-          { radius: 4.82, start: 0.72, length: Math.PI * 1.18, opacity: 0.3 },
-          { radius: 4.18, start: 2.65, length: Math.PI * 0.52, opacity: 0.2 },
+          { radius: 5.72, start: 0.72, length: Math.PI * 1.18, opacity: 0.3 },
+          { radius: 4.86, start: 2.65, length: Math.PI * 0.52, opacity: 0.2 },
         ].map((arc, index) => (
           <Line key={index} points={arcPoints(arc.radius, arc.start, arc.length)} color="#bda36e" lineWidth={0.76 - index * 0.1} transparent opacity={arc.opacity} />
         ))}
@@ -79,7 +79,7 @@ export function SanctuaryFloor({ skipIntro = false }: { skipIntro?: boolean }) {
         {Array.from({ length: 48 }, (_, index) => {
           const angle = index / 48 * Math.PI * 2;
           return (
-            <mesh key={index} position={[Math.cos(angle) * 5.32, 0.035, Math.sin(angle) * 5.32]} rotation={[-Math.PI / 2, 0, -angle]}>
+            <mesh key={index} position={[Math.cos(angle) * 6.03, 0.035, Math.sin(angle) * 6.03]} rotation={[-Math.PI / 2, 0, -angle]}>
               <boxGeometry args={[index % 4 === 0 ? 0.13 : 0.052, 0.008, 0.008]} />
               <meshBasicMaterial color="#c0a66e" transparent opacity={index % 4 === 0 ? 0.58 : 0.3} />
             </mesh>

@@ -15,9 +15,9 @@ import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverl
 import { chapter01 } from "@/config/chapters";
 
 const chapterPositions: Array<[number, number, number]> = [
-  [-4.15, 0, -1.4],
-  [4.15, 0, -1.4],
-  [0, 0, 4.3],
+  [-4.82, 0, -1.05],
+  [4.82, 0, -1.05],
+  [0, 0, 5.02],
 ];
 
 type SanctuaryCanvasProps = {
@@ -86,12 +86,12 @@ export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onAct
     <Canvas
       key={`${compactLayout ? "compact" : "wide"}-${restoring ? "restored" : "initial"}`}
       dpr={[1, 1.5]}
-      camera={{ position: compactLayout ? [0, 5.65, 15.2] : [0, 4.65, 12.25], fov: compactLayout ? 47 : 43, near: 0.1, far: 90 }}
+      camera={{ position: compactLayout ? [0, 6.05, 16.4] : [0, 5.15, 13.65], fov: compactLayout ? 47 : 43, near: 0.1, far: 90 }}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       onCreated={({ camera, gl, scene }) => {
-        camera.position.set(0, compactLayout ? 5.65 : 4.65, compactLayout ? 15.2 : 12.25);
+        camera.position.set(0, compactLayout ? 6.05 : 5.15, compactLayout ? 16.4 : 13.65);
         camera.rotation.set(0, 0, 0);
-        camera.lookAt(0, compactLayout ? 0.55 : 0.42, 0.35);
+        camera.lookAt(0, compactLayout ? 0.52 : 0.44, 0.42);
         if (camera instanceof THREE.PerspectiveCamera) {
           camera.fov = compactLayout ? 47 : 43;
           camera.zoom = 1;
@@ -100,7 +100,7 @@ export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onAct
         gl.setClearColor("#060a13", 1);
         gl.outputColorSpace = "srgb";
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.34;
+        gl.toneMappingExposure = 1.47;
         scene.fog = new THREE.FogExp2("#07101e", 0.032);
       }}
     >
