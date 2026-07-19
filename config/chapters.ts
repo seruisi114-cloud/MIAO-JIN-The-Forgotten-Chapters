@@ -17,3 +17,7 @@ export const chapter01: ChapterConfig = {
 };
 
 export const chapters = [chapter01] as const;
+
+export const chapterMusic: Record<string, string> = Object.fromEntries(
+  chapters.map((chapter) => [chapter.id, chapter.audioSrc]),
+);

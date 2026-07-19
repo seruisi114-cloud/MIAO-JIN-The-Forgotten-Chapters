@@ -4,6 +4,7 @@ import { CSSProperties, useEffect, useMemo } from "react";
 import { chapter01 } from "@/config/chapters";
 
 type ChapterGateProps = {
+  onMusicCue: () => Promise<void>;
   onComplete: () => void;
 };
 
@@ -22,7 +23,7 @@ function seededRandom(seed: number) {
   };
 }
 
-export function ChapterGate({ onComplete }: ChapterGateProps) {
+export function ChapterGate({ onMusicCue, onComplete }: ChapterGateProps) {
   const dust = useMemo(() => {
     const random = seededRandom(7190601);
     return Array.from({ length: 48 }, (_, index) => {
@@ -42,9 +43,13 @@ export function ChapterGate({ onComplete }: ChapterGateProps) {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const timer = window.setTimeout(onComplete, reducedMotion ? 900 : 3800);
-    return () => window.clearTimeout(timer);
-  }, [onComplete]);
+    const musicTimer = window.setTimeout(() => void onMusicCue(), reducedMotion ? 220 : 2700);
+    const completeTimer = window.setTimeout(onComplete, reducedMotion ? 950 : 5000);
+    return () => {
+      window.clearTimeout(musicTimer);
+      window.clearTimeout(completeTimer);
+    };
+  }, [onComplete, onMusicCue]);
 
   return (
     <section className="chapter-gate" aria-label={`${chapter01.chapterLabel}正在开启`} role="status">

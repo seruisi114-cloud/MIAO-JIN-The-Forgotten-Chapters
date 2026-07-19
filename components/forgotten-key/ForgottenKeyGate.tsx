@@ -2,10 +2,11 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { OpeningAudioController, OpeningAudioControllerHandle } from "@/components/audio/OpeningAudioController";
+import { useAudioManager } from "@/components/audio/AudioManager";
 import { DeferredLoadingNotice } from "@/components/loading/DeferredLoadingNotice";
 import type { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
 import type { OpeningPhase } from "@/components/opening/OpeningSequence";
+import { chapter01 } from "@/config/chapters";
 import { CinematicInscription } from "./CinematicInscription";
 import { KeyInput } from "./KeyInput";
 import { LightweightPasswordBackdrop } from "./LightweightPasswordBackdrop";
@@ -34,6 +35,7 @@ const CreatorNotePanel = dynamic(() => import("@/components/creator/CreatorNoteP
 });
 
 export function ForgottenKeyGate() {
+  const { prepareSanctuary, playSanctuary, leaveSanctuaryForChapter, playChapter, stopChapter } = useAudioManager();
   const [phase, setPhase] = useState<OpeningPhase>("locked");
   const [errorSignal, setErrorSignal] = useState(0);
   const [inputFocused, setInputFocused] = useState(false);
@@ -45,7 +47,7 @@ export function ForgottenKeyGate() {
   const [universeReady, setUniverseReady] = useState(false);
   const activationTimerRef = useRef<number | null>(null);
   const returnTimerRef = useRef<number | null>(null);
-  const openingAudioRef = useRef<OpeningAudioControllerHandle>(null);
+  const chapterPreparationRef = useRef<Promise<void> | null>(null);
   const awakened = phase !== "locked";
   const sanctuaryMounted = phase === "sanctuaryTransition" || phase === "sanctuary" || phase === "activatingStatue" || phase === "returnToSanctuary";
   const universeMounted = phase !== "locked" && phase !== "sanctuary" && phase !== "activatingStatue" && phase !== "chapterOpening" && phase !== "chapterWorld" && phase !== "returnToSanctuary";
@@ -58,8 +60,14 @@ export function ForgottenKeyGate() {
     [],
   );
 
+  useEffect(() => {
+    if (phase !== "sanctuaryTransition" && phase !== "sanctuary") return;
+    void playSanctuary();
+  }, [phase, playSanctuary]);
+
   const beginChapterActivation = useCallback((statueId: number) => {
     if (statueId !== 1 || activationTimerRef.current) return;
+    chapterPreparationRef.current = leaveSanctuaryForChapter(chapter01.id);
     setActiveStatueId(statueId);
     setCreatorNoteOpen(false);
     setPhase("activatingStatue");
@@ -68,15 +76,20 @@ export function ForgottenKeyGate() {
       setActiveStatueId(null);
       setPhase("chapterOpening");
     }, 3800);
-  }, []);
+  }, [leaveSanctuaryForChapter]);
 
   const enterChapterWorld = useCallback(() => setPhase("chapterWorld"), []);
-  const prepareChapterAudio = useCallback(() => openingAudioRef.current?.fadeOutOpening() ?? Promise.resolve(), []);
+  const cueChapterMusic = useCallback(async () => {
+    await chapterPreparationRef.current;
+    await playChapter(chapter01.id);
+  }, [playChapter]);
   const openCreatorNote = useCallback(() => {
     if (phase === "sanctuary") setCreatorNoteOpen(true);
   }, [phase]);
   const beginReturnToSanctuary = useCallback(() => {
     if (returnTimerRef.current) return;
+    stopChapter(chapter01.id);
+    chapterPreparationRef.current = null;
     setActiveStatueId(null);
     setSanctuaryInstanceKey((key) => key + 1);
     setPhase("returnToSanctuary");
@@ -84,12 +97,12 @@ export function ForgottenKeyGate() {
       returnTimerRef.current = null;
       setPhase("sanctuary");
     }, 2600);
-  }, []);
+  }, [stopChapter]);
 
   const unlock = async (key: string) => {
     // Resume the Web Audio context synchronously inside the submit gesture.
     // The server request can then safely validate the key without losing audio permission.
-    openingAudioRef.current?.prepareOpening();
+    prepareSanctuary();
 
     try {
       const response = await fetch("/api/unlock", {
@@ -103,7 +116,6 @@ export function ForgottenKeyGate() {
         return false;
       }
 
-      openingAudioRef.current?.playOpening();
       setPhase("awakening");
       return true;
     } catch {
@@ -114,7 +126,6 @@ export function ForgottenKeyGate() {
 
   return (
     <div className={`forgotten-key-gate phase-${phase}${awakened ? " is-awakened" : ""}`}>
-      <OpeningAudioController ref={openingAudioRef} />
       {phase === "locked" ? <LightweightPasswordBackdrop /> : null}
       {universeMounted ? (
         <UniverseCanvas
@@ -141,9 +152,9 @@ export function ForgottenKeyGate() {
         />
       ) : null}
       <OpeningSequence phase={phase} onPhaseChange={setPhase} />
-      {phase === "chapterOpening" ? <ChapterGate onComplete={enterChapterWorld} /> : null}
+      {phase === "chapterOpening" ? <ChapterGate onMusicCue={cueChapterMusic} onComplete={enterChapterWorld} /> : null}
       {phase === "chapterWorld" || phase === "returnToSanctuary" ? (
-        <MoonlitStarSeaWorld returning={phase === "returnToSanctuary"} onReturn={beginReturnToSanctuary} onBeforePlay={prepareChapterAudio} />
+        <MoonlitStarSeaWorld returning={phase === "returnToSanctuary"} onReturn={beginReturnToSanctuary} />
       ) : null}
       {phase === "activatingStatue" || phase === "chapterOpening" ? (
         <SacredTransitionOverlay phase={phase === "activatingStatue" ? "covering" : "releasing"} origin={transitionOrigin} />

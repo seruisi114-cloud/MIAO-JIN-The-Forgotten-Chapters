@@ -1,16 +1,15 @@
 "use client";
 
-import { Howl } from "howler";
-import { CSSProperties, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { CSSProperties, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import { useAudioManager } from "@/components/audio/AudioManager";
 
 export type ChapterAudioPlayerHandle = {
   stopAndUnload: () => void;
 };
 
 type ChapterAudioPlayerProps = {
-  src: string;
+  chapterId: string;
   title: string;
-  onBeforePlay: () => Promise<void>;
   onPlaybackChange: (playing: boolean) => void;
 };
 
@@ -26,117 +25,40 @@ function formatTime(value: number) {
 }
 
 export const ChapterAudioPlayer = forwardRef<ChapterAudioPlayerHandle, ChapterAudioPlayerProps>(function ChapterAudioPlayer(
-  { src, title, onBeforePlay, onPlaybackChange },
+  { chapterId, title, onPlaybackChange },
   ref,
 ) {
-  const howlRef = useRef<Howl | null>(null);
-  const animationFrameRef = useRef(0);
-  const mountedRef = useRef(true);
-  const [ready, setReady] = useState(false);
-  const [error, setError] = useState(false);
-  const [playing, setPlaying] = useState(false);
-  const [starting, setStarting] = useState(false);
+  const { chapter, toggleChapter, seekChapter, stopChapter } = useAudioManager();
   const [hasStarted, setHasStarted] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
+  const isCurrentChapter = chapter.id === chapterId;
+  const playing = isCurrentChapter && chapter.status === "playing";
+  const starting = isCurrentChapter && (chapter.status === "loading" || chapter.status === "starting");
+  const ready = isCurrentChapter && (chapter.status === "ready" || chapter.status === "playing" || chapter.status === "paused");
+  const error = isCurrentChapter && chapter.error;
+  const duration = isCurrentChapter ? chapter.duration : 0;
+  const currentTime = isCurrentChapter ? chapter.currentTime : 0;
 
-  const release = () => {
-    window.cancelAnimationFrame(animationFrameRef.current);
-    const howl = howlRef.current;
-    if (howl) {
-      howl.stop();
-      howl.unload();
-      howlRef.current = null;
-    }
-    setPlaying(false);
-    setReady(false);
-    setCurrentTime(0);
+  const release = useCallback(() => {
+    stopChapter(chapterId);
     onPlaybackChange(false);
-  };
+  }, [chapterId, onPlaybackChange, stopChapter]);
 
   useImperativeHandle(ref, () => ({ stopAndUnload: release }));
 
   useEffect(() => {
-    const howl = new Howl({
-      src: [src],
-      html5: false,
-      preload: true,
-      autoplay: false,
-      volume: 0.82,
-      onload: () => {
-        setDuration(howl.duration());
-        setReady(true);
-        setError(false);
-      },
-      onloaderror: () => {
-        setReady(false);
-        setError(true);
-      },
-      onplay: () => {
-        setPlaying(true);
-        setHasStarted(true);
-        onPlaybackChange(true);
-      },
-      onpause: () => {
-        setPlaying(false);
-        onPlaybackChange(false);
-      },
-      onstop: () => {
-        setPlaying(false);
-        setCurrentTime(0);
-        onPlaybackChange(false);
-      },
-      onend: () => {
-        setPlaying(false);
-        setCurrentTime(howl.duration());
-        onPlaybackChange(false);
-      },
-    });
-    howlRef.current = howl;
-    mountedRef.current = true;
-
-    return () => {
-      mountedRef.current = false;
-      window.cancelAnimationFrame(animationFrameRef.current);
-      howl.stop();
-      howl.unload();
-      if (howlRef.current === howl) howlRef.current = null;
-    };
-  }, [onPlaybackChange, src]);
-
-  useEffect(() => {
-    if (!playing) return;
-    const updateProgress = () => {
-      const seek = howlRef.current?.seek();
-      if (typeof seek === "number") setCurrentTime(seek);
-      animationFrameRef.current = window.requestAnimationFrame(updateProgress);
-    };
-    animationFrameRef.current = window.requestAnimationFrame(updateProgress);
-    return () => window.cancelAnimationFrame(animationFrameRef.current);
-  }, [playing]);
+    if (playing) setHasStarted(true);
+    onPlaybackChange(playing);
+  }, [onPlaybackChange, playing]);
 
   const togglePlayback = async () => {
-    const howl = howlRef.current;
-    if (!howl || !ready || error || starting) return;
-    if (howl.playing()) howl.pause();
-    else {
-      setStarting(true);
-      await onBeforePlay();
-      if (!mountedRef.current || howlRef.current !== howl) return;
-      if (currentTime >= duration - 0.05) {
-        howl.seek(0);
-        setCurrentTime(0);
-      }
-      howl.play();
-      setStarting(false);
-    }
+    if (error || starting) return;
+    if (currentTime >= duration - 0.05 && duration > 0) seekChapter(chapterId, 0);
+    await toggleChapter(chapterId);
   };
 
   const seek = (value: number) => {
-    const howl = howlRef.current;
-    if (!howl || !ready) return;
-    howl.seek(value);
-    setCurrentTime(value);
+    if (!ready) return;
+    seekChapter(chapterId, value);
   };
 
   const status = error ? "旋律未能回应" : !ready ? "正在聆听星海" : starting ? "正在交接旋律" : playing ? "旋律正在流动" : hasStarted ? "旋律暂歇" : "开启旋律";

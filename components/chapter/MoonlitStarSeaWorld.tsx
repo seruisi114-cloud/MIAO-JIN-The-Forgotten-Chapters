@@ -10,7 +10,6 @@ import { ReturnToSanctuary } from "./ReturnToSanctuary";
 type MoonlitStarSeaWorldProps = {
   returning: boolean;
   onReturn: () => void;
-  onBeforePlay: () => Promise<void>;
 };
 
 type DreamDustStyle = CSSProperties & {
@@ -28,7 +27,7 @@ function seededRandom(seed: number) {
   };
 }
 
-export function MoonlitStarSeaWorld({ returning, onReturn, onBeforePlay }: MoonlitStarSeaWorldProps) {
+export function MoonlitStarSeaWorld({ returning, onReturn }: MoonlitStarSeaWorldProps) {
   const playerRef = useRef<ChapterAudioPlayerHandle>(null);
   const [playing, setPlaying] = useState(false);
   const [webglReady, setWebglReady] = useState(false);
@@ -80,7 +79,7 @@ export function MoonlitStarSeaWorld({ returning, onReturn, onBeforePlay }: Moonl
         <blockquote>{chapter01.poem[0]}<br />{chapter01.poem[1]}</blockquote>
       </header>
       <div className="dream-controls">
-        <ChapterAudioPlayer ref={playerRef} src={chapter01.audioSrc} title={chapter01.title} onBeforePlay={onBeforePlay} onPlaybackChange={handlePlaybackChange} />
+        <ChapterAudioPlayer ref={playerRef} chapterId={chapter01.id} title={chapter01.title} onPlaybackChange={handlePlaybackChange} />
         <ReturnToSanctuary onReturn={beginReturn} disabled={returning} />
       </div>
       <div className="dream-return-dust" aria-hidden="true" />
