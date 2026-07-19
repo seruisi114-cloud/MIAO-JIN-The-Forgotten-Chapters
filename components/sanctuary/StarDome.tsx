@@ -48,11 +48,11 @@ const fragmentShader = /* glsl */ `
     float ribbonA = exp(-pow(abs(uv.y - 0.57 - sin(uv.x * 8.0 + drift) * 0.055), 2.0) * 95.0);
     float ribbonB = exp(-pow(abs(uv.y - 0.31 - sin(uv.x * 5.0 - drift) * 0.04), 2.0) * 120.0);
     float mist = (ribbonA * 0.7 + ribbonB * 0.34) * smoothstep(0.28, 0.82, cloud);
-    vec3 base = vec3(0.012, 0.024, 0.058);
+    vec3 base = vec3(0.016, 0.033, 0.074);
     float violetVeil = exp(-pow(abs(uv.y - 0.72 + sin(uv.x * 4.0 - drift) * 0.035), 2.0) * 86.0) * smoothstep(0.36, 0.82, cloud);
-    vec3 blueMist = vec3(0.055, 0.105, 0.205);
-    vec3 violetMist = vec3(0.095, 0.055, 0.17);
-    vec3 color = base + blueMist * mist * 0.72 + violetMist * violetVeil * 0.22 + vec3(0.025, 0.035, 0.07) * cloud * 0.2;
+    vec3 blueMist = vec3(0.07, 0.135, 0.255);
+    vec3 violetMist = vec3(0.115, 0.064, 0.19);
+    vec3 color = base + blueMist * mist * 0.82 + violetMist * violetVeil * 0.28 + vec3(0.03, 0.045, 0.085) * cloud * 0.24;
     gl_FragColor = vec4(color, 1.0);
   }
 `;
@@ -78,6 +78,7 @@ export function StarDome() {
       </mesh>
       <Stars radius={42} depth={24} count={960} factor={2.1} saturation={0} fade speed={0.12} />
       <Stars radius={34} depth={18} count={86} factor={4.2} saturation={0} fade speed={0.08} />
+      <Stars radius={29} depth={13} count={32} factor={6.2} saturation={0.08} fade speed={0.055} />
     </group>
   );
 }

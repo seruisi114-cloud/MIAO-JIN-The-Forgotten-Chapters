@@ -2166,9 +2166,9 @@ select {
   top: 45%;
   left: 50%;
   display: flex;
-  width: clamp(17rem, 24vw, 22rem);
-  min-height: 16rem;
-  padding: 2.15rem 2rem 1.8rem;
+  width: clamp(17rem, 23vw, 20rem);
+  min-height: 14.5rem;
+  padding: 1.75rem 1.7rem 1.55rem;
   transform: translate(-50%, -50%);
   flex-direction: column;
   align-items: center;
@@ -2281,6 +2281,15 @@ select {
   font-size: 0.56rem;
   letter-spacing: 0.14em;
   line-height: 1.9;
+}
+
+.creator-archive-overlay .creator-archive-poem {
+  width: 94%;
+  margin-top: 0.72rem;
+  color: rgba(208, 211, 211, 0.5);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  line-height: 2;
 }
 
 .creator-archive-overlay em {

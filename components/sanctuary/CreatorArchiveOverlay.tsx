@@ -14,12 +14,12 @@ export function CreatorArchiveOverlay({ onOpen }: CreatorArchiveOverlayProps) {
     >
       <span className="creator-archive-kicker">作者档案</span>
       <strong>金淼</strong>
-      <span className="creator-archive-intro">来自东方创作者的一段月光叙事。</span>
-      <i className="creator-archive-divider" aria-hidden="true" />
-      <span className="creator-archive-catalogue">已发布曲目</span>
+      <span className="creator-archive-catalogue">作品</span>
       <b>《月下星海》</b>
-      <small>原作者尚未留下更多话语，敬请期待。</small>
-      <em>开启作者结语</em>
+      <i className="creator-archive-divider" aria-hidden="true" />
+      <span className="creator-archive-intro">来自东方创作者的一段月光叙事。</span>
+      <small className="creator-archive-poem">月光落入沉寂的星海，<br />沉睡的旋律在遗忘之境中醒来。</small>
+      <em>开启完整档案</em>
     </button>
   );
 }

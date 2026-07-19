@@ -5,19 +5,20 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { CelestialVaultRuins } from "./CelestialVaultRuins";
 import { CreatorArchiveCore } from "./CreatorArchiveCore";
+import { ArchiveOrbitField } from "./ArchiveOrbitField";
+import { ChapterArchiveCore } from "./ChapterArchiveCore";
 import { SanctuaryFloor } from "./SanctuaryFloor";
 import { SanctuaryLighting } from "./SanctuaryLighting";
 import { SanctuaryParticles } from "./SanctuaryParticles";
 import { SanctuaryPillars } from "./SanctuaryPillars";
 import { StarDome } from "./StarDome";
-import { MemoryGuardianStatue } from "./MemoryGuardianStatue";
 import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
 import { chapter01 } from "@/config/chapters";
 
 const chapterPositions: Array<[number, number, number]> = [
   [-4.82, 0, -1.05],
   [4.82, 0, -1.05],
-  [0, 0, 5.02],
+  [0, -0.35, 5.18],
 ];
 
 type SanctuaryCanvasProps = {
@@ -52,11 +53,12 @@ function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex
   return (
     <group ref={rootRef}>
       <CelestialVaultRuins reducedMotion={reducedMotion} />
+      <ArchiveOrbitField reducedMotion={reducedMotion} />
       <SanctuaryFloor skipIntro={restoring} />
       <SanctuaryPillars skipIntro={restoring} />
-      <MemoryGuardianStatue state="awakened" labelPlacement="left" position={chapterPositions[0]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <MemoryGuardianStatue state="dormant" labelPlacement="right" position={chapterPositions[1]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <MemoryGuardianStatue state="dormant" labelPlacement="bottom" position={chapterPositions[2]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <ChapterArchiveCore kind="moon-planet" labelPlacement="left" position={chapterPositions[0]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <ChapterArchiveCore kind="dormant-crystal" labelPlacement="right" position={chapterPositions[1]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <ChapterArchiveCore kind="dormant-crystal" labelPlacement="bottom" position={chapterPositions[2]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <CreatorArchiveCore chapterPositions={chapterPositions} activeIndex={activeIndex} skipIntro={restoring} onOpenCreatorNote={onOpenCreatorNote} />
       <SanctuaryParticles reducedMotion={reducedMotion} skipIntro={restoring} />
     </group>
@@ -97,11 +99,11 @@ export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onAct
           camera.zoom = 1;
           camera.updateProjectionMatrix();
         }
-        gl.setClearColor("#060a13", 1);
+        gl.setClearColor("#050a16", 1);
         gl.outputColorSpace = "srgb";
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.47;
-        scene.fog = new THREE.FogExp2("#07101e", 0.032);
+        gl.toneMappingExposure = 1.62;
+        scene.fog = new THREE.FogExp2("#071225", 0.028);
       }}
     >
       <StarDome />
