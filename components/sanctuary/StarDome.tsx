@@ -49,8 +49,10 @@ const fragmentShader = /* glsl */ `
     float ribbonB = exp(-pow(abs(uv.y - 0.31 - sin(uv.x * 5.0 - drift) * 0.04), 2.0) * 120.0);
     float mist = (ribbonA * 0.7 + ribbonB * 0.34) * smoothstep(0.28, 0.82, cloud);
     vec3 base = vec3(0.012, 0.024, 0.058);
+    float violetVeil = exp(-pow(abs(uv.y - 0.72 + sin(uv.x * 4.0 - drift) * 0.035), 2.0) * 86.0) * smoothstep(0.36, 0.82, cloud);
     vec3 blueMist = vec3(0.055, 0.105, 0.205);
-    vec3 color = base + blueMist * mist * 0.72 + vec3(0.025, 0.035, 0.07) * cloud * 0.2;
+    vec3 violetMist = vec3(0.095, 0.055, 0.17);
+    vec3 color = base + blueMist * mist * 0.72 + violetMist * violetVeil * 0.22 + vec3(0.025, 0.035, 0.07) * cloud * 0.2;
     gl_FragColor = vec4(color, 1.0);
   }
 `;

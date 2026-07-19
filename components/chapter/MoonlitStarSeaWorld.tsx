@@ -4,6 +4,7 @@ import { CSSProperties, useCallback, useMemo, useRef, useState } from "react";
 import { chapter01 } from "@/config/chapters";
 import { ChapterAudioPlayer, ChapterAudioPlayerHandle } from "./ChapterAudioPlayer";
 import { MoonlitAtmosphere } from "./MoonlitAtmosphere";
+import { MoonlitSceneCanvas } from "./MoonlitSceneCanvas";
 import { ReturnToSanctuary } from "./ReturnToSanctuary";
 
 type MoonlitStarSeaWorldProps = {
@@ -30,6 +31,7 @@ function seededRandom(seed: number) {
 export function MoonlitStarSeaWorld({ returning, onReturn, onBeforePlay }: MoonlitStarSeaWorldProps) {
   const playerRef = useRef<ChapterAudioPlayerHandle>(null);
   const [playing, setPlaying] = useState(false);
+  const [webglReady, setWebglReady] = useState(false);
   const dust = useMemo(() => {
     const random = seededRandom(7190602);
     return Array.from({ length: 48 }, (_, id) => ({
@@ -52,13 +54,14 @@ export function MoonlitStarSeaWorld({ returning, onReturn, onBeforePlay }: Moonl
   };
 
   return (
-    <section className={`temporary-dream-world moonlit-star-sea-world${playing ? " is-playing" : ""}${returning ? " is-returning" : ""}`} aria-label={`${chapter01.chapterLabel}：${chapter01.title}`}>
+    <section className={`temporary-dream-world moonlit-star-sea-world${playing ? " is-playing" : ""}${webglReady ? " has-webgl" : ""}${returning ? " is-returning" : ""}`} aria-label={`${chapter01.chapterLabel}：${chapter01.title}`}>
       <div className="dream-sky" aria-hidden="true">
         <i className="dream-nebula dream-nebula--one" />
         <i className="dream-nebula dream-nebula--two" />
         <i className="dream-moon" />
         <i className="dream-moon-reflection" />
       </div>
+      <MoonlitSceneCanvas playing={playing} onReady={() => setWebglReady(true)} />
       <MoonlitAtmosphere playing={playing} />
       <div className="dream-dust" aria-hidden="true">
         {dust.map((particle) => <i key={particle.id} style={particle.style} />)}
@@ -72,7 +75,7 @@ export function MoonlitStarSeaWorld({ returning, onReturn, onBeforePlay }: Moonl
         <div className="dream-author">
           <strong>金淼</strong>
           <i aria-hidden="true" />
-          <small>一段来自东方的梦境旋律。</small>
+          <small>来自东方创作者的月光诗篇</small>
         </div>
         <blockquote>{chapter01.poem[0]}<br />{chapter01.poem[1]}</blockquote>
       </header>

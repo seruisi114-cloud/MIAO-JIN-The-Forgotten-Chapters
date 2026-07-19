@@ -1,5 +1,12 @@
 # MIAO JIN — The Forgotten Chapters / TODO
 
+## 首屏性能当前状态
+
+- 密码页已经与 Three.js、圣殿、篇章世界拆分，生产首页 HTML 不再引用 Three.js 异步 chunk 或两份音频 URL。
+- 开场音频已关闭初始预加载，只在访客提交遗忘之钥后开始请求。
+- 页面业务首屏 JS 已从约 `1.12 MB` 降至约 `48 KB`；后续仍可把全局 `globals.css` 拆为按场景 CSS Modules，进一步减少首屏 CSS。
+- 发布 Preview 后需要在中国大陆普通网络下测试首次打开、密码提交后的异步资源等待时间及静态资源 CDN 表现。
+
 ## Vercel 部署前事项
 
 - 在 Vercel Preview 与 Production 环境中设置 `SITE_ACCESS_KEY`，不要把真实密钥写入源码。

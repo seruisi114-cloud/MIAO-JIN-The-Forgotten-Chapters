@@ -30,9 +30,10 @@ type UniverseCanvasProps = {
   errorSignal: number;
   inputFocused: boolean;
   keyLength: number;
+  onReady?: () => void;
 };
 
-export function UniverseCanvas({ awakened, errorSignal, inputFocused, keyLength }: UniverseCanvasProps) {
+export function UniverseCanvas({ awakened, errorSignal, inputFocused, keyLength, onReady }: UniverseCanvasProps) {
   const reducedMotion = useReducedMotion();
 
   return (
@@ -46,6 +47,7 @@ export function UniverseCanvas({ awakened, errorSignal, inputFocused, keyLength 
           gl.outputColorSpace = "srgb";
           gl.toneMapping = 3;
           gl.toneMappingExposure = 0.88;
+          onReady?.();
         }}
       >
         <CameraDrift reducedMotion={reducedMotion} />

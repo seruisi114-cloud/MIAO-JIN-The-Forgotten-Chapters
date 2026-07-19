@@ -1,16 +1,37 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OpeningAudioController, OpeningAudioControllerHandle } from "@/components/audio/OpeningAudioController";
-import { CreatorNotePanel } from "@/components/creator/CreatorNotePanel";
-import { ChapterGate } from "@/components/chapter/ChapterGate";
-import { MoonlitStarSeaWorld } from "@/components/chapter/MoonlitStarSeaWorld";
-import { SacredTransitionOverlay, TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
-import { OpeningPhase, OpeningSequence } from "@/components/opening/OpeningSequence";
-import { SanctuaryScene } from "@/components/sanctuary/SanctuaryScene";
-import { UniverseCanvas } from "@/components/universe/UniverseCanvas";
+import { DeferredLoadingNotice } from "@/components/loading/DeferredLoadingNotice";
+import type { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
+import type { OpeningPhase } from "@/components/opening/OpeningSequence";
 import { CinematicInscription } from "./CinematicInscription";
 import { KeyInput } from "./KeyInput";
+import { LightweightPasswordBackdrop } from "./LightweightPasswordBackdrop";
+
+const UniverseCanvas = dynamic(() => import("@/components/universe/UniverseCanvas").then((module) => module.UniverseCanvas), {
+  ssr: false,
+});
+const OpeningSequence = dynamic(() => import("@/components/opening/OpeningSequence").then((module) => module.OpeningSequence), {
+  ssr: false,
+});
+const SanctuaryScene = dynamic(() => import("@/components/sanctuary/SanctuaryScene").then((module) => module.SanctuaryScene), {
+  ssr: false,
+});
+const MoonlitStarSeaWorld = dynamic(() => import("@/components/chapter/MoonlitStarSeaWorld").then((module) => module.MoonlitStarSeaWorld), {
+  ssr: false,
+});
+const ChapterGate = dynamic(() => import("@/components/chapter/ChapterGate").then((module) => module.ChapterGate), {
+  ssr: false,
+});
+const SacredTransitionOverlay = dynamic(
+  () => import("@/components/transitions/SacredTransitionOverlay").then((module) => module.SacredTransitionOverlay),
+  { ssr: false },
+);
+const CreatorNotePanel = dynamic(() => import("@/components/creator/CreatorNotePanel").then((module) => module.CreatorNotePanel), {
+  ssr: false,
+});
 
 export function ForgottenKeyGate() {
   const [phase, setPhase] = useState<OpeningPhase>("locked");
@@ -21,12 +42,13 @@ export function ForgottenKeyGate() {
   const [transitionOrigin, setTransitionOrigin] = useState<TransitionOrigin>({ x: 25, y: 38 });
   const [sanctuaryInstanceKey, setSanctuaryInstanceKey] = useState(0);
   const [creatorNoteOpen, setCreatorNoteOpen] = useState(false);
+  const [universeReady, setUniverseReady] = useState(false);
   const activationTimerRef = useRef<number | null>(null);
   const returnTimerRef = useRef<number | null>(null);
   const openingAudioRef = useRef<OpeningAudioControllerHandle>(null);
   const awakened = phase !== "locked";
   const sanctuaryMounted = phase === "sanctuaryTransition" || phase === "sanctuary" || phase === "activatingStatue" || phase === "returnToSanctuary";
-  const universeMounted = phase !== "sanctuary" && phase !== "activatingStatue" && phase !== "chapterOpening" && phase !== "chapterWorld" && phase !== "returnToSanctuary";
+  const universeMounted = phase !== "locked" && phase !== "sanctuary" && phase !== "activatingStatue" && phase !== "chapterOpening" && phase !== "chapterWorld" && phase !== "returnToSanctuary";
 
   useEffect(
     () => () => {
@@ -93,7 +115,17 @@ export function ForgottenKeyGate() {
   return (
     <div className={`forgotten-key-gate phase-${phase}${awakened ? " is-awakened" : ""}`}>
       <OpeningAudioController ref={openingAudioRef} />
-      {universeMounted ? <UniverseCanvas awakened={awakened} errorSignal={errorSignal} inputFocused={inputFocused} keyLength={keyLength} /> : null}
+      {phase === "locked" ? <LightweightPasswordBackdrop /> : null}
+      {universeMounted ? (
+        <UniverseCanvas
+          awakened={awakened}
+          errorSignal={errorSignal}
+          inputFocused={inputFocused}
+          keyLength={keyLength}
+          onReady={() => setUniverseReady(true)}
+        />
+      ) : null}
+      {universeMounted && !universeReady ? <DeferredLoadingNotice /> : null}
       <CinematicInscription awakened={awakened} />
       <KeyInput awakened={awakened} onSubmit={unlock} onFocusChange={setInputFocused} onLengthChange={setKeyLength} />
       {sanctuaryMounted ? (

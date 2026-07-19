@@ -22,7 +22,6 @@ type SanctuarySceneProps = {
 export function SanctuaryScene({ active, settled, restoring, activeStatueId, onBeginChapterActivation, onActivationPosition, onOpenCreatorNote }: SanctuarySceneProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [unavailableMessage, setUnavailableMessage] = useState("");
-  const [creatorNoteHovered, setCreatorNoteHovered] = useState(false);
   const messageTimerRef = useRef<number | null>(null);
   const activeIndex = activeStatueId ?? hoveredIndex;
 
@@ -67,14 +66,12 @@ export function SanctuaryScene({ active, settled, restoring, activeStatueId, onB
         onActivate={handleActivate}
         onActivationPosition={onActivationPosition}
         onOpenCreatorNote={onOpenCreatorNote}
-        onHoverCreatorNote={setCreatorNoteHovered}
       />
       <SacredMist />
       <FlowingGoldenStreams activeIndex={activeIndex} />
       <GoldenOrnaments activeIndex={activeIndex} />
       <GoldenDustField />
       <ForegroundVeil />
-      <p className={`sanctuary-creator-label${creatorNoteHovered ? " is-visible" : ""}`}>创作者结语</p>
       <p className={`sanctuary-unavailable${unavailableMessage ? " is-visible" : ""}`} aria-live="polite">{unavailableMessage}</p>
       <div className="sanctuary-vignette" aria-hidden="true" />
     </section>

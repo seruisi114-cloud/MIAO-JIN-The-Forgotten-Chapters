@@ -3,7 +3,8 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { CentralAltar } from "./CentralAltar";
+import { CelestialVaultRuins } from "./CelestialVaultRuins";
+import { CreatorArchiveCore } from "./CreatorArchiveCore";
 import { DormantNebula } from "./DormantNebula";
 import { SanctuaryFloor } from "./SanctuaryFloor";
 import { SanctuaryLighting } from "./SanctuaryLighting";
@@ -30,10 +31,9 @@ type SanctuaryCanvasProps = {
   onActivate: (index: number) => void;
   onActivationPosition: (origin: TransitionOrigin) => void;
   onOpenCreatorNote: () => void;
-  onHoverCreatorNote: (hovered: boolean) => void;
 };
 
-function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote, onHoverCreatorNote }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
+function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
   const rootRef = useRef<THREE.Group>(null);
 
   useLayoutEffect(() => {
@@ -54,12 +54,13 @@ function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex
 
   return (
     <group ref={rootRef}>
+      <CelestialVaultRuins reducedMotion={reducedMotion} />
       <SanctuaryFloor skipIntro={restoring} />
       <SanctuaryPillars skipIntro={restoring} />
-      <CentralAltar chapterPositions={chapterPositions} activeIndex={activeIndex} skipIntro={restoring} onOpenCreatorNote={onOpenCreatorNote} onHoverCreatorNote={onHoverCreatorNote} />
-      <StatuePlaceholder position={chapterPositions[1]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <StatuePlaceholder position={chapterPositions[2]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <StatuePlaceholder position={chapterPositions[3]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <CreatorArchiveCore chapterPositions={chapterPositions} activeIndex={activeIndex} skipIntro={restoring} onOpenCreatorNote={onOpenCreatorNote} />
+      <StatuePlaceholder state="awakened" position={chapterPositions[1]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <StatuePlaceholder state="dormant" position={chapterPositions[2]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <StatuePlaceholder state="dormant" position={chapterPositions[3]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <DormantNebula position={chapterPositions[0]} seed={301} revealDelay={8.1} index={0} skipIntro={restoring} onHoverChange={onActiveChange} />
       <DormantNebula position={chapterPositions[4]} seed={719} revealDelay={8.8} index={4} skipIntro={restoring} onHoverChange={onActiveChange} />
       <SanctuaryParticles reducedMotion={reducedMotion} skipIntro={restoring} />
@@ -67,7 +68,7 @@ function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex
   );
 }
 
-export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote, onHoverCreatorNote }: SanctuaryCanvasProps) {
+export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote }: SanctuaryCanvasProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -101,7 +102,7 @@ export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onAct
     >
       <StarDome />
       <SanctuaryLighting />
-      <SanctuaryWorld reducedMotion={reducedMotion} restoring={restoring} activeIndex={activeIndex} activatingIndex={activatingIndex} onActiveChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} onOpenCreatorNote={onOpenCreatorNote} onHoverCreatorNote={onHoverCreatorNote} />
+      <SanctuaryWorld reducedMotion={reducedMotion} restoring={restoring} activeIndex={activeIndex} activatingIndex={activatingIndex} onActiveChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} onOpenCreatorNote={onOpenCreatorNote} />
     </Canvas>
   );
 }

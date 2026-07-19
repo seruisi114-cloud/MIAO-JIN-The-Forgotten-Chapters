@@ -24,7 +24,7 @@ export const OpeningAudioController = forwardRef<OpeningAudioControllerHandle>(f
   const stopTimerRef = useRef<number | null>(null);
   const fadePromiseRef = useRef<Promise<void> | null>(null);
   const fadeResolveRef = useRef<(() => void) | null>(null);
-  const [status, setStatus] = useState<OpeningAudioStatus>("loading");
+  const [status, setStatus] = useState<OpeningAudioStatus>("idle");
 
   const clearStopTimer = useCallback(() => {
     if (stopTimerRef.current === null) return;
@@ -52,6 +52,11 @@ export const OpeningAudioController = forwardRef<OpeningAudioControllerHandle>(f
   }, [clearStopTimer]);
 
   const prepareOpening = useCallback(() => {
+    const howl = howlRef.current;
+    if (howl?.state() === "unloaded") {
+      setStatus("loading");
+      howl.load();
+    }
     if (Howler.ctx?.state === "suspended") void Howler.ctx.resume();
   }, []);
 
@@ -110,7 +115,7 @@ export const OpeningAudioController = forwardRef<OpeningAudioControllerHandle>(f
     const openingAudio = new Howl({
       src: [OPENING_AUDIO_SRC],
       html5: false,
-      preload: true,
+      preload: false,
       autoplay: false,
       loop: true,
       volume: 0,

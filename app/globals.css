@@ -47,6 +47,78 @@ select {
   opacity: 1;
 }
 
+.password-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(20, 35, 68, 0.25), transparent 42%),
+    radial-gradient(ellipse at 20% 22%, rgba(27, 45, 77, 0.14), transparent 34%),
+    radial-gradient(ellipse at 82% 78%, rgba(47, 40, 63, 0.1), transparent 36%),
+    linear-gradient(180deg, #060912 0%, #03050a 58%, #05060a 100%);
+}
+
+.password-backdrop-nebula,
+.password-backdrop-stars,
+.password-backdrop-seal {
+  position: absolute;
+  pointer-events: none;
+}
+
+.password-backdrop-nebula {
+  inset: -18%;
+  opacity: 0.55;
+  background:
+    radial-gradient(ellipse at 36% 48%, rgba(24, 43, 80, 0.22), transparent 30%),
+    radial-gradient(ellipse at 68% 35%, rgba(30, 46, 76, 0.14), transparent 28%);
+  filter: blur(28px);
+  animation: password-nebula-drift 22s ease-in-out infinite alternate;
+}
+
+.password-backdrop-stars {
+  inset: 0;
+  opacity: 0.44;
+  background-image:
+    radial-gradient(circle at 13% 21%, rgba(231, 234, 240, 0.72) 0 0.7px, transparent 1px),
+    radial-gradient(circle at 29% 74%, rgba(195, 205, 224, 0.48) 0 0.8px, transparent 1.1px),
+    radial-gradient(circle at 47% 13%, rgba(205, 180, 126, 0.42) 0 0.65px, transparent 1px),
+    radial-gradient(circle at 71% 67%, rgba(231, 234, 240, 0.58) 0 0.75px, transparent 1.1px),
+    radial-gradient(circle at 87% 31%, rgba(173, 190, 218, 0.48) 0 0.8px, transparent 1.2px);
+  background-size: 19rem 17rem, 23rem 21rem, 29rem 25rem, 31rem 27rem, 37rem 33rem;
+}
+
+.password-backdrop-seal {
+  top: 48%;
+  left: 50%;
+  width: clamp(8rem, 16vw, 12rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(188, 160, 107, 0.12);
+  border-radius: 50%;
+  box-shadow: inset 0 0 2.8rem rgba(3, 5, 11, 0.8), 0 0 3.5rem rgba(188, 160, 107, 0.035);
+}
+
+.password-backdrop-seal::before,
+.password-backdrop-seal::after {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  border: 1px solid rgba(188, 160, 107, 0.08);
+  border-radius: 50%;
+}
+
+.password-backdrop-seal::after {
+  inset: 46%;
+  border-color: rgba(232, 229, 220, 0.26);
+  background: rgba(232, 229, 220, 0.2);
+  box-shadow: 0 0 1.4rem rgba(216, 222, 234, 0.15);
+}
+
+@keyframes password-nebula-drift {
+  from { transform: translate3d(-1.5%, 0.8%, 0) scale(1); }
+  to { transform: translate3d(1.8%, -1.2%, 0) scale(1.04); }
+}
+
 .universe-canvas {
   background:
     radial-gradient(circle at 50% 45%, rgba(11, 19, 40, 0.18), transparent 54%),
@@ -1129,6 +1201,13 @@ select {
   transform: translateX(-50%);
   pointer-events: none;
   text-align: center;
+  transition: opacity 1.2s ease, transform 1.2s ease, filter 1.2s ease;
+}
+
+.inscription-layer--awakened {
+  opacity: 0;
+  transform: translate(-50%, -8px);
+  filter: blur(7px);
 }
 
 .key-input {
@@ -1341,7 +1420,10 @@ select {
 .inscription-character {
   display: inline-block;
   opacity: 0;
+  filter: blur(12px);
+  transform: translateY(7px);
   white-space: pre;
+  animation: inscription-character-reveal 2.6s calc(0.85s + var(--inscription-index) * 0.075s) forwards cubic-bezier(0.22, 0.68, 0.25, 1);
 }
 
 .inscription-rule {
@@ -1352,6 +1434,7 @@ select {
   opacity: 0;
   transform-origin: center;
   background: linear-gradient(90deg, transparent, rgba(169, 138, 85, 0.62), transparent);
+  animation: inscription-rule-reveal 2.2s 1.5s forwards ease-in-out;
 }
 
 .inscription-dust {
@@ -1391,6 +1474,58 @@ select {
     opacity: 0;
     transform: translate(0, 0) scale(0.05);
   }
+}
+
+@keyframes inscription-character-reveal {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes inscription-rule-reveal {
+  from { opacity: 0; transform: scaleX(0); }
+  to { opacity: 0.48; transform: scaleX(1); }
+}
+
+.deferred-loading-notice {
+  position: fixed;
+  z-index: 40;
+  left: 50%;
+  bottom: clamp(2.2rem, 8vh, 5.5rem);
+  display: flex;
+  transform: translateX(-50%);
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(226, 222, 212, 0.56);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  pointer-events: none;
+  animation: deferred-notice-in 0.9s ease both;
+}
+
+.deferred-loading-notice span {
+  width: 0.3rem;
+  height: 0.3rem;
+  border: 1px solid rgba(201, 174, 118, 0.64);
+  transform: rotate(45deg);
+  animation: deferred-notice-pulse 1.8s ease-in-out infinite alternate;
+}
+
+.deferred-loading-notice p {
+  margin: 0;
+}
+
+@keyframes deferred-notice-in {
+  from { opacity: 0; filter: blur(5px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+@keyframes deferred-notice-pulse {
+  from { opacity: 0.32; box-shadow: 0 0 0 rgba(201, 174, 118, 0); }
+  to { opacity: 0.82; box-shadow: 0 0 0.8rem rgba(201, 174, 118, 0.16); }
 }
 
 @keyframes inscription-breathe {
@@ -1436,6 +1571,9 @@ select {
   .inscription-character,
   .inscription-rule {
     opacity: 1;
+    animation: none;
+    filter: none;
+    transform: none;
   }
 
   .inscription-text {
@@ -1814,6 +1952,97 @@ select {
   text-shadow: 0 0 1.3rem rgba(214, 224, 238, 0.2);
 }
 
+.creator-archive-inscription {
+  width: min(31vw, 21rem);
+  transform: translateY(-0.15rem);
+  color: rgba(228, 225, 216, 0.62);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  text-align: center;
+  text-shadow: 0 0 1.8rem rgba(200, 215, 236, 0.11);
+  transition: color 1s ease, filter 1s ease, transform 1s ease;
+}
+
+.creator-archive-inscription p,
+.creator-archive-inscription strong,
+.creator-archive-inscription span,
+.creator-archive-inscription small,
+.creator-archive-inscription em,
+.creator-archive-inscription blockquote {
+  display: block;
+  margin: 0;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.creator-archive-inscription p {
+  color: rgba(205, 178, 120, 0.7);
+  font-size: 0.68rem;
+  letter-spacing: 0.38em;
+  text-indent: 0.38em;
+}
+
+.creator-archive-inscription strong {
+  margin-top: 0.55rem;
+  color: rgba(238, 235, 226, 0.86);
+  font-size: 1.05rem;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+}
+
+.creator-archive-inscription span {
+  margin-top: 0.35rem;
+  color: rgba(222, 217, 204, 0.58);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+}
+
+.creator-archive-inscription small {
+  margin-top: 0.32rem;
+  color: rgba(192, 199, 210, 0.42);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+}
+
+.creator-archive-inscription > i {
+  display: block;
+  width: 6.5rem;
+  height: 1px;
+  margin: 0.75rem auto 0.65rem;
+  background: linear-gradient(90deg, transparent, rgba(199, 169, 108, 0.52), transparent);
+}
+
+.creator-archive-inscription em {
+  color: rgba(202, 177, 126, 0.48);
+  font-size: 0.56rem;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+}
+
+.creator-archive-inscription blockquote {
+  margin-top: 0.35rem;
+  color: rgba(220, 221, 218, 0.48);
+  font-size: 0.58rem;
+  letter-spacing: 0.13em;
+  line-height: 1.9;
+}
+
+.creator-archive-inscription.is-awake {
+  transform: translateY(-0.35rem);
+  color: rgba(240, 236, 224, 0.86);
+  filter: drop-shadow(0 0 1.5rem rgba(196, 213, 236, 0.12));
+}
+
+.creator-archive-inscription.is-awake blockquote {
+  color: rgba(232, 231, 224, 0.7);
+}
+
+@media (max-width: 760px) {
+  .creator-archive-inscription {
+    width: min(58vw, 18rem);
+    transform: translateY(-0.4rem) scale(0.82);
+  }
+}
+
 .creator-note-panel {
   position: absolute;
   z-index: 105;
@@ -1885,6 +2114,54 @@ select {
   font-weight: 400;
 }
 
+.creator-note-archive {
+  display: grid;
+  gap: 0.75rem;
+  width: min(88vw, 28rem);
+  margin: 0 auto 2.2rem;
+  color: rgba(224, 223, 218, 0.68);
+  font-size: clamp(0.68rem, 0.9vw, 0.78rem);
+  letter-spacing: 0.16em;
+  line-height: 1.8;
+}
+
+.creator-note-archive div {
+  display: grid;
+  grid-template-columns: 3.8rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0;
+  text-align: left;
+}
+
+.creator-note-archive dt,
+.creator-note-archive dd {
+  margin: 0;
+  font-weight: 400;
+}
+
+.creator-note-archive dt {
+  color: rgba(203, 177, 124, 0.45);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+}
+
+.creator-note-archive dd {
+  position: relative;
+  padding-left: 1rem;
+  color: rgba(229, 228, 223, 0.72);
+}
+
+.creator-note-archive dd::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0.45rem;
+  height: 1px;
+  background: rgba(197, 168, 108, 0.4);
+}
+
 .creator-note-copy p {
   color: rgba(203, 181, 135, 0.52);
   font-size: 0.66rem;
@@ -1902,9 +2179,9 @@ select {
 
 .creator-note-copy blockquote {
   color: rgba(235, 232, 222, 0.82);
-  font-size: clamp(1rem, 1.75vw, 1.35rem);
-  letter-spacing: 0.22em;
-  line-height: 2.1;
+  font-size: clamp(0.84rem, 1.35vw, 1.08rem);
+  letter-spacing: 0.2em;
+  line-height: 2.25;
   text-shadow: 0 0 2.6rem rgba(204, 219, 238, 0.13);
 }
 
@@ -2160,6 +2437,36 @@ select {
 
 .moonlit-star-sea-world {
   --moon-axis: 72%;
+}
+
+.moonlit-scene-canvas {
+  position: absolute;
+  z-index: -4;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.8s ease;
+}
+
+.moonlit-scene-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.moonlit-star-sea-world.has-webgl .moonlit-scene-canvas {
+  opacity: 1;
+}
+
+.moonlit-star-sea-world.has-webgl .dream-moon,
+.moonlit-star-sea-world.has-webgl .dream-moon-reflection {
+  opacity: 0;
+  transition: opacity 1.8s ease;
+}
+
+.moonlit-star-sea-world.has-webgl .dream-nebula {
+  opacity: 0.18;
 }
 
 .dream-sky,
@@ -2836,7 +3143,10 @@ select {
   color: rgba(238, 236, 227, 0.9);
   font-size: clamp(1.55rem, 3vw, 2.7rem);
   letter-spacing: 0.16em;
-  text-shadow: 0 0 2rem rgba(190, 207, 234, 0.12);
+  text-shadow:
+    0 0 1.25rem rgba(202, 217, 239, 0.2),
+    0 0 3.4rem rgba(175, 193, 224, 0.12),
+    0 0 4.8rem rgba(196, 166, 104, 0.045);
 }
 
 .dream-author {
@@ -2866,9 +3176,10 @@ select {
 }
 
 .dream-author small {
-  color: rgba(207, 203, 194, 0.4);
+  color: rgba(219, 216, 207, 0.45);
   font-size: clamp(0.6rem, 0.78vw, 0.7rem);
-  letter-spacing: 0.17em;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 1.3rem rgba(184, 202, 231, 0.08);
 }
 
 .dream-copy blockquote {
