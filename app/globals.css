@@ -446,6 +446,7 @@ select {
 }
 
 .sanctuary-scene--restored .flowing-golden-streams,
+.sanctuary-scene--restored .archive-runes-layer,
 .sanctuary-scene--restored .golden-dust-field,
 .sanctuary-scene--restored .sacred-mist,
 .sanctuary-scene--restored .golden-ornaments {
@@ -558,6 +559,59 @@ select {
   opacity: 0;
   mix-blend-mode: screen;
   animation: sanctuary-art-reveal 1.8s 9.85s both ease-in-out;
+}
+
+.archive-runes-layer {
+  z-index: 3;
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: sanctuary-art-reveal 2.2s 7.75s both ease-in-out;
+}
+
+.archive-rune-traces use {
+  fill: none;
+  stroke: rgba(190, 159, 98, 0.12);
+  stroke-width: 0.45;
+  stroke-dasharray: 3 10 1 14;
+  vector-effect: non-scaling-stroke;
+  animation: archive-rune-trace 34s linear infinite;
+}
+
+.archive-rune {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: archive-rune-drift var(--rune-duration) var(--rune-delay) ease-in-out infinite alternate;
+}
+
+.archive-rune circle {
+  fill: rgba(8, 15, 27, 0.32);
+  stroke: rgba(191, 158, 94, 0.18);
+  stroke-width: 0.55;
+  vector-effect: non-scaling-stroke;
+}
+
+.archive-rune text {
+  fill: rgba(211, 182, 122, 0.28);
+  font-family: "Times New Roman", serif;
+  font-size: 9px;
+  filter: url(#archive-rune-glow);
+}
+
+.archive-rune--1 {
+  opacity: 0.58;
+}
+
+.archive-rune--2 {
+  opacity: 0.38;
+}
+
+.archive-rune-mote {
+  fill: rgba(231, 210, 162, 0.72);
+  filter: drop-shadow(0 0 4px rgba(199, 166, 102, 0.44));
+}
+
+.archive-rune-mote--b {
+  fill: rgba(172, 193, 222, 0.52);
 }
 
 .sacred-mist {
@@ -965,6 +1019,28 @@ select {
   }
 }
 
+@keyframes archive-rune-trace {
+  to {
+    stroke-dashoffset: -96;
+  }
+}
+
+@keyframes archive-rune-drift {
+  0% {
+    opacity: 0.18;
+    translate: -4px 7px;
+    rotate: -5deg;
+  }
+  55% {
+    opacity: 0.52;
+  }
+  100% {
+    opacity: 0.28;
+    translate: 6px -9px;
+    rotate: 7deg;
+  }
+}
+
 @keyframes sanctuary-node-breathe {
   from {
     opacity: 0.26;
@@ -1132,10 +1208,18 @@ select {
   text-align: center;
 }
 
+.sanctuary-label--top {
+  min-width: 10rem;
+  text-align: center;
+  color: rgba(226, 226, 220, 0.56);
+}
+
 .sanctuary-label--left::before,
 .sanctuary-label--right::after,
 .sanctuary-label--bottom::before,
-.sanctuary-label--bottom::after {
+.sanctuary-label--bottom::after,
+.sanctuary-label--top::before,
+.sanctuary-label--top::after {
   display: none;
 }
 
@@ -2166,21 +2250,21 @@ select {
   top: 45%;
   left: 50%;
   display: flex;
-  width: clamp(17rem, 23vw, 20rem);
-  min-height: 14.5rem;
-  padding: 1.75rem 1.7rem 1.55rem;
+  width: clamp(14rem, 20vw, 17.5rem);
+  min-height: 0;
+  padding: 0;
   transform: translate(-50%, -50%);
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border: 0;
   color: rgba(230, 228, 219, 0.72);
-  background:
-    radial-gradient(ellipse at center, rgba(20, 33, 58, 0.78), rgba(7, 12, 24, 0.34) 50%, transparent 74%);
+  background: transparent;
   font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
   text-align: center;
   cursor: pointer;
-  filter: drop-shadow(0 0 2.8rem rgba(160, 183, 220, 0.06));
+  filter: drop-shadow(0 0 2.8rem rgba(160, 183, 220, 0.11));
+  mix-blend-mode: screen;
   transition: color 1s ease, filter 1s ease, transform 1s ease;
 }
 
@@ -2188,19 +2272,21 @@ select {
 .creator-archive-overlay::after {
   content: "";
   position: absolute;
-  inset: 0.65rem 0;
+  top: -0.9rem;
+  left: 15%;
+  width: 70%;
+  height: 1px;
   pointer-events: none;
-  opacity: 0.42;
-  clip-path: polygon(12% 0, 88% 0, 100% 15%, 100% 85%, 88% 100%, 12% 100%, 0 85%, 0 15%);
-  border: 1px solid rgba(195, 165, 105, 0.28);
-  box-shadow: inset 0 0 2.4rem rgba(188, 159, 102, 0.025);
-  transition: inset 1s ease, opacity 1s ease, border-color 1s ease;
+  opacity: 0.46;
+  background: linear-gradient(90deg, transparent, rgba(205, 174, 111, 0.7), transparent);
+  box-shadow: 0 0 0.8rem rgba(188, 159, 102, 0.16);
+  transition: left 1s ease, width 1s ease, opacity 1s ease;
 }
 
 .creator-archive-overlay::after {
-  inset: 1.1rem 0.48rem;
-  border-color: rgba(205, 187, 151, 0.11);
-  border-style: dashed;
+  top: auto;
+  bottom: -0.95rem;
+  opacity: 0.28;
 }
 
 .creator-archive-overlay:hover,
@@ -2212,10 +2298,12 @@ select {
 }
 
 .creator-archive-overlay:hover::before,
-.creator-archive-overlay:focus-visible::before {
-  inset: 0.45rem -0.18rem;
+.creator-archive-overlay:focus-visible::before,
+.creator-archive-overlay:hover::after,
+.creator-archive-overlay:focus-visible::after {
+  left: 8%;
+  width: 84%;
   opacity: 0.76;
-  border-color: rgba(213, 184, 124, 0.48);
 }
 
 .creator-archive-overlay span,
@@ -2311,8 +2399,8 @@ select {
   .creator-archive-overlay {
     top: 44%;
     width: min(56vw, 17rem);
-    min-height: 13rem;
-    padding: 1.5rem 1.2rem;
+    min-height: 0;
+    padding: 0;
     transform: translate(-50%, -50%) scale(0.83);
   }
 
@@ -2328,7 +2416,8 @@ select {
 
   .sanctuary-label--left,
   .sanctuary-label--right,
-  .sanctuary-label--bottom {
+  .sanctuary-label--bottom,
+  .sanctuary-label--top {
     min-width: 7.5rem;
     font-size: 0.58rem;
     text-align: center;

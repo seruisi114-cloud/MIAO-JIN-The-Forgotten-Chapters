@@ -5,9 +5,9 @@ type FlowingGoldenStreamsProps = {
 };
 
 const streams = [
-  { index: 1, x: 265, y: 292, path: "M500 420 C408 392 354 326 265 292", echo: "M500 426 C414 374 346 344 265 288", duration: "16s" },
-  { index: 2, x: 735, y: 292, path: "M500 420 C592 392 646 326 735 292", echo: "M500 426 C586 374 654 344 735 288", duration: "17s" },
-  { index: 3, x: 500, y: 505, path: "M500 420 C478 448 522 478 500 505", echo: "M493 420 C526 449 474 479 507 505", duration: "18s" },
+  { index: 1, x: 500, y: 170, path: "M500 420 C472 336 528 252 500 170", echo: "M493 420 C526 338 474 252 507 170", duration: "16s" },
+  { index: 2, x: 255, y: 392, path: "M500 420 C418 388 340 430 255 392", echo: "M500 426 C412 408 344 372 255 398", duration: "17s" },
+  { index: 3, x: 745, y: 392, path: "M500 420 C582 388 660 430 745 392", echo: "M500 426 C588 408 656 372 745 398", duration: "18s" },
 ];
 
 export function FlowingGoldenStreams({ activeIndex }: FlowingGoldenStreamsProps) {

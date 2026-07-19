@@ -9,6 +9,7 @@ import { GoldenOrnaments } from "./GoldenOrnaments";
 import { SacredMist } from "./SacredMist";
 import { SanctuaryCanvas } from "./SanctuaryCanvas";
 import { CreatorArchiveOverlay } from "./CreatorArchiveOverlay";
+import { ArchiveRunesLayer } from "./ArchiveRunesLayer";
 
 type SanctuarySceneProps = {
   active: boolean;
@@ -70,6 +71,7 @@ export function SanctuaryScene({ active, settled, restoring, activeStatueId, onB
       />
       <SacredMist />
       <FlowingGoldenStreams activeIndex={activeIndex} />
+      <ArchiveRunesLayer />
       <GoldenOrnaments activeIndex={activeIndex} />
       <GoldenDustField />
       <CreatorArchiveOverlay onOpen={onOpenCreatorNote} />

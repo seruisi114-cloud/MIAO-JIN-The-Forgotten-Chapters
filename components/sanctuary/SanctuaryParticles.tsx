@@ -18,18 +18,24 @@ export function SanctuaryParticles({ reducedMotion, skipIntro = false }: { reduc
   const fragmentRef = useRef<THREE.Group>(null);
   const elapsed = useRef(skipIntro ? 20 : 0);
   const initialFragmentScale = skipIntro ? 1 : 0.001;
-  const positions = useMemo(() => {
+  const particleField = useMemo(() => {
     const random = seededRandom(7192026);
-    const values = new Float32Array(84 * 3);
-    for (let index = 0; index < 84; index += 1) {
+    const values = new Float32Array(144 * 3);
+    const colors = new Float32Array(144 * 3);
+    const palette = [new THREE.Color("#b69d6d"), new THREE.Color("#8096b8"), new THREE.Color("#d7dbe2"), new THREE.Color("#6c5b7e")];
+    for (let index = 0; index < 144; index += 1) {
       const offset = index * 3;
       const angle = random() * Math.PI * 2;
-      const radius = 0.8 + random() * 5.1;
+      const radius = 0.75 + Math.pow(random(), 0.72) * 6.2;
       values[offset] = Math.cos(angle) * radius;
-      values[offset + 1] = 0.18 + random() * 3.6;
-      values[offset + 2] = Math.sin(angle) * radius;
+      values[offset + 1] = 0.15 + random() * 4.35;
+      values[offset + 2] = Math.sin(angle) * radius * (0.72 + random() * 0.4);
+      const color = palette[index % palette.length].clone().multiplyScalar(0.68 + random() * 0.32);
+      colors[offset] = color.r;
+      colors[offset + 1] = color.g;
+      colors[offset + 2] = color.b;
     }
-    return values;
+    return { positions: values, colors };
   }, []);
 
   const fragments = useMemo(() => {
@@ -63,9 +69,10 @@ export function SanctuaryParticles({ reducedMotion, skipIntro = false }: { reduc
     <group>
       <points ref={rootRef}>
         <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+          <bufferAttribute attach="attributes-position" args={[particleField.positions, 3]} />
+          <bufferAttribute attach="attributes-color" args={[particleField.colors, 3]} />
         </bufferGeometry>
-        <pointsMaterial ref={materialRef} color="#b69d6d" size={0.024} sizeAttenuation transparent opacity={skipIntro ? 0.34 : 0} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <pointsMaterial ref={materialRef} vertexColors size={0.026} sizeAttenuation transparent opacity={skipIntro ? 0.38 : 0} depthWrite={false} blending={THREE.AdditiveBlending} />
       </points>
       <group ref={fragmentRef} scale={initialFragmentScale}>
         {fragments.map((fragment, index) => (
