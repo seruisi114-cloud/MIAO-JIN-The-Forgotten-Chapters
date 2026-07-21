@@ -455,6 +455,11 @@ select {
   filter: none;
 }
 
+.sanctuary-scene--entering-chapter {
+  pointer-events: none;
+  animation: sanctuary-chapter-approach 2.8s both cubic-bezier(0.18, 0.72, 0.18, 1);
+}
+
 .sanctuary-scene canvas {
   display: block;
 }
@@ -1974,6 +1979,272 @@ select {
 
 .sacred-transition-overlay--returning .sacred-transition-dust i {
   animation: sacred-return-dust 2s var(--sacred-dust-delay) both ease-in-out;
+}
+
+.chapter-entry-transition {
+  position: fixed;
+  z-index: 45;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: auto;
+  color: rgba(239, 238, 231, 0.92);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+}
+
+.chapter-entry-dim,
+.chapter-entry-portal,
+.chapter-entry-orbit,
+.chapter-entry-rush {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.chapter-entry-dim {
+  z-index: -4;
+  background:
+    radial-gradient(circle at var(--entry-origin-x) var(--entry-origin-y), transparent 0 8%, rgba(6, 17, 38, 0.12) 25%, rgba(2, 7, 19, 0.66) 68%, rgba(1, 4, 12, 0.92)),
+    linear-gradient(180deg, rgba(3, 10, 25, 0.05), rgba(3, 10, 24, 0.72));
+  opacity: 0;
+  backdrop-filter: blur(0) brightness(1);
+  animation: chapter-entry-dim 4.6s both cubic-bezier(0.18, 0.7, 0.2, 1);
+}
+
+.chapter-entry-portal {
+  z-index: -1;
+  top: var(--entry-origin-y);
+  left: var(--entry-origin-x);
+  width: 1px;
+  height: 1px;
+  inset: auto;
+}
+
+.chapter-entry-portal i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: min(34vw, 30rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.04);
+  opacity: 0;
+}
+
+.chapter-entry-portal i:nth-child(1) {
+  background: radial-gradient(circle, rgba(236, 241, 242, 0.9), rgba(173, 203, 229, 0.28) 18%, rgba(31, 69, 119, 0.22) 42%, transparent 72%);
+  filter: blur(4px);
+  animation: chapter-entry-moon-bloom 3.2s 0.1s both cubic-bezier(0.16, 0.72, 0.18, 1);
+}
+
+.chapter-entry-portal i:nth-child(2) {
+  width: min(50vw, 46rem);
+  border: 1px solid rgba(213, 186, 126, 0.28);
+  box-shadow: 0 0 4rem rgba(190, 214, 239, 0.08), inset 0 0 5rem rgba(201, 171, 111, 0.04);
+  animation: chapter-entry-ring-pass 2.8s 0.22s both cubic-bezier(0.16, 0.68, 0.2, 1);
+}
+
+.chapter-entry-portal i:nth-child(3) {
+  width: min(66vw, 60rem);
+  border: 1px dashed rgba(203, 174, 113, 0.16);
+  animation: chapter-entry-ring-pass 3.05s 0.42s both cubic-bezier(0.16, 0.68, 0.2, 1);
+}
+
+.chapter-entry-orbit {
+  z-index: -2;
+  top: var(--entry-origin-y);
+  left: var(--entry-origin-x);
+  width: 1px;
+  height: 1px;
+  inset: auto;
+}
+
+.chapter-entry-orbit i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(28vw, 24rem);
+  aspect-ratio: 1;
+  border: 1px solid rgba(213, 182, 117, 0.36);
+  border-right-color: transparent;
+  border-bottom-color: rgba(213, 182, 117, 0.08);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(-34deg) scale(0.26, 0.13);
+  box-shadow: 0 0 1.8rem rgba(194, 166, 109, 0.08);
+  animation: chapter-entry-orbit-pass 2.55s 0.08s both cubic-bezier(0.18, 0.66, 0.22, 1);
+}
+
+.chapter-entry-orbit i:nth-child(2) {
+  width: min(39vw, 34rem);
+  transform: translate(-50%, -50%) rotate(24deg) scale(0.18, 0.1);
+  border-color: rgba(191, 213, 235, 0.17) transparent rgba(210, 181, 119, 0.18);
+  animation-delay: 0.22s;
+}
+
+.chapter-entry-orbit i:nth-child(3) {
+  width: min(48vw, 44rem);
+  border-style: dashed;
+  border-color: rgba(209, 178, 112, 0.14) transparent rgba(191, 214, 237, 0.12);
+  transform: translate(-50%, -50%) rotate(62deg) scale(0.14, 0.08);
+  animation-delay: 0.38s;
+}
+
+.chapter-entry-rush {
+  z-index: 1;
+  top: var(--entry-origin-y);
+  left: var(--entry-origin-x);
+  width: 1px;
+  height: 1px;
+  inset: auto;
+  mix-blend-mode: screen;
+}
+
+.chapter-entry-rush i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--entry-length);
+  height: var(--entry-size);
+  border-radius: 999px;
+  transform: rotate(var(--entry-angle)) translateX(0) scaleX(0.08);
+  transform-origin: left center;
+  background: linear-gradient(90deg, rgba(238, 241, 239, 0.9), rgba(218, 186, 119, 0.5) 28%, transparent);
+  box-shadow: 0 0 0.8rem rgba(189, 211, 235, 0.22);
+  opacity: 0;
+  animation: chapter-entry-star-rush 1.55s var(--entry-delay) both cubic-bezier(0.12, 0.64, 0.18, 1);
+}
+
+.chapter-entry-rush i:nth-child(4n) {
+  background: linear-gradient(90deg, rgba(174, 205, 235, 0.9), rgba(94, 136, 190, 0.34) 32%, transparent);
+}
+
+.chapter-entry-copy {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  width: min(86vw, 42rem);
+  transform: translate(-50%, -42%);
+  text-align: center;
+  text-shadow: 0 0 2.6rem rgba(190, 215, 239, 0.16);
+  opacity: 0;
+  animation: chapter-entry-copy 4.6s both cubic-bezier(0.18, 0.7, 0.22, 1);
+}
+
+.chapter-entry-copy p,
+.chapter-entry-copy h1,
+.chapter-entry-copy blockquote,
+.chapter-entry-copy small {
+  margin: 0;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.chapter-entry-copy p {
+  color: rgba(218, 200, 161, 0.64);
+  font-size: clamp(0.62rem, 0.82vw, 0.76rem);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+}
+
+.chapter-entry-copy > span {
+  display: block;
+  width: 7.5rem;
+  height: 1px;
+  margin: 1rem auto 1.35rem;
+  background: linear-gradient(90deg, transparent, rgba(209, 181, 120, 0.75), transparent);
+}
+
+.chapter-entry-copy h1 {
+  color: rgba(240, 239, 232, 0.94);
+  font-size: clamp(1.75rem, 3.6vw, 3.05rem);
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+}
+
+.chapter-entry-copy blockquote {
+  display: grid;
+  gap: 0.42rem;
+  margin-top: 1.45rem;
+  color: rgba(216, 221, 225, 0.58);
+  font-size: clamp(0.68rem, 0.92vw, 0.82rem);
+  letter-spacing: 0.23em;
+  line-height: 1.85;
+}
+
+.chapter-entry-copy blockquote span { display: block; }
+
+.chapter-entry-copy small {
+  display: block;
+  margin-top: 1.35rem;
+  color: rgba(207, 186, 144, 0.44);
+  font-size: 0.58rem;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  opacity: 0;
+  animation: chapter-entry-loading 0.8s 3.85s both ease-in-out;
+}
+
+.chapter-entry-transition--portal .chapter-entry-dim {
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(38, 65, 106, 0.38), transparent 32%),
+    radial-gradient(circle at 50% 52%, rgba(194, 214, 233, 0.08), transparent 18%),
+    linear-gradient(180deg, #050b1b, #071329 55%, #030714);
+}
+
+.chapter-entry-transition--portal .chapter-entry-copy small { opacity: 1; }
+
+@keyframes sanctuary-chapter-approach {
+  0% { filter: blur(0) brightness(1) saturate(1); }
+  52% { filter: blur(0.7px) brightness(1.12) saturate(1.08); }
+  100% { filter: blur(4px) brightness(0.48) saturate(0.78); }
+}
+
+@keyframes chapter-entry-dim {
+  0%, 18% { opacity: 0; backdrop-filter: blur(0) brightness(1); }
+  58% { opacity: 0.46; backdrop-filter: blur(0.8px) brightness(0.92); }
+  100% { opacity: 1; backdrop-filter: blur(4px) brightness(0.58); }
+}
+
+@keyframes chapter-entry-moon-bloom {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.04); }
+  30% { opacity: 0.68; }
+  72% { opacity: 0.92; }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(7.4); }
+}
+
+@keyframes chapter-entry-ring-pass {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.08) rotate(-22deg); }
+  28% { opacity: 0.52; }
+  74% { opacity: 0.34; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(4.8) rotate(28deg); }
+}
+
+@keyframes chapter-entry-orbit-pass {
+  0% { opacity: 0; filter: blur(0); }
+  20% { opacity: 0.64; }
+  70% { opacity: 0.4; }
+  100% { opacity: 0; transform: translate(-50%, -50%) rotate(190deg) scale(5.2, 2.8); filter: blur(1.5px); }
+}
+
+@keyframes chapter-entry-star-rush {
+  0% { opacity: 0; transform: rotate(var(--entry-angle)) translateX(0) scaleX(0.08); filter: blur(0); }
+  18% { opacity: 0.78; }
+  72% { opacity: 0.58; }
+  100% { opacity: 0; transform: rotate(var(--entry-angle)) translateX(var(--entry-distance)) scaleX(2.6); filter: blur(1.2px); }
+}
+
+@keyframes chapter-entry-copy {
+  0%, 54% { opacity: 0; transform: translate(-50%, -36%); filter: blur(9px); }
+  78% { opacity: 1; transform: translate(-50%, -42%); filter: blur(0); }
+  100% { opacity: 1; transform: translate(-50%, -42%); filter: blur(0); }
+}
+
+@keyframes chapter-entry-loading {
+  from { opacity: 0; transform: translateY(0.35rem); }
+  to { opacity: 0.72; transform: translateY(0); }
 }
 
 @keyframes statue-crack-appear {
@@ -4105,6 +4376,13 @@ select {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sanctuary-scene--entering-chapter,
+  .chapter-entry-dim,
+  .chapter-entry-portal i,
+  .chapter-entry-orbit i,
+  .chapter-entry-rush i,
+  .chapter-entry-copy,
+  .chapter-entry-copy small,
   .chapter-gate-dust i,
   .dream-dust i,
   .dream-nebula,
@@ -4126,6 +4404,36 @@ select {
   .chapter-player-orbit::after {
     animation: none;
   }
+
+  .chapter-entry-transition .chapter-entry-dim {
+    opacity: 1;
+    backdrop-filter: none;
+    background:
+      radial-gradient(ellipse at 50% 48%, rgba(39, 67, 108, 0.42), transparent 34%),
+      linear-gradient(180deg, #050b1b, #071329 58%, #030714);
+  }
+
+  .chapter-entry-transition .chapter-entry-portal i:nth-child(1) {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(5.4);
+  }
+
+  .chapter-entry-transition .chapter-entry-portal i:nth-child(2),
+  .chapter-entry-transition .chapter-entry-portal i:nth-child(3) {
+    opacity: 0.18;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
+
+  .chapter-entry-transition .chapter-entry-orbit i { display: none; }
+  .chapter-entry-transition .chapter-entry-rush i { display: none; }
+
+  .chapter-entry-transition .chapter-entry-copy {
+    opacity: 1;
+    transform: translate(-50%, -42%);
+    filter: none;
+  }
+
+  .chapter-entry-transition .chapter-entry-copy small { opacity: 0.72; }
 
   .sanctuary-scene--chapter-opening .sanctuary-chapter-light i:first-child,
   .sanctuary-scene--chapter-opening .sanctuary-chapter-light i:last-child,

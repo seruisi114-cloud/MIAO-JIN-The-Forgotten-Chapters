@@ -23,9 +23,7 @@ const SanctuaryScene = dynamic(() => import("@/components/sanctuary/SanctuarySce
 const MoonlitStarSeaWorld = dynamic(() => import("@/components/chapter/MoonlitStarSeaWorld").then((module) => module.MoonlitStarSeaWorld), {
   ssr: false,
 });
-const ChapterGate = dynamic(() => import("@/components/chapter/ChapterGate").then((module) => module.ChapterGate), {
-  ssr: false,
-});
+const ChapterEntryTransition = dynamic(() => import("@/components/transitions/ChapterEntryTransition").then((module) => module.ChapterEntryTransition), { ssr: false });
 const SacredTransitionOverlay = dynamic(
   () => import("@/components/transitions/SacredTransitionOverlay").then((module) => module.SacredTransitionOverlay),
   { ssr: false },
@@ -41,21 +39,21 @@ export function ForgottenKeyGate() {
   const [inputFocused, setInputFocused] = useState(false);
   const [keyLength, setKeyLength] = useState(0);
   const [activeStatueId, setActiveStatueId] = useState<number | null>(null);
-  const [transitionOrigin, setTransitionOrigin] = useState<TransitionOrigin>({ x: 25, y: 38 });
+  const [transitionOrigin, setTransitionOrigin] = useState<TransitionOrigin>({ x: 50, y: 69 });
   const [sanctuaryInstanceKey, setSanctuaryInstanceKey] = useState(0);
   const [creatorNoteOpen, setCreatorNoteOpen] = useState(false);
   const [universeReady, setUniverseReady] = useState(false);
-  const activationTimerRef = useRef<number | null>(null);
+  const chapterEntryLockedRef = useRef(false);
+  const transitionOriginCapturedRef = useRef(false);
   const returnTimerRef = useRef<number | null>(null);
   const chapterPreparationRef = useRef<Promise<void> | null>(null);
   const chapterSceneReadyRef = useRef<Promise<unknown> | null>(null);
   const awakened = phase !== "locked";
-  const sanctuaryMounted = phase === "sanctuaryTransition" || phase === "sanctuary" || phase === "returnToSanctuary";
+  const sanctuaryMounted = phase === "sanctuaryTransition" || phase === "sanctuary" || phase === "activatingStatue" || phase === "returnToSanctuary";
   const universeMounted = phase !== "locked" && phase !== "sanctuary" && phase !== "activatingStatue" && phase !== "chapterOpening" && phase !== "chapterWorld" && phase !== "returnToSanctuary";
 
   useEffect(
     () => () => {
-      if (activationTimerRef.current) window.clearTimeout(activationTimerRef.current);
       if (returnTimerRef.current) window.clearTimeout(returnTimerRef.current);
     },
     [],
@@ -67,29 +65,30 @@ export function ForgottenKeyGate() {
   }, [phase, playSanctuary]);
 
   const beginChapterActivation = useCallback((statueId: number) => {
-    if (statueId !== 1 || activationTimerRef.current) return;
-    chapterSceneReadyRef.current = Promise.all([
-      import("@/components/chapter/ChapterGate"),
-      import("@/components/chapter/MoonlitStarSeaWorld"),
-    ]);
+    if (statueId !== 1 || chapterEntryLockedRef.current) return;
+    chapterEntryLockedRef.current = true;
+    transitionOriginCapturedRef.current = false;
+    chapterSceneReadyRef.current = import("@/components/chapter/MoonlitStarSeaWorld");
     chapterPreparationRef.current = leaveSanctuaryForChapter(chapter01.id);
     setActiveStatueId(statueId);
     setCreatorNoteOpen(false);
     setPhase("activatingStatue");
-    activationTimerRef.current = window.setTimeout(() => {
-      activationTimerRef.current = null;
-      setActiveStatueId(null);
-      setPhase("chapterOpening");
-    }, 1050);
   }, [leaveSanctuaryForChapter]);
 
-  const enterChapterWorld = useCallback(async () => {
-    await chapterSceneReadyRef.current;
-    setPhase((current) => current === "chapterOpening" ? "chapterWorld" : current);
+  const captureTransitionOrigin = useCallback((origin: TransitionOrigin) => {
+    if (transitionOriginCapturedRef.current) return;
+    transitionOriginCapturedRef.current = true;
+    setTransitionOrigin(origin);
   }, []);
-  const cueChapterMusic = useCallback(async () => {
-    await chapterPreparationRef.current;
+
+  const reachChapterPortal = useCallback(() => {
+    setActiveStatueId(null);
+    setPhase((current) => current === "activatingStatue" ? "chapterOpening" : current);
+  }, []);
+  const enterChapterWorld = useCallback(async () => {
+    await Promise.all([chapterSceneReadyRef.current, chapterPreparationRef.current]);
     await playChapter(chapter01.id);
+    setPhase((current) => current === "chapterOpening" ? "chapterWorld" : current);
   }, [playChapter]);
   const openCreatorNote = useCallback(() => {
     if (phase === "sanctuary") setCreatorNoteOpen(true);
@@ -99,6 +98,8 @@ export function ForgottenKeyGate() {
     stopChapter(chapter01.id);
     chapterPreparationRef.current = null;
     chapterSceneReadyRef.current = null;
+    chapterEntryLockedRef.current = false;
+    transitionOriginCapturedRef.current = false;
     setActiveStatueId(null);
     setSanctuaryInstanceKey((key) => key + 1);
     setPhase("returnToSanctuary");
@@ -155,19 +156,24 @@ export function ForgottenKeyGate() {
           active
           settled={phase === "sanctuary" || phase === "returnToSanctuary"}
           restoring={sanctuaryInstanceKey > 0}
+          enteringChapter={phase === "activatingStatue"}
           activeStatueId={activeStatueId}
           onBeginChapterActivation={beginChapterActivation}
-          onActivationPosition={setTransitionOrigin}
+          onActivationPosition={captureTransitionOrigin}
           onOpenCreatorNote={openCreatorNote}
         />
       ) : null}
       <OpeningSequence phase={phase} onPhaseChange={setPhase} />
-      {phase === "chapterOpening" ? <ChapterGate onMusicCue={cueChapterMusic} onComplete={enterChapterWorld} /> : null}
+      {phase === "activatingStatue" || phase === "chapterOpening" ? (
+        <ChapterEntryTransition
+          stage={phase === "activatingStatue" ? "approaching" : "portal"}
+          origin={transitionOrigin}
+          onPortalReached={reachChapterPortal}
+          onComplete={enterChapterWorld}
+        />
+      ) : null}
       {phase === "chapterWorld" || phase === "returnToSanctuary" ? (
         <MoonlitStarSeaWorld returning={phase === "returnToSanctuary"} onReturn={beginReturnToSanctuary} />
-      ) : null}
-      {phase === "activatingStatue" || phase === "chapterOpening" ? (
-        <SacredTransitionOverlay phase={phase === "activatingStatue" ? "covering" : "releasing"} origin={transitionOrigin} />
       ) : null}
       {phase === "returnToSanctuary" ? <SacredTransitionOverlay phase="returning" origin={{ x: 50, y: 50 }} /> : null}
       {creatorNoteOpen && phase === "sanctuary" ? <CreatorNotePanel onClose={() => setCreatorNoteOpen(false)} /> : null}

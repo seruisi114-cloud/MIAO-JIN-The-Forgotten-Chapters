@@ -15,13 +15,14 @@ type SanctuarySceneProps = {
   active: boolean;
   settled: boolean;
   restoring: boolean;
+  enteringChapter: boolean;
   activeStatueId: number | null;
   onBeginChapterActivation: (statueId: number) => void;
   onActivationPosition: (origin: TransitionOrigin) => void;
   onOpenCreatorNote: () => void;
 };
 
-export function SanctuaryScene({ active, settled, restoring, activeStatueId, onBeginChapterActivation, onActivationPosition, onOpenCreatorNote }: SanctuarySceneProps) {
+export function SanctuaryScene({ active, settled, restoring, enteringChapter, activeStatueId, onBeginChapterActivation, onActivationPosition, onOpenCreatorNote }: SanctuarySceneProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [unavailableMessage, setUnavailableMessage] = useState("");
   const messageTimerRef = useRef<number | null>(null);
@@ -59,9 +60,10 @@ export function SanctuaryScene({ active, settled, restoring, activeStatueId, onB
   );
 
   return (
-    <section className={`sanctuary-scene${active ? " sanctuary-scene--active" : ""}${settled ? " sanctuary-scene--settled" : ""}${restoring ? " sanctuary-scene--restored" : ""}`} aria-label="星穹圣殿">
+    <section className={`sanctuary-scene${active ? " sanctuary-scene--active" : ""}${settled ? " sanctuary-scene--settled" : ""}${restoring ? " sanctuary-scene--restored" : ""}${enteringChapter ? " sanctuary-scene--entering-chapter" : ""}`} aria-label="星穹圣殿">
       <SanctuaryCanvas
         restoring={restoring}
+        enteringChapter={enteringChapter}
         activeIndex={activeIndex}
         activatingIndex={activeStatueId}
         onActiveChange={handleHoverChange}

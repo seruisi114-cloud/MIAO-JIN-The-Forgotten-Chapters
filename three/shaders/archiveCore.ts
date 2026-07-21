@@ -81,6 +81,10 @@ export const moonPlanetFragmentShader = /* glsl */ `
     surface *= 0.18 + terminator * 0.82;
     surface += vec3(0.48, 0.67, 0.88) * fresnel * (0.35 + uHover * 0.16 + uActivation * 0.38);
     surface += vec3(0.78, 0.69, 0.48) * uActivation * (0.08 + fresnel * 0.12);
+    float awakeningFlow = sin((vUv.y * 18.0 + vUv.x * 7.0) - uTime * 1.35) * 0.5 + 0.5;
+    float awakeningVein = smoothstep(0.56, 0.92, awakeningFlow + continents * 0.28);
+    surface += vec3(0.2, 0.36, 0.58) * uActivation * (0.2 + continents * 0.18);
+    surface += vec3(0.63, 0.76, 0.9) * uActivation * awakeningVein * 0.2;
 
     float alpha = 0.88 + fresnel * 0.1;
     gl_FragColor = vec4(surface, alpha);

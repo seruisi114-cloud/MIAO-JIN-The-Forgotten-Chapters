@@ -34,9 +34,9 @@ export function GoldenStarRibbon({ active, hovered }: GoldenStarRibbonProps) {
   const movingPositions = useMemo(() => new Float32Array(42 * 3), []);
 
   useFrame(({ clock }, delta) => {
-    const speed = active ? 0.13 : hovered ? 0.055 : 0.024;
+    const speed = active ? 0.23 : hovered ? 0.055 : 0.024;
     if (rootRef.current) {
-      rootRef.current.rotation.y += delta * (active ? 0.72 : hovered ? 0.18 : 0.055);
+      rootRef.current.rotation.y += delta * (active ? 1.34 : hovered ? 0.18 : 0.055);
       rootRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.12) * 0.055;
     }
     if (particleRef.current) {
@@ -53,8 +53,8 @@ export function GoldenStarRibbon({ active, hovered }: GoldenStarRibbonProps) {
       attribute.needsUpdate = true;
     }
     if (materialRef.current) {
-      materialRef.current.opacity = THREE.MathUtils.damp(materialRef.current.opacity, active ? 0.94 : hovered ? 0.66 : 0.38, 2.4, delta);
-      materialRef.current.size = THREE.MathUtils.damp(materialRef.current.size, active ? 0.055 : hovered ? 0.043 : 0.032, 2.4, delta);
+      materialRef.current.opacity = THREE.MathUtils.damp(materialRef.current.opacity, active ? 1 : hovered ? 0.66 : 0.38, 3.4, delta);
+      materialRef.current.size = THREE.MathUtils.damp(materialRef.current.size, active ? 0.068 : hovered ? 0.043 : 0.032, 3.4, delta);
     }
   });
 

@@ -14,6 +14,7 @@ import { SanctuaryPillars } from "./SanctuaryPillars";
 import { StarDome } from "./StarDome";
 import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
 import { chapter01 } from "@/config/chapters";
+import { ChapterEntryCameraRig } from "./ChapterEntryCameraRig";
 
 const chapterPositions: Array<[number, number, number]> = [
   [0, -1.25, 5.2],
@@ -23,6 +24,7 @@ const chapterPositions: Array<[number, number, number]> = [
 
 type SanctuaryCanvasProps = {
   restoring: boolean;
+  enteringChapter: boolean;
   activeIndex: number | null;
   activatingIndex: number | null;
   onActiveChange: (index: number | null) => void;
@@ -31,7 +33,7 @@ type SanctuaryCanvasProps = {
   onOpenCreatorNote: () => void;
 };
 
-function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
+function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
   const rootRef = useRef<THREE.Group>(null);
 
   useLayoutEffect(() => {
@@ -61,11 +63,12 @@ function SanctuaryWorld({ reducedMotion, restoring, activeIndex, activatingIndex
       <ChapterArchiveCore kind="frozen-nebula" labelPlacement="right" position={chapterPositions[2]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <CreatorArchiveCore chapterPositions={chapterPositions} activeIndex={activeIndex} skipIntro={restoring} onOpenCreatorNote={onOpenCreatorNote} />
       <SanctuaryParticles reducedMotion={reducedMotion} skipIntro={restoring} />
+      <ChapterEntryCameraRig active={enteringChapter} reducedMotion={reducedMotion} />
     </group>
   );
 }
 
-export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote }: SanctuaryCanvasProps) {
+export function SanctuaryCanvas({ restoring, enteringChapter, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote }: SanctuaryCanvasProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [compactLayout, setCompactLayout] = useState(false);
 
@@ -108,7 +111,7 @@ export function SanctuaryCanvas({ restoring, activeIndex, activatingIndex, onAct
     >
       <StarDome />
       <SanctuaryLighting />
-      <SanctuaryWorld reducedMotion={reducedMotion} restoring={restoring} activeIndex={activeIndex} activatingIndex={activatingIndex} onActiveChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} onOpenCreatorNote={onOpenCreatorNote} />
+      <SanctuaryWorld reducedMotion={reducedMotion} restoring={restoring} enteringChapter={enteringChapter} activeIndex={activeIndex} activatingIndex={activatingIndex} onActiveChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} onOpenCreatorNote={onOpenCreatorNote} />
     </Canvas>
   );
 }
