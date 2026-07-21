@@ -34,7 +34,7 @@ export function ChapterGate({ onMusicCue, onComplete }: ChapterGateProps) {
         style: {
           "--gate-x": `${Math.cos(angle) * radius}vw`,
           "--gate-y": `${Math.sin(angle) * radius}vh`,
-          "--gate-delay": `${random() * 1.25}s`,
+          "--gate-delay": `${random() * 0.48}s`,
           "--gate-size": `${0.6 + random() * 1.3}px`,
         } as GateDustStyle,
       };
@@ -43,8 +43,8 @@ export function ChapterGate({ onMusicCue, onComplete }: ChapterGateProps) {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const musicTimer = window.setTimeout(() => void onMusicCue(), reducedMotion ? 180 : 1600);
-    const completeTimer = window.setTimeout(onComplete, reducedMotion ? 850 : 3600);
+    const musicTimer = window.setTimeout(() => void onMusicCue(), reducedMotion ? 120 : 620);
+    const completeTimer = window.setTimeout(onComplete, reducedMotion ? 700 : 1450);
     return () => {
       window.clearTimeout(musicTimer);
       window.clearTimeout(completeTimer);
@@ -62,7 +62,7 @@ export function ChapterGate({ onMusicCue, onComplete }: ChapterGateProps) {
         <p>{chapter01.chapterLabel}</p>
         <span />
         <h1>《{chapter01.title}》</h1>
-        <small>正在开启</small>
+        <small>正在开启《{chapter01.title}》……</small>
       </div>
     </section>
   );

@@ -48,6 +48,7 @@ export function ForgottenKeyGate() {
   const activationTimerRef = useRef<number | null>(null);
   const returnTimerRef = useRef<number | null>(null);
   const chapterPreparationRef = useRef<Promise<void> | null>(null);
+  const chapterSceneReadyRef = useRef<Promise<unknown> | null>(null);
   const awakened = phase !== "locked";
   const sanctuaryMounted = phase === "sanctuaryTransition" || phase === "sanctuary" || phase === "returnToSanctuary";
   const universeMounted = phase !== "locked" && phase !== "sanctuary" && phase !== "activatingStatue" && phase !== "chapterOpening" && phase !== "chapterWorld" && phase !== "returnToSanctuary";
@@ -67,8 +68,10 @@ export function ForgottenKeyGate() {
 
   const beginChapterActivation = useCallback((statueId: number) => {
     if (statueId !== 1 || activationTimerRef.current) return;
-    void import("@/components/chapter/ChapterGate");
-    void import("@/components/chapter/MoonlitStarSeaWorld");
+    chapterSceneReadyRef.current = Promise.all([
+      import("@/components/chapter/ChapterGate"),
+      import("@/components/chapter/MoonlitStarSeaWorld"),
+    ]);
     chapterPreparationRef.current = leaveSanctuaryForChapter(chapter01.id);
     setActiveStatueId(statueId);
     setCreatorNoteOpen(false);
@@ -80,7 +83,10 @@ export function ForgottenKeyGate() {
     }, 1050);
   }, [leaveSanctuaryForChapter]);
 
-  const enterChapterWorld = useCallback(() => setPhase("chapterWorld"), []);
+  const enterChapterWorld = useCallback(async () => {
+    await chapterSceneReadyRef.current;
+    setPhase((current) => current === "chapterOpening" ? "chapterWorld" : current);
+  }, []);
   const cueChapterMusic = useCallback(async () => {
     await chapterPreparationRef.current;
     await playChapter(chapter01.id);
@@ -92,6 +98,7 @@ export function ForgottenKeyGate() {
     if (returnTimerRef.current) return;
     stopChapter(chapter01.id);
     chapterPreparationRef.current = null;
+    chapterSceneReadyRef.current = null;
     setActiveStatueId(null);
     setSanctuaryInstanceKey((key) => key + 1);
     setPhase("returnToSanctuary");

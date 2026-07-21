@@ -16,7 +16,7 @@ import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverl
 import { chapter01 } from "@/config/chapters";
 
 const chapterPositions: Array<[number, number, number]> = [
-  [0, -1.25, 3.4],
+  [0, -1.25, 5.2],
   [-5.2, 0.28, 0.55],
   [5.2, 0.28, 0.55],
 ];
