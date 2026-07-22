@@ -47,6 +47,13 @@ export const moonlitSceneFragmentShader = /* glsl */ `
     return value;
   }
 
+  float moonCrater(vec2 p, vec2 center, float radius) {
+    float distanceFromCenter = length(p - center) / radius;
+    float bowl = 1.0 - smoothstep(0.0, 0.82, distanceFromCenter);
+    float rim = smoothstep(0.7, 0.9, distanceFromCenter) * (1.0 - smoothstep(0.9, 1.08, distanceFromCenter));
+    return rim * 0.7 - bowl * 0.34;
+  }
+
   float starLayer(vec2 uv, float scale, float threshold, float radius) {
     vec2 cell = uv * scale;
     vec2 id = floor(cell);
@@ -88,11 +95,11 @@ export const moonlitSceneFragmentShader = /* glsl */ `
     night += skyMask * midStars * vec3(0.55, 0.67, 0.86) * 0.7;
     night += skyMask * brightStars * mix(vec3(0.69, 0.8, 1.0), vec3(0.82, 0.68, 0.39), hash21(floor(uv * 38.0))) * 0.72;
 
-    float moonDrift = sin(uTime * 0.065) * 0.006;
-    vec2 moonPosition = vec2(0.72 + moonDrift, 0.77);
+    float moonDrift = sin(uTime * 0.052) * 0.004;
+    vec2 moonPosition = vec2(0.72 + moonDrift, 0.765);
     vec2 moonUv = uv - moonPosition;
     moonUv.x *= uAspect;
-    float moonRadius = 0.069;
+    float moonRadius = 0.078;
     float moonDistance = length(moonUv);
     float moonDisk = smoothstep(moonRadius + 0.0015, moonRadius - 0.0015, moonDistance);
     vec2 moonSurfaceUv = moonUv / moonRadius;
@@ -100,15 +107,23 @@ export const moonlitSceneFragmentShader = /* glsl */ `
     vec3 moonNormal = normalize(vec3(moonSurfaceUv, moonZ));
     float moonLight = smoothstep(-0.2, 0.82, dot(moonNormal, normalize(vec3(-0.42, 0.55, 0.9))));
     float moonTexture = fbm(moonSurfaceUv * 4.7 + vec2(1.2, 4.8));
-    float moonCraters = fbm(moonSurfaceUv * 10.0 - vec2(7.1, 2.6));
+    float moonFineTexture = fbm(moonSurfaceUv * 15.0 - vec2(2.8, 7.4));
+    float moonCraters =
+      moonCrater(moonSurfaceUv, vec2(-0.34, 0.26), 0.22) +
+      moonCrater(moonSurfaceUv, vec2(0.28, -0.14), 0.17) +
+      moonCrater(moonSurfaceUv, vec2(0.05, 0.38), 0.11) +
+      moonCrater(moonSurfaceUv, vec2(-0.12, -0.48), 0.14) +
+      moonCrater(moonSurfaceUv, vec2(0.48, 0.28), 0.09);
     vec3 moonColor = mix(vec3(0.42, 0.53, 0.7), vec3(0.9, 0.94, 0.98), moonLight);
-    moonColor *= 0.76 + moonTexture * 0.22 - moonCraters * 0.11;
+    moonColor *= 0.72 + moonTexture * 0.24 + moonFineTexture * 0.075 + moonCraters * 0.11;
+    moonColor += vec3(0.08, 0.13, 0.22) * pow(1.0 - moonZ, 2.2);
     float moonBreath = 0.95 + (0.045 + uPlaying * 0.025) * sin(uTime * 0.62);
     night = mix(night, moonColor * moonBreath, moonDisk);
 
-    float moonHalo = exp(-moonDistance * 26.0) * (1.0 - moonDisk);
-    float wideHalo = exp(-moonDistance * 8.2) * 0.13;
-    night += vec3(0.48, 0.65, 0.92) * (moonHalo * 0.5 + wideHalo) * moonBreath;
+    float moonHalo = exp(-moonDistance * 24.0) * (1.0 - moonDisk);
+    float wideHalo = exp(-moonDistance * 7.1) * 0.14;
+    float lunarRim = smoothstep(moonRadius + 0.008, moonRadius, moonDistance) * (1.0 - moonDisk);
+    night += vec3(0.48, 0.65, 0.92) * (moonHalo * 0.54 + wideHalo + lunarRim * 0.3) * moonBreath;
 
     float downward = smoothstep(moonPosition.y, horizon - 0.08, uv.y);
     float beamProgress = clamp((moonPosition.y - uv.y) / (moonPosition.y - horizon), 0.0, 1.0);
@@ -130,17 +145,23 @@ export const moonlitSceneFragmentShader = /* glsl */ `
 
     float waterMask = 1.0 - smoothstep(horizon - 0.006, horizon + 0.006, uv.y);
     float waterDepth = clamp((horizon - uv.y) / horizon, 0.0, 1.0);
-    float wave = sin(uv.y * 430.0 + valueNoise(vec2(uv.y * 34.0, time * 0.18)) * 5.0 + time * 0.48);
+    float wave = sin(uv.y * 430.0 + valueNoise(vec2(uv.y * 34.0, time * 0.18)) * 5.0 + time * mix(0.4, 0.54, uPlaying));
     float longWave = sin(uv.x * 19.0 + uv.y * 72.0 - time * 0.22);
+    float crossWave = sin(uv.x * 34.0 - uv.y * 96.0 + time * 0.17);
     vec3 water = mix(vec3(0.004, 0.012, 0.032), vec3(0.014, 0.045, 0.09), (1.0 - waterDepth) * 0.72);
     water += vec3(0.035, 0.075, 0.13) * (wave * 0.5 + 0.5) * (0.025 + uPlaying * 0.018);
     water += vec3(0.08, 0.09, 0.12) * (longWave * 0.5 + 0.5) * 0.018;
+    water += vec3(0.09, 0.13, 0.2) * (crossWave * 0.5 + 0.5) * mix(0.008, 0.014, uPlaying);
 
     float reflectionWidth = mix(0.022, 0.16, waterDepth);
     float reflection = exp(-pow(abs(uv.x - moonPosition.x) / reflectionWidth, 2.0) * 2.1);
-    reflection *= (0.42 + 0.58 * smoothstep(0.12, 0.95, sin(uv.y * 610.0 + time * 0.8) * 0.5 + 0.5));
+    reflection *= (0.42 + 0.58 * smoothstep(0.12, 0.95, sin(uv.y * 610.0 + time * mix(0.72, 0.94, uPlaying)) * 0.5 + 0.5));
     reflection *= (1.0 - waterDepth * 0.62);
     water += vec3(0.47, 0.61, 0.82) * reflection * mix(0.21, 0.3, uPlaying);
+
+    float goldReflection = exp(-pow(abs(uv.x - moonPosition.x) / (reflectionWidth * 1.65), 2.0) * 2.8);
+    goldReflection *= smoothstep(0.74, 0.98, sin(uv.y * 380.0 - time * 0.36 + uv.x * 24.0) * 0.5 + 0.5);
+    water += vec3(0.55, 0.4, 0.18) * goldReflection * (0.018 + uPlaying * 0.018) * (1.0 - waterDepth * 0.72);
 
     float reflectedStars = starLayer(vec2(uv.x + wave * 0.0007, 1.0 - uv.y * 0.72), 62.0, 0.982, 0.17);
     water += reflectedStars * mix(vec3(0.17, 0.24, 0.35), vec3(0.48, 0.36, 0.18), hash21(floor(uv * 62.0))) * 0.34;

@@ -4,6 +4,7 @@ import { CSSProperties, useEffect, useMemo, useRef } from "react";
 import { DreamLake } from "./DreamLake";
 import { GoldenMelodyTrails } from "./GoldenMelodyTrails";
 import { MoonFireflies } from "./MoonFireflies";
+import { MoonlitDepthLayers } from "./MoonlitDepthLayers";
 import { MoonlightPath } from "./MoonlightPath";
 
 type MoonlitAtmosphereProps = {
@@ -82,6 +83,7 @@ export function MoonlitAtmosphere({ playing }: MoonlitAtmosphereProps) {
         <i className="moonlit-distant-body moonlit-distant-body--three" />
       </div>
 
+      <MoonlitDepthLayers playing={playing} />
       <MoonlightPath />
       <DreamLake />
       <GoldenMelodyTrails playing={playing} />

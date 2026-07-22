@@ -74,7 +74,7 @@ export function MoonlitStarSeaWorld({ returning, onReturn }: MoonlitStarSeaWorld
         <div className="dream-author">
           <strong>金淼</strong>
           <i aria-hidden="true" />
-          <small>来自东方创作者的月光诗篇</small>
+          <small>一段来自东方的梦境旋律。</small>
         </div>
         <blockquote>{chapter01.poem[0]}<br />{chapter01.poem[1]}</blockquote>
       </header>

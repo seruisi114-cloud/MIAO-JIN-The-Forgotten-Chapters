@@ -38,9 +38,9 @@ export function MoonFireflies({ playing }: MoonFirefliesProps) {
   const fieldRef = useRef<HTMLDivElement>(null);
   const fireflies = useMemo<Firefly[]>(() => {
     const random = seededRandom(7192026);
-    return Array.from({ length: 20 }, (_, id) => {
-      const x = 31 + random() * 39;
-      const y = 43 + random() * 30;
+    return Array.from({ length: 30 }, (_, id) => {
+      const x = 27 + random() * 48;
+      const y = 40 + random() * 34;
       const tone = id % 6 === 0 ? "blue" : id % 3 === 0 ? "gold" : "moon";
       return {
         id,
@@ -50,7 +50,7 @@ export function MoonFireflies({ playing }: MoonFirefliesProps) {
         style: {
           "--firefly-x": `${x}%`,
           "--firefly-y": `${y}%`,
-          "--firefly-size": `${2.4 + random() * 4.2}px`,
+          "--firefly-size": `${2.8 + random() * 4.8}px`,
           "--firefly-delay": `${-random() * 12}s`,
           "--firefly-duration": `${8 + random() * 7}s`,
           "--firefly-drift-x": `${-10 + random() * 20}px`,
@@ -86,7 +86,7 @@ export function MoonFireflies({ playing }: MoonFirefliesProps) {
     return () => window.removeEventListener("pointermove", move);
   }, [fireflies]);
 
-  const connectionPairs = [[0, 4], [2, 7], [4, 9], [6, 12], [9, 14], [12, 17], [15, 19]];
+  const connectionPairs = [[0, 4], [2, 7], [4, 9], [6, 12], [9, 14], [12, 17], [15, 19], [18, 23], [21, 27], [24, 29]];
 
   return (
     <div ref={fieldRef} className={`moon-fireflies${playing ? " is-playing" : ""}`} aria-hidden="true">

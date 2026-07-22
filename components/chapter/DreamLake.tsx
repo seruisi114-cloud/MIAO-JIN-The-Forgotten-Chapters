@@ -29,6 +29,9 @@ const lakeSparkles = Array.from({ length: 22 }, (_, id) => ({
 export function DreamLake() {
   return (
     <>
+      <div className="moonlit-lake-surface" aria-hidden="true">
+        <i /><i /><i />
+      </div>
       <div className="moonlit-lake-ripples" aria-hidden="true">
         <i /><i /><i /><i /><i />
       </div>
