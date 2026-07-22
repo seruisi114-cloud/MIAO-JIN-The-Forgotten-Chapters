@@ -2,8 +2,10 @@
 
 import { CSSProperties, useCallback, useMemo, useRef, useState } from "react";
 import { chapter01 } from "@/config/chapters";
+import { ChapterInfoLayer } from "./ChapterInfoLayer";
 import { ChapterAudioPlayer, ChapterAudioPlayerHandle } from "./ChapterAudioPlayer";
 import { MoonlitAtmosphere } from "./MoonlitAtmosphere";
+import { MoonlitExploration } from "./MoonlitExploration";
 import { MoonlitSceneCanvas } from "./MoonlitSceneCanvas";
 import { ReturnToSanctuary } from "./ReturnToSanctuary";
 
@@ -67,17 +69,8 @@ export function MoonlitStarSeaWorld({ returning, onReturn }: MoonlitStarSeaWorld
       </div>
       <div className="dream-horizon" aria-hidden="true"><i /><i /><i /><b /><b /></div>
       <div className="dream-mist" aria-hidden="true"><i /><i /></div>
-      <header className="dream-copy">
-        <p>{chapter01.chapterLabel}</p>
-        <span />
-        <h1>《{chapter01.title}》</h1>
-        <div className="dream-author">
-          <strong>金淼</strong>
-          <i aria-hidden="true" />
-          <small>一段来自东方的梦境旋律。</small>
-        </div>
-        <blockquote>{chapter01.poem[0]}<br />{chapter01.poem[1]}</blockquote>
-      </header>
+      <ChapterInfoLayer playing={playing} />
+      <MoonlitExploration />
       <div className="dream-controls">
         <ChapterAudioPlayer ref={playerRef} chapterId={chapter01.id} title={chapter01.title} onPlaybackChange={handlePlaybackChange} />
         <ReturnToSanctuary onReturn={beginReturn} disabled={returning} />

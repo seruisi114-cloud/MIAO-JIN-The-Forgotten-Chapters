@@ -3959,6 +3959,21 @@ select {
   animation: dream-copy-arrive 2.6s 0.8s backwards ease-out;
 }
 
+.chapter-info-layer {
+  pointer-events: none;
+  transition: opacity 2.6s ease, transform 2.6s ease, filter 2.6s ease;
+}
+
+.chapter-info-layer.is-muted {
+  opacity: 0.14;
+  transform: translateY(-0.3rem);
+  filter: blur(0.2px);
+}
+
+.chapter-info-layer.is-visible.is-playing {
+  opacity: 0.42;
+}
+
 .dream-copy p,
 .dream-copy h1,
 .dream-copy blockquote {
@@ -4029,6 +4044,227 @@ select {
   font-size: clamp(0.75rem, 1.05vw, 0.92rem);
   letter-spacing: 0.24em;
   line-height: 2.2;
+}
+
+.chapter-info-credits {
+  display: grid;
+  gap: 0.52rem;
+  width: min(100%, 18rem);
+  margin: 1.35rem 0 0;
+  color: rgba(224, 219, 205, 0.6);
+}
+
+.chapter-info-credits div {
+  display: grid;
+  grid-template-columns: 3.8rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.chapter-info-credits dt,
+.chapter-info-credits dd {
+  margin: 0;
+  font-weight: 400;
+}
+
+.chapter-info-credits dt {
+  color: rgba(198, 172, 116, 0.45);
+  font-size: 0.57rem;
+  letter-spacing: 0.3em;
+}
+
+.chapter-info-credits dd {
+  position: relative;
+  padding-left: 1.1rem;
+  color: rgba(228, 226, 218, 0.64);
+  font-size: clamp(0.67rem, 0.9vw, 0.79rem);
+  letter-spacing: 0.2em;
+}
+
+.chapter-info-credits dd::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0.7rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(205, 176, 116, 0.48), transparent);
+}
+
+.chapter-info-recall {
+  position: absolute;
+  z-index: 6;
+  top: 18%;
+  left: clamp(2.2%, 4vw, 5%);
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  width: 2.2rem;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: rgba(204, 181, 132, 0.34);
+  cursor: pointer;
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  transition: color 0.8s ease, opacity 0.8s ease;
+}
+
+.chapter-info-recall i {
+  width: 1px;
+  height: 3.8rem;
+  background: linear-gradient(180deg, transparent, rgba(211, 185, 130, 0.58), transparent);
+  box-shadow: 0 0 0.8rem rgba(195, 166, 105, 0.1);
+  transition: height 1s ease, filter 1s ease;
+}
+
+.chapter-info-recall span {
+  writing-mode: vertical-rl;
+  font-size: 0.52rem;
+  letter-spacing: 0.28em;
+}
+
+.chapter-info-recall:hover,
+.chapter-info-recall:focus-visible {
+  color: rgba(224, 205, 164, 0.72);
+  outline: none;
+}
+
+.chapter-info-recall:hover i,
+.chapter-info-recall:focus-visible i {
+  height: 4.6rem;
+  filter: brightness(1.35) drop-shadow(0 0 0.45rem rgba(205, 175, 113, 0.28));
+}
+
+.chapter-info-recall.is-open {
+  opacity: 0.48;
+}
+
+.moonlit-exploration {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+.moonlit-discovery {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.moonlit-discovery::before,
+.moonlit-discovery::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px solid rgba(220, 228, 237, 0.11);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.76);
+  opacity: 0;
+  transition: opacity 1s ease, transform 1.2s ease, border-color 1s ease;
+}
+
+.moonlit-discovery::before { width: 2.6rem; height: 2.6rem; }
+.moonlit-discovery::after { width: 3.9rem; height: 3.9rem; border-color: rgba(203, 176, 119, 0.08); }
+
+.moonlit-discovery i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(231, 234, 233, 0.46);
+  box-shadow: 0 0 0.8rem rgba(206, 220, 237, 0.34), 0 0 2rem rgba(120, 157, 211, 0.12);
+  opacity: 0.58;
+  animation: moonlit-discovery-breathe 4.8s ease-in-out infinite alternate;
+}
+
+.moonlit-discovery:hover::before,
+.moonlit-discovery:hover::after,
+.moonlit-discovery:focus-visible::before,
+.moonlit-discovery:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.moonlit-discovery:hover i,
+.moonlit-discovery:focus-visible i {
+  opacity: 1;
+  filter: brightness(1.25);
+}
+
+.moonlit-discovery:focus-visible { outline: none; }
+
+.moonlit-discovery--moon {
+  top: 11%;
+  left: calc(var(--moon-axis) - 7%);
+  width: 14%;
+  height: 25%;
+}
+
+.moonlit-discovery--water {
+  right: 8%;
+  bottom: 16%;
+  width: 28%;
+  height: 28%;
+}
+
+.moonlit-discovery--melody {
+  top: 43%;
+  left: 37%;
+  width: 21%;
+  height: 25%;
+}
+
+.moonlit-discovery--melody i {
+  background: rgba(221, 195, 139, 0.6);
+  box-shadow: 0 0 0.8rem rgba(211, 179, 115, 0.32), 0 0 2rem rgba(196, 158, 90, 0.12);
+}
+
+.moonlit-discovery-verse {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  display: grid;
+  grid-template-columns: minmax(2rem, 5rem) auto minmax(2rem, 5rem);
+  align-items: center;
+  gap: 1.1rem;
+  width: min(74vw, 42rem);
+  transform: translate(-50%, 0.5rem);
+  opacity: 0;
+  color: rgba(232, 231, 224, 0.78);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  pointer-events: none;
+  text-align: center;
+  transition: opacity 0.9s ease, transform 1.2s ease, filter 1.2s ease;
+  filter: blur(4px);
+}
+
+.moonlit-discovery-verse.is-visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  filter: blur(0);
+}
+
+.moonlit-discovery-verse i {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(204, 176, 117, 0.48));
+}
+
+.moonlit-discovery-verse i:last-child {
+  transform: scaleX(-1);
+}
+
+.moonlit-discovery-verse p {
+  margin: 0;
+  font-size: clamp(0.7rem, 1vw, 0.86rem);
+  letter-spacing: 0.22em;
+  line-height: 1.9;
+  text-shadow: 0 0 1.5rem rgba(186, 205, 230, 0.18);
 }
 
 .dream-controls {
@@ -4497,14 +4733,17 @@ select {
   to { filter: blur(0.15px) brightness(1.12); }
 }
 
+@keyframes moonlit-discovery-breathe {
+  from { transform: scale(0.8); opacity: 0.34; }
+  to { transform: scale(1.16); opacity: 0.78; }
+}
+
 @keyframes dream-copy-arrive {
   from { opacity: 0; transform: translateY(0.8rem); filter: blur(6px); }
   to { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
-.moonlit-star-sea-world.is-playing .dream-copy {
-  opacity: 0.36;
-}
+.moonlit-star-sea-world.is-playing .chapter-info-layer.is-muted { opacity: 0.1; }
 
 .moonlit-star-sea-world.is-playing .dream-moon {
   animation-duration: 4.2s;
@@ -4598,6 +4837,7 @@ select {
   .moon-firefly span,
   .moonlit-horizon-lights i,
   .moonlit-parallax-mist i,
+  .moonlit-discovery i,
   .creator-note-panel,
   .creator-note-space i,
   .chapter-player-orbit i,

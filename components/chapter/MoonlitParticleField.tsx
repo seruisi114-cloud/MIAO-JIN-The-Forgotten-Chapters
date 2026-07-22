@@ -13,7 +13,7 @@ type MoonlitParticleFieldProps = {
 
 type ParticleCloudProps = MoonlitParticleFieldProps & {
   count: number;
-  kind: "dust" | "fireflies";
+  kind: "dust" | "fireflies" | "rising";
   seed: number;
 };
 
@@ -38,13 +38,14 @@ function ParticleCloud({ count, kind, seed, playing, reducedMotion, mobile }: Pa
     for (let index = 0; index < count; index += 1) {
       const offset = index * 3;
       const firefly = kind === "fireflies";
-      positions[offset] = firefly ? -0.25 + random() * 0.68 : -1 + random() * 2;
-      positions[offset + 1] = firefly ? -0.2 + random() * 0.58 : -1 + random() * 2;
+      const rising = kind === "rising";
+      positions[offset] = firefly ? -0.25 + random() * 0.68 : rising ? -0.72 + random() * 1.44 : -1 + random() * 2;
+      positions[offset + 1] = firefly ? -0.2 + random() * 0.58 : rising ? -0.88 + random() * 0.38 : -1 + random() * 2;
       positions[offset + 2] = 0;
-      sizes[index] = firefly ? 7 + random() * 11 : 1.4 + random() * (mobile ? 4.2 : 5.8);
+      sizes[index] = firefly ? 7 + random() * 11 : rising ? 2.2 + random() * 5 : 1.4 + random() * (mobile ? 4.2 : 5.8);
       seeds[index] = random();
-      tones[index] = random();
-      trails[index] = firefly ? random() * 0.18 : (random() > 0.82 ? 0.55 + random() * 0.42 : random() * 0.14);
+      tones[index] = rising ? 0.18 + random() * 0.28 : random();
+      trails[index] = firefly ? random() * 0.18 : rising ? 0.38 + random() * 0.42 : (random() > 0.82 ? 0.55 + random() * 0.42 : random() * 0.14);
     }
 
     const result = new THREE.BufferGeometry();
@@ -60,7 +61,7 @@ function ParticleCloud({ count, kind, seed, playing, reducedMotion, mobile }: Pa
     uTime: { value: 0 },
     uPlaying: { value: 0 },
     uPixelRatio: { value: 1 },
-    uKind: { value: kind === "fireflies" ? 1 : 0 },
+    uKind: { value: kind === "fireflies" ? 1 : kind === "rising" ? 2 : 0 },
     uPointer: { value: new THREE.Vector2() },
   }), [kind]);
 
@@ -96,6 +97,7 @@ export function MoonlitParticleField({ playing, reducedMotion, mobile }: Moonlit
     <>
       <ParticleCloud count={mobile ? 76 : 132} kind="dust" seed={71901} playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
       <ParticleCloud count={mobile ? 22 : 32} kind="fireflies" seed={190726} playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
+      <ParticleCloud count={mobile ? 18 : 34} kind="rising" seed={260722} playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
     </>
   );
 }

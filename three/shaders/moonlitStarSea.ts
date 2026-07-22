@@ -15,6 +15,7 @@ export const moonlitSceneFragmentShader = /* glsl */ `
   uniform float uPlaying;
   uniform float uAspect;
   uniform vec2 uPointer;
+  uniform vec2 uCameraFloat;
 
   const float PI = 3.14159265359;
 
@@ -67,7 +68,7 @@ export const moonlitSceneFragmentShader = /* glsl */ `
   }
 
   void main() {
-    vec2 uv = vUv;
+    vec2 uv = vUv + uCameraFloat;
     vec2 pointer = uPointer * vec2(0.006, 0.004);
     float time = uTime * mix(0.2, 0.28, uPlaying);
     float horizon = 0.455;
@@ -117,7 +118,8 @@ export const moonlitSceneFragmentShader = /* glsl */ `
     vec3 moonColor = mix(vec3(0.42, 0.53, 0.7), vec3(0.9, 0.94, 0.98), moonLight);
     moonColor *= 0.72 + moonTexture * 0.24 + moonFineTexture * 0.075 + moonCraters * 0.11;
     moonColor += vec3(0.08, 0.13, 0.22) * pow(1.0 - moonZ, 2.2);
-    float moonBreath = 0.95 + (0.045 + uPlaying * 0.025) * sin(uTime * 0.62);
+    float musicalBreath = 0.5 + 0.5 * sin(uTime * mix(0.48, 0.74, uPlaying));
+    float moonBreath = 0.95 + (0.045 + uPlaying * 0.045) * sin(uTime * 0.62) + musicalBreath * uPlaying * 0.018;
     night = mix(night, moonColor * moonBreath, moonDisk);
 
     float moonHalo = exp(-moonDistance * 24.0) * (1.0 - moonDisk);
@@ -209,13 +211,21 @@ export const moonlitParticleVertexShader = /* glsl */ `
       float pointerDistance = max(length(point - uPointer), 0.12);
       point += (point - uPointer) * (0.0018 / pointerDistance);
       vAlpha = 0.28 + aSeed * 0.38;
-    } else {
+    } else if (uKind < 1.5) {
       float orbit = uTime * (0.055 + aSeed * 0.035) * pace + aSeed * 19.0;
       point.x += sin(orbit) * (0.025 + aSeed * 0.04);
       point.y += cos(orbit * 0.78) * (0.018 + aSeed * 0.035);
       float pointerDistance = length(point - uPointer);
       point += normalize(point - uPointer + vec2(0.0001)) * smoothstep(0.35, 0.0, pointerDistance) * 0.04;
       vAlpha = mix(0.58, 0.9, uPlaying) * (0.76 + aSeed * 0.24);
+    } else {
+      float rise = mod(aSeed * 1.2 + uTime * (0.018 + aSeed * 0.016) * mix(0.18, 1.0, uPlaying), 1.28);
+      point.y += rise;
+      point.x += sin(uTime * (0.18 + aSeed * 0.12) + aSeed * 31.0) * (0.012 + aSeed * 0.018);
+      float life = smoothstep(0.0, 0.14, rise) * (1.0 - smoothstep(0.78, 1.24, rise));
+      float pointerDistance = max(length(point - uPointer), 0.14);
+      point += (point - uPointer) * (0.0012 / pointerDistance);
+      vAlpha = life * mix(0.035, 0.66, uPlaying) * (0.6 + aSeed * 0.4);
     }
 
     gl_Position = vec4(point, position.z, 1.0);
