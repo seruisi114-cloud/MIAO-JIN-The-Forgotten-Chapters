@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
 import { FlowingGoldenStreams } from "./FlowingGoldenStreams";
 import { ForegroundVeil } from "./ForegroundVeil";
@@ -8,7 +8,6 @@ import { GoldenDustField } from "./GoldenDustField";
 import { GoldenOrnaments } from "./GoldenOrnaments";
 import { SacredMist } from "./SacredMist";
 import { SanctuaryCanvas } from "./SanctuaryCanvas";
-import { CreatorArchiveOverlay } from "./CreatorArchiveOverlay";
 import { ArchiveRunesLayer } from "./ArchiveRunesLayer";
 
 type SanctuarySceneProps = {
@@ -19,21 +18,13 @@ type SanctuarySceneProps = {
   activeStatueId: number | null;
   onBeginChapterActivation: (statueId: number) => void;
   onActivationPosition: (origin: TransitionOrigin) => void;
-  onOpenCreatorNote: () => void;
+  onOpenCreatorArchive: () => void;
+  onOpenMusicAnalysis: () => void;
 };
 
-export function SanctuaryScene({ active, settled, restoring, enteringChapter, activeStatueId, onBeginChapterActivation, onActivationPosition, onOpenCreatorNote }: SanctuarySceneProps) {
+export function SanctuaryScene({ active, settled, restoring, enteringChapter, activeStatueId, onBeginChapterActivation, onActivationPosition, onOpenCreatorArchive, onOpenMusicAnalysis }: SanctuarySceneProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [unavailableMessage, setUnavailableMessage] = useState("");
-  const messageTimerRef = useRef<number | null>(null);
   const activeIndex = activeStatueId ?? hoveredIndex;
-
-  useEffect(
-    () => () => {
-      if (messageTimerRef.current) window.clearTimeout(messageTimerRef.current);
-    },
-    [],
-  );
 
   const handleHoverChange = useCallback(
     (index: number | null) => {
@@ -46,15 +37,9 @@ export function SanctuaryScene({ active, settled, restoring, enteringChapter, ac
   const handleActivate = useCallback(
     (index: number) => {
       if (activeStatueId !== null) return;
-      if (index === 1) {
-        setHoveredIndex(1);
-        onBeginChapterActivation(1);
-        return;
-      }
-
-      setUnavailableMessage("此篇章尚未苏醒。");
-      if (messageTimerRef.current) window.clearTimeout(messageTimerRef.current);
-      messageTimerRef.current = window.setTimeout(() => setUnavailableMessage(""), 2000);
+      if (index !== 1) return;
+      setHoveredIndex(1);
+      onBeginChapterActivation(1);
     },
     [activeStatueId, onBeginChapterActivation],
   );
@@ -64,21 +49,19 @@ export function SanctuaryScene({ active, settled, restoring, enteringChapter, ac
       <SanctuaryCanvas
         restoring={restoring}
         enteringChapter={enteringChapter}
-        activeIndex={activeIndex}
         activatingIndex={activeStatueId}
         onActiveChange={handleHoverChange}
         onActivate={handleActivate}
         onActivationPosition={onActivationPosition}
-        onOpenCreatorNote={onOpenCreatorNote}
+        onOpenCreatorArchive={onOpenCreatorArchive}
+        onOpenMusicAnalysis={onOpenMusicAnalysis}
       />
       <SacredMist />
       <FlowingGoldenStreams activeIndex={activeIndex} />
       <ArchiveRunesLayer />
       <GoldenOrnaments activeIndex={activeIndex} />
       <GoldenDustField />
-      <CreatorArchiveOverlay onOpen={onOpenCreatorNote} />
       <ForegroundVeil />
-      <p className={`sanctuary-unavailable${unavailableMessage ? " is-visible" : ""}`} aria-live="polite">{unavailableMessage}</p>
       <div className="sanctuary-vignette" aria-hidden="true" />
     </section>
   );

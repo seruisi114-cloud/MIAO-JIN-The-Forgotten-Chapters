@@ -1,17 +1,17 @@
 "use client";
 
-import { Edges, Line, Sparkles } from "@react-three/drei";
+import { Edges, Html, Line, Sparkles } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { archiveCoreVertexShader, archiveMonumentFragmentShader } from "@/three/shaders/archiveCore";
-import { AltarConnections } from "./AltarConnections";
 
 type CreatorArchiveCoreProps = {
-  chapterPositions: Array<[number, number, number]>;
-  activeIndex: number | null;
+  position: [number, number, number];
+  index: number;
   skipIntro?: boolean;
-  onOpenCreatorNote: () => void;
+  onHoverChange: (index: number | null) => void;
+  onOpenCreatorArchive: () => void;
 };
 
 const archiveGlyphs: Array<Array<[number, number, number]>> = [
@@ -20,7 +20,7 @@ const archiveGlyphs: Array<Array<[number, number, number]>> = [
   [[-0.36, -0.25, 0.2], [-0.15, -0.15, 0.21], [0.08, -0.22, 0.21], [0.34, -0.12, 0.2]],
 ];
 
-export function CreatorArchiveCore({ chapterPositions, activeIndex, skipIntro = false, onOpenCreatorNote }: CreatorArchiveCoreProps) {
+export function CreatorArchiveCore({ position, index, skipIntro = false, onHoverChange, onOpenCreatorArchive }: CreatorArchiveCoreProps) {
   const rootRef = useRef<THREE.Group>(null);
   const monumentRef = useRef<THREE.Group>(null);
   const haloRef = useRef<THREE.Group>(null);
@@ -87,18 +87,17 @@ export function CreatorArchiveCore({ chapterPositions, activeIndex, skipIntro = 
     event.stopPropagation();
     hovered.current = active;
     setIsHovered(active);
+    onHoverChange(active ? index : null);
   };
 
   const handleClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
     rippleTime.current = 0;
-    onOpenCreatorNote();
+    onOpenCreatorArchive();
   };
 
   return (
-    <group ref={rootRef} position={[0, 0.05, 0]} scale={skipIntro ? 1 : 0.001}>
-      <AltarConnections chapterPositions={chapterPositions} activeIndex={activeIndex} />
-
+    <group ref={rootRef} position={position} scale={skipIntro ? 1 : 0.001}>
       <group position={[0, 0.22, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <mesh><torusGeometry args={[0.92, 0.012, 8, 112, Math.PI * 1.58]} /><meshBasicMaterial color="#b89a61" transparent opacity={isHovered ? 0.56 : 0.3} depthWrite={false} /></mesh>
         <mesh rotation={[0, 0, 2.08]}><torusGeometry args={[1.14, 0.006, 8, 112, Math.PI * 0.84]} /><meshBasicMaterial color="#d0bc8c" transparent opacity={0.16} depthWrite={false} /></mesh>
@@ -154,6 +153,12 @@ export function CreatorArchiveCore({ chapterPositions, activeIndex, skipIntro = 
         <ringGeometry args={[0.82, 0.84, 96]} />
         <meshBasicMaterial ref={rippleMaterialRef} color="#e0e6ed" transparent opacity={0} depthWrite={false} />
       </mesh>
+      <Html center position={[0, 3.48, 0.1]} distanceFactor={9.4} zIndexRange={[30, 10]} style={{ pointerEvents: "none" }}>
+        <div className={`sanctuary-label sanctuary-label--entry sanctuary-label--creator${isHovered ? " is-hovered" : ""}`}>
+          <span>创作者档案</span>
+          <small>金淼 · 宇宙档案空间</small>
+        </div>
+      </Html>
     </group>
   );
 }

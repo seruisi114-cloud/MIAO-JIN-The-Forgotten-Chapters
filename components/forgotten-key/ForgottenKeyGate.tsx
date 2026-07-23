@@ -28,9 +28,14 @@ const SacredTransitionOverlay = dynamic(
   () => import("@/components/transitions/SacredTransitionOverlay").then((module) => module.SacredTransitionOverlay),
   { ssr: false },
 );
-const CreatorNotePanel = dynamic(() => import("@/components/creator/CreatorNotePanel").then((module) => module.CreatorNotePanel), {
+const CreatorArchiveSpace = dynamic(() => import("@/components/creator/CreatorArchiveSpace").then((module) => module.CreatorArchiveSpace), {
   ssr: false,
 });
+const MusicAnalysisSpace = dynamic(() => import("@/components/analysis/MusicAnalysisSpace").then((module) => module.MusicAnalysisSpace), {
+  ssr: false,
+});
+
+type SanctuaryContent = "creator-archive" | "music-analysis" | null;
 
 export function ForgottenKeyGate() {
   const { prepareSanctuary, playSanctuary, leaveSanctuaryForChapter, playChapter, stopChapter } = useAudioManager();
@@ -41,7 +46,7 @@ export function ForgottenKeyGate() {
   const [activeStatueId, setActiveStatueId] = useState<number | null>(null);
   const [transitionOrigin, setTransitionOrigin] = useState<TransitionOrigin>({ x: 50, y: 69 });
   const [sanctuaryInstanceKey, setSanctuaryInstanceKey] = useState(0);
-  const [creatorNoteOpen, setCreatorNoteOpen] = useState(false);
+  const [sanctuaryContent, setSanctuaryContent] = useState<SanctuaryContent>(null);
   const [universeReady, setUniverseReady] = useState(false);
   const chapterEntryLockedRef = useRef(false);
   const transitionOriginCapturedRef = useRef(false);
@@ -71,7 +76,7 @@ export function ForgottenKeyGate() {
     chapterSceneReadyRef.current = import("@/components/chapter/MoonlitStarSeaWorld");
     chapterPreparationRef.current = leaveSanctuaryForChapter(chapter01.id);
     setActiveStatueId(statueId);
-    setCreatorNoteOpen(false);
+    setSanctuaryContent(null);
     setPhase("activatingStatue");
   }, [leaveSanctuaryForChapter]);
 
@@ -90,8 +95,11 @@ export function ForgottenKeyGate() {
     await playChapter(chapter01.id);
     setPhase((current) => current === "chapterOpening" ? "chapterWorld" : current);
   }, [playChapter]);
-  const openCreatorNote = useCallback(() => {
-    if (phase === "sanctuary") setCreatorNoteOpen(true);
+  const openCreatorArchive = useCallback(() => {
+    if (phase === "sanctuary") setSanctuaryContent("creator-archive");
+  }, [phase]);
+  const openMusicAnalysis = useCallback(() => {
+    if (phase === "sanctuary") setSanctuaryContent("music-analysis");
   }, [phase]);
   const beginReturnToSanctuary = useCallback(() => {
     if (returnTimerRef.current) return;
@@ -160,7 +168,8 @@ export function ForgottenKeyGate() {
           activeStatueId={activeStatueId}
           onBeginChapterActivation={beginChapterActivation}
           onActivationPosition={captureTransitionOrigin}
-          onOpenCreatorNote={openCreatorNote}
+          onOpenCreatorArchive={openCreatorArchive}
+          onOpenMusicAnalysis={openMusicAnalysis}
         />
       ) : null}
       <OpeningSequence phase={phase} onPhaseChange={setPhase} />
@@ -176,7 +185,12 @@ export function ForgottenKeyGate() {
         <MoonlitStarSeaWorld returning={phase === "returnToSanctuary"} onReturn={beginReturnToSanctuary} />
       ) : null}
       {phase === "returnToSanctuary" ? <SacredTransitionOverlay phase="returning" origin={{ x: 50, y: 50 }} /> : null}
-      {creatorNoteOpen && phase === "sanctuary" ? <CreatorNotePanel onClose={() => setCreatorNoteOpen(false)} /> : null}
+      {sanctuaryContent === "creator-archive" && phase === "sanctuary" ? (
+        <CreatorArchiveSpace onClose={() => setSanctuaryContent(null)} />
+      ) : null}
+      {sanctuaryContent === "music-analysis" && phase === "sanctuary" ? (
+        <MusicAnalysisSpace onClose={() => setSanctuaryContent(null)} />
+      ) : null}
     </div>
   );
 }

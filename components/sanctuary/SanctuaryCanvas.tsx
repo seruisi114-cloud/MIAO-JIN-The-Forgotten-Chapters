@@ -13,27 +13,25 @@ import { SanctuaryParticles } from "./SanctuaryParticles";
 import { SanctuaryPillars } from "./SanctuaryPillars";
 import { StarDome } from "./StarDome";
 import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
-import { chapter01 } from "@/config/chapters";
 import { ChapterEntryCameraRig } from "./ChapterEntryCameraRig";
+import { MusicAnalysisCore } from "./MusicAnalysisCore";
 
-const chapterPositions: Array<[number, number, number]> = [
-  [0, -1.25, 5.2],
-  [-5.2, 0.28, 0.55],
-  [5.2, 0.28, 0.55],
-];
+const moonPosition: [number, number, number] = [-4.15, -0.5, 2.45];
+const creatorPosition: [number, number, number] = [0, 0.55, -1.55];
+const analysisPosition: [number, number, number] = [4.25, -0.25, 1.75];
 
 type SanctuaryCanvasProps = {
   restoring: boolean;
   enteringChapter: boolean;
-  activeIndex: number | null;
   activatingIndex: number | null;
   onActiveChange: (index: number | null) => void;
   onActivate: (index: number) => void;
   onActivationPosition: (origin: TransitionOrigin) => void;
-  onOpenCreatorNote: () => void;
+  onOpenCreatorArchive: () => void;
+  onOpenMusicAnalysis: () => void;
 };
 
-function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
+function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive, onOpenMusicAnalysis }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
   const rootRef = useRef<THREE.Group>(null);
 
   useLayoutEffect(() => {
@@ -58,17 +56,16 @@ function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activeIndex
       <ArchiveOrbitField reducedMotion={reducedMotion} />
       <SanctuaryFloor skipIntro={restoring} />
       <SanctuaryPillars skipIntro={restoring} />
-      <ChapterArchiveCore kind="moon-planet" labelPlacement="bottom" position={chapterPositions[0]} chapter={chapter01.chapterLabel} revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <ChapterArchiveCore kind="relic-core" labelPlacement="left" position={chapterPositions[1]} chapter="第二篇章" revealDelay={6.6} index={2} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <ChapterArchiveCore kind="frozen-nebula" labelPlacement="right" position={chapterPositions[2]} chapter="第三篇章" revealDelay={7.4} index={3} activating={false} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <CreatorArchiveCore chapterPositions={chapterPositions} activeIndex={activeIndex} skipIntro={restoring} onOpenCreatorNote={onOpenCreatorNote} />
+      <ChapterArchiveCore kind="moon-planet" labelPlacement="left" position={moonPosition} chapter="核心作品" revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <CreatorArchiveCore position={creatorPosition} index={2} skipIntro={restoring} onHoverChange={onActiveChange} onOpenCreatorArchive={onOpenCreatorArchive} />
+      <MusicAnalysisCore position={analysisPosition} index={3} skipIntro={restoring} onHoverChange={onActiveChange} onOpen={onOpenMusicAnalysis} />
       <SanctuaryParticles reducedMotion={reducedMotion} skipIntro={restoring} />
       <ChapterEntryCameraRig active={enteringChapter} reducedMotion={reducedMotion} />
     </group>
   );
 }
 
-export function SanctuaryCanvas({ restoring, enteringChapter, activeIndex, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorNote }: SanctuaryCanvasProps) {
+export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive, onOpenMusicAnalysis }: SanctuaryCanvasProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [compactLayout, setCompactLayout] = useState(false);
 
@@ -111,7 +108,7 @@ export function SanctuaryCanvas({ restoring, enteringChapter, activeIndex, activ
     >
       <StarDome />
       <SanctuaryLighting />
-      <SanctuaryWorld reducedMotion={reducedMotion} restoring={restoring} enteringChapter={enteringChapter} activeIndex={activeIndex} activatingIndex={activatingIndex} onActiveChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} onOpenCreatorNote={onOpenCreatorNote} />
+      <SanctuaryWorld reducedMotion={reducedMotion} restoring={restoring} enteringChapter={enteringChapter} activatingIndex={activatingIndex} onActiveChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} onOpenCreatorArchive={onOpenCreatorArchive} onOpenMusicAnalysis={onOpenMusicAnalysis} />
     </Canvas>
   );
 }
