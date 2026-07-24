@@ -2799,6 +2799,275 @@ select {
   100% { opacity: 0; transform: translate(0, 0) scale(0.2); }
 }
 
+.cosmic-dissolve {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: auto;
+  color: rgba(234, 235, 230, 0.9);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+}
+
+.cosmic-dissolve__veil,
+.cosmic-dissolve__core,
+.cosmic-dissolve__dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cosmic-dissolve__veil {
+  z-index: -3;
+  background:
+    radial-gradient(circle at var(--dissolve-origin-x) var(--dissolve-origin-y), rgba(28, 52, 93, 0.28), transparent 24%),
+    radial-gradient(ellipse at 50% 50%, rgba(17, 31, 66, 0.72), rgba(2, 7, 19, 0.96) 72%),
+    #020713;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.cosmic-dissolve__core {
+  z-index: -1;
+  top: var(--dissolve-origin-y);
+  left: var(--dissolve-origin-x);
+  width: 1px;
+  height: 1px;
+  inset: auto;
+}
+
+.cosmic-dissolve__core i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: clamp(4rem, 9vw, 8rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.22);
+  opacity: 0;
+  background: radial-gradient(circle, rgba(224, 232, 240, 0.76), rgba(123, 159, 207, 0.15) 30%, transparent 72%);
+  box-shadow: 0 0 4rem rgba(128, 168, 217, 0.1);
+  will-change: transform, opacity;
+}
+
+.cosmic-dissolve__core i:last-child {
+  width: clamp(7rem, 14vw, 13rem);
+  background: radial-gradient(circle, rgba(213, 183, 121, 0.16), rgba(57, 88, 139, 0.06) 44%, transparent 74%);
+}
+
+.cosmic-dissolve__dust {
+  z-index: 1;
+  top: var(--dissolve-origin-y);
+  left: var(--dissolve-origin-x);
+  width: 1px;
+  height: 1px;
+  inset: auto;
+  mix-blend-mode: screen;
+}
+
+.cosmic-dissolve__particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--dissolve-size);
+  height: var(--dissolve-size);
+  border-radius: 50%;
+  opacity: 0;
+  background: rgba(218, 191, 135, 0.82);
+  box-shadow: 0 0 0.75rem rgba(196, 160, 92, 0.24);
+  will-change: transform, opacity;
+}
+
+.cosmic-dissolve__particle--moon {
+  background: rgba(224, 231, 238, 0.88);
+  box-shadow: 0 0 0.85rem rgba(180, 207, 237, 0.3);
+}
+
+.cosmic-dissolve__particle--blue {
+  background: rgba(174, 202, 235, 0.82);
+  box-shadow: 0 0 0.8rem rgba(105, 151, 211, 0.24);
+}
+
+.cosmic-dissolve__copy {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: min(82vw, 38rem);
+  transform: translate(-50%, -42%);
+  text-align: center;
+  text-shadow: 0 0 2.2rem rgba(170, 202, 233, 0.16);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cosmic-dissolve__copy p,
+.cosmic-dissolve__copy h1,
+.cosmic-dissolve__copy small {
+  margin: 0;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.cosmic-dissolve__copy p {
+  color: rgba(211, 190, 150, 0.58);
+  font-size: clamp(0.58rem, 0.78vw, 0.72rem);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+}
+
+.cosmic-dissolve__copy > span {
+  display: block;
+  width: 6.8rem;
+  height: 1px;
+  margin: 0.9rem auto 1.2rem;
+  background: linear-gradient(90deg, transparent, rgba(204, 174, 112, 0.66), transparent);
+}
+
+.cosmic-dissolve__copy h1 {
+  color: rgba(235, 235, 230, 0.92);
+  font-size: clamp(1.6rem, 3.2vw, 2.8rem);
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+}
+
+.cosmic-dissolve__copy small {
+  display: block;
+  margin-top: 1.2rem;
+  color: rgba(195, 204, 215, 0.42);
+  font-size: 0.56rem;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+}
+
+.cosmic-dissolve--entering .cosmic-dissolve__veil {
+  animation: cosmic-dissolve-cover 1.34s both ease-in-out;
+}
+
+.cosmic-dissolve--entering .cosmic-dissolve__core i:first-child {
+  animation: cosmic-core-awaken 1.25s both ease-out;
+}
+
+.cosmic-dissolve--entering .cosmic-dissolve__core i:last-child {
+  animation: cosmic-core-awaken 1.34s 0.08s both ease-out;
+}
+
+.cosmic-dissolve--entering .cosmic-dissolve__particle {
+  animation: cosmic-dust-scatter var(--dissolve-duration) var(--dissolve-delay) both ease-out;
+}
+
+.cosmic-dissolve--entering .cosmic-dissolve__copy {
+  animation: cosmic-copy-arrive 1.3s both ease-in-out;
+}
+
+.cosmic-dissolve--forming {
+  background: #020713;
+  animation: cosmic-dissolve-reveal 1.28s both ease-in-out;
+}
+
+.cosmic-dissolve--forming .cosmic-dissolve__veil {
+  opacity: 0.96;
+}
+
+.cosmic-dissolve--forming .cosmic-dissolve__particle {
+  animation: cosmic-dust-gather var(--dissolve-duration) var(--dissolve-delay) both ease-in-out;
+}
+
+.cosmic-dissolve--forming .cosmic-dissolve__copy {
+  animation: cosmic-copy-form 1.18s both ease-in-out;
+}
+
+.cosmic-dissolve--returning {
+  animation: cosmic-return-shell 2.6s both ease-in-out;
+}
+
+.cosmic-dissolve--returning .cosmic-dissolve__veil {
+  animation: cosmic-return-veil 2.6s both ease-in-out;
+}
+
+.cosmic-dissolve--returning .cosmic-dissolve__core {
+  top: 50%;
+  left: 50%;
+}
+
+.cosmic-dissolve--returning .cosmic-dissolve__core i:first-child {
+  animation: cosmic-return-core 2.6s both ease-in-out;
+}
+
+.cosmic-dissolve--returning .cosmic-dissolve__particle {
+  animation: cosmic-dust-return var(--dissolve-duration) var(--dissolve-delay) both ease-in-out;
+}
+
+@keyframes cosmic-dissolve-cover {
+  0% { opacity: 0; }
+  45% { opacity: 0.42; }
+  100% { opacity: 0.97; }
+}
+
+@keyframes cosmic-core-awaken {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.18); }
+  46% { opacity: 0.74; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(2.1); }
+}
+
+@keyframes cosmic-dust-scatter {
+  0% { opacity: 0; transform: rotate(var(--dissolve-angle)) translateX(0) scale(0.45); }
+  24% { opacity: 0.82; }
+  100% { opacity: 0; transform: rotate(var(--dissolve-angle)) translateX(var(--dissolve-distance)) scale(0.16); }
+}
+
+@keyframes cosmic-copy-arrive {
+  0%, 48% { opacity: 0; filter: blur(7px); }
+  82% { opacity: 0.76; filter: blur(0); }
+  100% { opacity: 0.28; filter: blur(1px); }
+}
+
+@keyframes cosmic-dissolve-reveal {
+  0% { opacity: 1; }
+  66% { opacity: 0.84; }
+  100% { opacity: 0; }
+}
+
+@keyframes cosmic-dust-gather {
+  0% { opacity: 0; transform: rotate(var(--dissolve-angle)) translateX(var(--dissolve-distance)) scale(0.16); }
+  28% { opacity: 0.72; }
+  82% { opacity: 0.46; }
+  100% { opacity: 0; transform: rotate(var(--dissolve-angle)) translateX(0) scale(0.3); }
+}
+
+@keyframes cosmic-copy-form {
+  0% { opacity: 0.28; filter: blur(2px); }
+  38%, 72% { opacity: 0.86; filter: blur(0); }
+  100% { opacity: 0; filter: blur(5px); }
+}
+
+@keyframes cosmic-return-shell {
+  0%, 82% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes cosmic-return-veil {
+  0% { opacity: 0; }
+  38%, 64% { opacity: 0.94; }
+  100% { opacity: 0; }
+}
+
+@keyframes cosmic-return-core {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(1.8); }
+  42% { opacity: 0.48; }
+  68% { opacity: 0.24; transform: translate(-50%, -50%) scale(0.38); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.12); }
+}
+
+@keyframes cosmic-dust-return {
+  0% { opacity: 0; transform: rotate(var(--dissolve-angle)) translateX(var(--dissolve-distance)) scale(0.18); }
+  32% { opacity: 0.72; }
+  72% { opacity: 0.54; transform: rotate(var(--dissolve-angle)) translateX(0) scale(0.5); }
+  100% { opacity: 0; transform: rotate(var(--dissolve-angle)) translateX(0) scale(0.12); }
+}
+
 .sanctuary-chapter-light {
   position: absolute;
   z-index: 8;
@@ -5718,8 +5987,26 @@ select {
   .creator-note-panel,
   .creator-note-space i,
   .chapter-player-orbit i,
-  .chapter-player-orbit::after {
+  .chapter-player-orbit::after,
+  .cosmic-dissolve,
+  .cosmic-dissolve__veil,
+  .cosmic-dissolve__core i,
+  .cosmic-dissolve__particle,
+  .cosmic-dissolve__copy {
     animation: none;
+  }
+
+  .cosmic-dissolve--entering .cosmic-dissolve__veil {
+    opacity: 0.96;
+  }
+
+  .cosmic-dissolve--forming {
+    background: rgba(2, 7, 19, 0.14);
+    opacity: 0.12;
+  }
+
+  .cosmic-dissolve--returning {
+    opacity: 0.08;
   }
 
   .chapter-entry-transition .chapter-entry-dim {

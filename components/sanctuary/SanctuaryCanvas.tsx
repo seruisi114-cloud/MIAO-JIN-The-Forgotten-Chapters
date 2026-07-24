@@ -12,7 +12,7 @@ import { SanctuaryLighting } from "./SanctuaryLighting";
 import { SanctuaryParticles } from "./SanctuaryParticles";
 import { SanctuaryPillars } from "./SanctuaryPillars";
 import { StarDome } from "./StarDome";
-import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
+import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { ChapterEntryCameraRig } from "./ChapterEntryCameraRig";
 import { MusicAnalysisCore } from "./MusicAnalysisCore";
 

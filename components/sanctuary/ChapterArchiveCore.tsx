@@ -4,7 +4,7 @@ import { Edges, Html, Line, Sparkles } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
+import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { chapter01 } from "@/config/chapters";
 import { archiveCoreVertexShader, dormantCrystalFragmentShader, frozenNebulaFragmentShader, moonPlanetFragmentShader } from "@/three/shaders/archiveCore";
 import { GoldenStarRibbon } from "./GoldenStarRibbon";

@@ -4,7 +4,7 @@ import { Html, Line } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
+import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { chapter01 } from "@/config/chapters";
 import { memoryGuardianFragmentShader, memoryGuardianVertexShader } from "@/three/shaders/memoryGuardian";
 import { MemoryGuardianParticles } from "./MemoryGuardianParticles";

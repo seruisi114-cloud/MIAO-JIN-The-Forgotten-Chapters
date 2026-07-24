@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAudioManager } from "@/components/audio/AudioManager";
 import { DeferredLoadingNotice } from "@/components/loading/DeferredLoadingNotice";
-import type { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
+import type { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import type { OpeningPhase } from "@/components/opening/OpeningSequence";
 import { chapter01 } from "@/config/chapters";
 import { CinematicInscription } from "./CinematicInscription";
@@ -23,9 +23,8 @@ const SanctuaryScene = dynamic(() => import("@/components/sanctuary/SanctuarySce
 const MoonlitStarSeaWorld = dynamic(() => import("@/components/chapter/MoonlitStarSeaWorld").then((module) => module.MoonlitStarSeaWorld), {
   ssr: false,
 });
-const ChapterEntryTransition = dynamic(() => import("@/components/transitions/ChapterEntryTransition").then((module) => module.ChapterEntryTransition), { ssr: false });
-const SacredTransitionOverlay = dynamic(
-  () => import("@/components/transitions/SacredTransitionOverlay").then((module) => module.SacredTransitionOverlay),
+const CosmicDissolveTransition = dynamic(
+  () => import("@/components/transitions/CosmicDissolveTransition").then((module) => module.CosmicDissolveTransition),
   { ssr: false },
 );
 const CreatorArchiveSpace = dynamic(() => import("@/components/creator/CreatorArchiveSpace").then((module) => module.CreatorArchiveSpace), {
@@ -174,17 +173,19 @@ export function ForgottenKeyGate() {
       ) : null}
       <OpeningSequence phase={phase} onPhaseChange={setPhase} />
       {phase === "activatingStatue" || phase === "chapterOpening" ? (
-        <ChapterEntryTransition
-          stage={phase === "activatingStatue" ? "approaching" : "portal"}
+        <CosmicDissolveTransition
+          mode={phase === "activatingStatue" ? "entering" : "forming"}
           origin={transitionOrigin}
-          onPortalReached={reachChapterPortal}
+          onCovered={reachChapterPortal}
           onComplete={enterChapterWorld}
         />
       ) : null}
-      {phase === "chapterWorld" || phase === "returnToSanctuary" ? (
+      {phase === "chapterOpening" || phase === "chapterWorld" || phase === "returnToSanctuary" ? (
         <MoonlitStarSeaWorld returning={phase === "returnToSanctuary"} onReturn={beginReturnToSanctuary} />
       ) : null}
-      {phase === "returnToSanctuary" ? <SacredTransitionOverlay phase="returning" origin={{ x: 50, y: 50 }} /> : null}
+      {phase === "returnToSanctuary" ? (
+        <CosmicDissolveTransition mode="returning" origin={{ x: 50, y: 50 }} />
+      ) : null}
       {sanctuaryContent === "creator-archive" && phase === "sanctuary" ? (
         <CreatorArchiveSpace onClose={() => setSanctuaryContent(null)} />
       ) : null}

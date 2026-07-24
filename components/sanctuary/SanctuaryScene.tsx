@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { TransitionOrigin } from "@/components/transitions/SacredTransitionOverlay";
+import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { FlowingGoldenStreams } from "./FlowingGoldenStreams";
 import { ForegroundVeil } from "./ForegroundVeil";
 import { GoldenDustField } from "./GoldenDustField";
