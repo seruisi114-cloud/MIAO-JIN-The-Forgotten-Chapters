@@ -3755,7 +3755,9 @@ select {
   width: 92%;
   height: 18%;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(49, 67, 124, 0.15), rgba(24, 39, 82, 0.06) 48%, transparent 72%);
+  background:
+    radial-gradient(ellipse at 46% 48%, rgba(113, 89, 159, 0.13), transparent 24%),
+    radial-gradient(ellipse, rgba(52, 76, 142, 0.2), rgba(38, 42, 103, 0.085) 46%, transparent 73%);
   filter: blur(24px);
   mix-blend-mode: screen;
   animation: moonlit-galaxy-drift 34s ease-in-out infinite alternate;
@@ -3959,6 +3961,19 @@ select {
   filter: blur(10px);
 }
 
+.moonlit-light-road::after {
+  content: "";
+  position: absolute;
+  inset: 2% 15% 8%;
+  clip-path: polygon(47% 0, 53% 0, 82% 100%, 18% 100%);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 8%, rgba(232, 235, 237, 0.12) 9%, transparent 10% 17%),
+    linear-gradient(180deg, rgba(229, 235, 242, 0.2), rgba(181, 199, 224, 0.025) 56%, transparent);
+  filter: blur(2.5px);
+  opacity: 0.45;
+  mix-blend-mode: screen;
+}
+
 .moonlit-light-road i {
   position: absolute;
   left: 50%;
@@ -3994,6 +4009,19 @@ select {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(179, 201, 229, 0.24), rgba(210, 184, 125, 0.12), transparent);
   box-shadow: 0 0 1.7rem rgba(105, 139, 187, 0.13);
+}
+
+.moonlit-lake-surface::after {
+  content: "";
+  position: absolute;
+  inset: 8% -18% 6%;
+  background:
+    radial-gradient(ellipse at 68% 28%, rgba(207, 218, 235, 0.07), transparent 16%),
+    radial-gradient(ellipse at 43% 45%, rgba(91, 82, 146, 0.08), rgba(40, 67, 125, 0.035) 35%, transparent 67%);
+  filter: blur(10px);
+  opacity: 0.62;
+  transform: rotate(2deg);
+  animation: moonlit-reflected-galaxy 28s ease-in-out infinite alternate;
 }
 
 .moonlit-lake-surface i {
@@ -4097,6 +4125,130 @@ select {
 .golden-melody-trail-pulse--2 { animation-delay: -5s; animation-duration: 23s; }
 .golden-melody-trail-pulse--3 { animation-delay: -11s; animation-duration: 26s; }
 .golden-melody-trail-pulse--4 { animation-delay: -15s; animation-duration: 21s; }
+
+.moonlit-memory-veil {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.moonlit-memory-veil > svg {
+  position: absolute;
+  inset: 20% -2% 4%;
+  width: 104%;
+  height: 76%;
+  overflow: visible;
+  opacity: 0.3;
+  transform: translate3d(var(--moonlit-parallax-soft-x), var(--moonlit-parallax-soft-y), 0);
+  transition: opacity 2.4s ease, transform 2s cubic-bezier(0.2, 0.65, 0.24, 1);
+}
+
+.moonlit-memory-thread {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.moonlit-memory-thread--ghost {
+  stroke: rgba(177, 192, 219, 0.04);
+  stroke-width: 0.55;
+}
+
+.moonlit-memory-thread--pulse {
+  stroke-width: 0.72;
+  stroke-linecap: round;
+  stroke-dasharray: 2 30 1 46;
+  filter: drop-shadow(0 0 3px rgba(206, 176, 115, 0.18));
+  animation: moonlit-memory-thread-flow 27s linear infinite;
+}
+
+.moonlit-memory-thread--2 {
+  animation-delay: -8s;
+  animation-duration: 32s;
+}
+
+.moonlit-memory-thread--3 {
+  animation-delay: -18s;
+  animation-duration: 36s;
+}
+
+.moonlit-memory-motes,
+.moonlit-lens-haze {
+  position: absolute;
+  inset: 0;
+}
+
+.moonlit-memory-mote {
+  position: absolute;
+  top: var(--memory-y);
+  left: var(--memory-x);
+  width: var(--memory-size);
+  height: var(--memory-size);
+  border-radius: 50%;
+  opacity: var(--memory-opacity);
+  background: rgba(229, 232, 231, 0.88);
+  box-shadow:
+    0 0 calc(0.35rem + var(--memory-depth) * 0.6rem) rgba(195, 211, 234, 0.28),
+    0 0 calc(1.2rem + var(--memory-depth) * 1.2rem) rgba(112, 149, 207, 0.1);
+  filter: blur(var(--memory-blur));
+  animation: moonlit-memory-mote-float var(--memory-duration) var(--memory-delay) ease-in-out infinite alternate;
+  transition: opacity 2.2s ease, filter 2.2s ease;
+}
+
+.moonlit-memory-mote--gold {
+  background: rgba(224, 201, 151, 0.9);
+  box-shadow:
+    0 0 calc(0.35rem + var(--memory-depth) * 0.65rem) rgba(218, 190, 133, 0.28),
+    0 0 calc(1.2rem + var(--memory-depth) * 1.15rem) rgba(189, 151, 81, 0.1);
+}
+
+.moonlit-memory-mote--blue {
+  background: rgba(199, 216, 239, 0.9);
+}
+
+.moonlit-lens-haze {
+  transform: translate3d(var(--moonlit-parallax-x), var(--moonlit-parallax-y), 0);
+  transition: transform 2.4s cubic-bezier(0.2, 0.65, 0.24, 1);
+}
+
+.moonlit-lens-haze i {
+  position: absolute;
+  display: block;
+  width: clamp(9rem, 22vw, 25rem);
+  aspect-ratio: 1.8;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(117, 149, 198, 0.055), rgba(38, 57, 102, 0.02) 42%, transparent 72%);
+  filter: blur(18px);
+  opacity: 0.55;
+  animation: moonlit-lens-haze-drift 22s ease-in-out infinite alternate;
+}
+
+.moonlit-lens-haze i:first-child {
+  bottom: 7%;
+  left: -7%;
+}
+
+.moonlit-lens-haze i:last-child {
+  right: -8%;
+  bottom: 18%;
+  opacity: 0.38;
+  animation-delay: -11s;
+  animation-direction: alternate-reverse;
+}
+
+.moonlit-memory-veil.is-playing > svg {
+  opacity: 0.54;
+}
+
+.moonlit-memory-veil.is-playing .moonlit-memory-thread--pulse {
+  animation-duration: 20s;
+}
+
+.moonlit-memory-veil.is-playing .moonlit-memory-mote {
+  opacity: var(--memory-playing-opacity);
+  filter: brightness(1.1) blur(var(--memory-playing-blur));
+}
 
 .moon-fireflies {
   position: absolute;
@@ -4450,6 +4602,42 @@ select {
 
 .chapter-info-layer.is-visible.is-playing {
   opacity: 0.42;
+}
+
+.chapter-lasting-caption {
+  position: absolute;
+  z-index: 3;
+  top: 53%;
+  left: clamp(6%, 10vw, 12%);
+  margin: 0;
+  color: rgba(223, 220, 209, 0.28);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  font-size: clamp(0.58rem, 0.8vw, 0.7rem);
+  letter-spacing: 0.28em;
+  text-shadow: 0 0 1.7rem rgba(172, 195, 226, 0.12);
+  opacity: 0.42;
+  transform: translateY(0.45rem);
+  transition: opacity 2.8s ease, transform 2.8s ease, color 2.8s ease;
+  pointer-events: none;
+}
+
+.chapter-lasting-caption::before {
+  content: "";
+  display: inline-block;
+  width: 2.4rem;
+  height: 1px;
+  margin: 0 0.9rem 0.2rem 0;
+  background: linear-gradient(90deg, rgba(207, 178, 118, 0.52), transparent);
+}
+
+.chapter-lasting-caption.is-revealed {
+  color: rgba(228, 225, 215, 0.52);
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chapter-lasting-caption.is-playing {
+  opacity: 0.62;
 }
 
 .dream-copy p,
@@ -5165,6 +5353,11 @@ select {
   to { transform: translateX(4%) scaleX(1.04); opacity: 0.68; }
 }
 
+@keyframes moonlit-reflected-galaxy {
+  from { transform: translate3d(-2%, 1%, 0) rotate(1deg) scaleX(0.98); opacity: 0.42; }
+  to { transform: translate3d(3%, -1%, 0) rotate(3deg) scaleX(1.04); opacity: 0.72; }
+}
+
 @keyframes moonlit-lake-breathe {
   from { transform: translateX(-50%) scaleX(0.86); filter: blur(0.15px); }
   to { transform: translateX(-50%) scaleX(1.04); filter: blur(0.45px); }
@@ -5177,6 +5370,24 @@ select {
 
 @keyframes golden-melody-flow {
   to { stroke-dashoffset: -96; }
+}
+
+@keyframes moonlit-memory-thread-flow {
+  to { stroke-dashoffset: -124; }
+}
+
+@keyframes moonlit-memory-mote-float {
+  from {
+    transform: translate3d(0, 0, 0) scale(0.74);
+  }
+  to {
+    transform: translate3d(var(--memory-drift-x), var(--memory-drift-y), 0) scale(1.12);
+  }
+}
+
+@keyframes moonlit-lens-haze-drift {
+  from { transform: translate3d(-4%, 2%, 0) scale(0.92); }
+  to { transform: translate3d(7%, -3%, 0) scale(1.08); }
 }
 
 @keyframes moon-firefly-float {
@@ -5310,8 +5521,12 @@ select {
   .moonlit-cloud-veil i,
   .moonlit-foreground-veil i,
   .moonlit-lake-surface i,
+  .moonlit-lake-surface::after,
   .moonlit-melody-particle,
   .golden-melody-trail-pulse,
+  .moonlit-memory-thread--pulse,
+  .moonlit-memory-mote,
+  .moonlit-lens-haze i,
   .moon-firefly span,
   .moonlit-horizon-lights i,
   .moonlit-parallax-mist i,

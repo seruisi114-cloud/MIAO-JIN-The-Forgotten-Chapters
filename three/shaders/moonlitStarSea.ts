@@ -68,7 +68,9 @@ export const moonlitSceneFragmentShader = /* glsl */ `
   }
 
   void main() {
-    vec2 uv = vUv + uCameraFloat;
+    vec2 uv = vUv + uCameraFloat * 0.62;
+    vec2 farUv = vUv + uCameraFloat * 0.18;
+    vec2 nearUv = vUv + uCameraFloat * 1.08;
     vec2 pointer = uPointer * vec2(0.006, 0.004);
     float time = uTime * mix(0.2, 0.28, uPlaying);
     float horizon = 0.455;
@@ -76,25 +78,30 @@ export const moonlitSceneFragmentShader = /* glsl */ `
     vec3 night = mix(vec3(0.006, 0.014, 0.038), vec3(0.018, 0.045, 0.105), uv.y);
     night += vec3(0.015, 0.016, 0.045) * smoothstep(0.25, 0.9, uv.y);
 
-    vec2 nebulaUv = uv + pointer * 0.45;
+    vec2 nebulaUv = farUv + pointer * 0.28;
     float broadNebula = fbm(nebulaUv * vec2(2.5, 4.2) + vec2(time * 0.025, -time * 0.012));
     float fineNebula = fbm(nebulaUv * vec2(6.8, 3.1) - vec2(time * 0.018, 2.7));
+    float violetMemory = fbm(nebulaUv * vec2(3.6, 7.4) + vec2(-time * 0.014, 8.6));
     float nebulaMask = smoothstep(0.43, 0.78, broadNebula * 0.72 + fineNebula * 0.38);
     nebulaMask *= smoothstep(0.38, 0.7, uv.y) * (1.0 - smoothstep(0.92, 1.0, uv.y));
-    vec3 nebulaColor = mix(vec3(0.025, 0.075, 0.19), vec3(0.14, 0.055, 0.22), fineNebula);
+    vec3 nebulaColor = mix(vec3(0.022, 0.075, 0.2), vec3(0.17, 0.065, 0.25), fineNebula * 0.72 + violetMemory * 0.28);
     night += nebulaColor * nebulaMask * mix(0.39, 0.55, uPlaying);
 
-    float galaxy = exp(-pow((uv.y - (0.72 - uv.x * 0.16)), 2.0) / 0.008);
-    galaxy *= fbm(uv * vec2(7.0, 18.0) + vec2(time * 0.018, 1.3));
+    float galaxy = exp(-pow((farUv.y - (0.72 - farUv.x * 0.16)), 2.0) / 0.008);
+    galaxy *= fbm(farUv * vec2(7.0, 18.0) + vec2(time * 0.018, 1.3));
     night += mix(vec3(0.035, 0.09, 0.19), vec3(0.15, 0.09, 0.23), uv.x) * galaxy * mix(0.21, 0.29, uPlaying);
+    float galaxyFilament = exp(-pow((farUv.y - (0.75 - farUv.x * 0.19)), 2.0) / 0.0018);
+    galaxyFilament *= smoothstep(0.34, 0.78, fbm(farUv * vec2(12.0, 25.0) - vec2(time * 0.02, 3.4)));
+    night += vec3(0.18, 0.2, 0.36) * galaxyFilament * mix(0.12, 0.2, uPlaying);
 
     float skyMask = smoothstep(horizon + 0.015, horizon + 0.09, uv.y);
-    float farStars = starLayer(uv + pointer * 0.15, 145.0, 0.982, 0.19);
+    float farStars = starLayer(farUv + pointer * 0.15, 145.0, 0.982, 0.19);
     float midStars = starLayer(uv - pointer * 0.28, 72.0, 0.971, 0.15);
-    float brightStars = starLayer(uv + pointer * 0.55, 38.0, 0.982, 0.13);
-    night += skyMask * farStars * vec3(0.22, 0.31, 0.48) * 0.72;
-    night += skyMask * midStars * vec3(0.55, 0.67, 0.86) * 0.7;
-    night += skyMask * brightStars * mix(vec3(0.69, 0.8, 1.0), vec3(0.82, 0.68, 0.39), hash21(floor(uv * 38.0))) * 0.72;
+    float brightStars = starLayer(nearUv + pointer * 0.55, 38.0, 0.982, 0.13);
+    float starBreath = 0.91 + 0.05 * sin(uTime * 0.23) + uPlaying * (0.04 + 0.04 * sin(uTime * 0.71));
+    night += skyMask * farStars * vec3(0.22, 0.31, 0.48) * 0.72 * starBreath;
+    night += skyMask * midStars * vec3(0.55, 0.67, 0.86) * 0.7 * starBreath;
+    night += skyMask * brightStars * mix(vec3(0.69, 0.8, 1.0), vec3(0.82, 0.68, 0.39), hash21(floor(nearUv * 38.0))) * 0.72 * starBreath;
 
     float moonDrift = sin(uTime * 0.052) * 0.004;
     vec2 moonPosition = vec2(0.72 + moonDrift, 0.765);
@@ -109,6 +116,8 @@ export const moonlitSceneFragmentShader = /* glsl */ `
     float moonLight = smoothstep(-0.2, 0.82, dot(moonNormal, normalize(vec3(-0.42, 0.55, 0.9))));
     float moonTexture = fbm(moonSurfaceUv * 4.7 + vec2(1.2, 4.8));
     float moonFineTexture = fbm(moonSurfaceUv * 15.0 - vec2(2.8, 7.4));
+    float moonMaria = smoothstep(0.49, 0.72, fbm(moonSurfaceUv * vec2(2.8, 4.1) + vec2(8.2, 1.7)));
+    float lunarGrain = valueNoise(moonSurfaceUv * 39.0 + moonFineTexture * 2.3);
     float moonCraters =
       moonCrater(moonSurfaceUv, vec2(-0.34, 0.26), 0.22) +
       moonCrater(moonSurfaceUv, vec2(0.28, -0.14), 0.17) +
@@ -116,7 +125,8 @@ export const moonlitSceneFragmentShader = /* glsl */ `
       moonCrater(moonSurfaceUv, vec2(-0.12, -0.48), 0.14) +
       moonCrater(moonSurfaceUv, vec2(0.48, 0.28), 0.09);
     vec3 moonColor = mix(vec3(0.42, 0.53, 0.7), vec3(0.9, 0.94, 0.98), moonLight);
-    moonColor *= 0.72 + moonTexture * 0.24 + moonFineTexture * 0.075 + moonCraters * 0.11;
+    moonColor *= 0.75 + moonTexture * 0.22 + moonFineTexture * 0.065 + lunarGrain * 0.035 + moonCraters * 0.13;
+    moonColor *= 1.0 - moonMaria * 0.13;
     moonColor += vec3(0.08, 0.13, 0.22) * pow(1.0 - moonZ, 2.2);
     float musicalBreath = 0.5 + 0.5 * sin(uTime * mix(0.48, 0.74, uPlaying));
     float moonBreath = 0.95 + (0.045 + uPlaying * 0.045) * sin(uTime * 0.62) + musicalBreath * uPlaying * 0.018;
@@ -167,6 +177,16 @@ export const moonlitSceneFragmentShader = /* glsl */ `
 
     float reflectedStars = starLayer(vec2(uv.x + wave * 0.0007, 1.0 - uv.y * 0.72), 62.0, 0.982, 0.17);
     water += reflectedStars * mix(vec3(0.17, 0.24, 0.35), vec3(0.48, 0.36, 0.18), hash21(floor(uv * 62.0))) * 0.34;
+
+    float galaxyReflectionBand = exp(-pow((uv.y - (0.25 + uv.x * 0.055)), 2.0) / 0.0065);
+    float galaxyReflectionNoise = fbm(vec2(uv.x * 8.0 - time * 0.014, uv.y * 22.0 + wave * 0.12));
+    galaxyReflectionBand *= smoothstep(0.36, 0.77, galaxyReflectionNoise) * (1.0 - waterDepth * 0.72);
+    water += mix(vec3(0.035, 0.09, 0.18), vec3(0.13, 0.075, 0.2), galaxyReflectionNoise)
+      * galaxyReflectionBand * mix(0.11, 0.18, uPlaying);
+
+    float memoryGlint = smoothstep(0.955, 1.0, sin(uv.x * 76.0 + uv.y * 290.0 - time * 0.34) * 0.5 + 0.5);
+    memoryGlint *= smoothstep(0.08, 0.72, waterDepth) * (1.0 - smoothstep(0.72, 1.0, waterDepth));
+    water += vec3(0.56, 0.43, 0.23) * memoryGlint * (0.008 + uPlaying * 0.014);
     night = mix(night, water, waterMask * 0.96);
 
     float goldPathOne = exp(-abs(uv.y - (0.505 + sin(uv.x * 7.0 + time * 0.15) * 0.008)) * 420.0);

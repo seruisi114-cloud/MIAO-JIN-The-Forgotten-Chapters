@@ -5,6 +5,7 @@ import { DreamLake } from "./DreamLake";
 import { GoldenMelodyTrails } from "./GoldenMelodyTrails";
 import { MoonFireflies } from "./MoonFireflies";
 import { MoonlitDepthLayers } from "./MoonlitDepthLayers";
+import { MoonlitMemoryVeil } from "./MoonlitMemoryVeil";
 import { MoonlightPath } from "./MoonlightPath";
 
 type MoonlitAtmosphereProps = {
@@ -88,6 +89,7 @@ export function MoonlitAtmosphere({ playing }: MoonlitAtmosphereProps) {
       <DreamLake />
       <GoldenMelodyTrails playing={playing} />
       <MoonFireflies playing={playing} />
+      <MoonlitMemoryVeil playing={playing} />
 
       <div className="moonlit-melody-dust">
         {melodyDust.map((particle) => (

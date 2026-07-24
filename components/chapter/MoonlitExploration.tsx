@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 
 const discoveries = {
-  moon: "月光记录着每一次遗忘的旋律。",
-  water: "每一道波纹，都保存着一段未完成的故事。",
-  melody: "声音，是时间留下的轨迹。",
+  moon: "月光记录着每一次被遗忘的旋律。",
+  water: "每一道星光，都是时间留下的回响。",
+  melody: "声音，是记忆穿越时间的方式。",
 } as const;
 
 type DiscoveryId = keyof typeof discoveries;

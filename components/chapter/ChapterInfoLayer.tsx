@@ -33,6 +33,9 @@ export function ChapterInfoLayer({ playing }: ChapterInfoLayerProps) {
         </dl>
         <blockquote>月光落入沉睡的星海，<br />旋律在寂静中寻找归途。</blockquote>
       </header>
+      <p className={`chapter-lasting-caption${visible ? "" : " is-revealed"}${playing ? " is-playing" : ""}`}>
+        来自东方创作者的一段月光叙事。
+      </p>
       <button
         className={`chapter-info-recall${visible ? " is-open" : ""}`}
         type="button"

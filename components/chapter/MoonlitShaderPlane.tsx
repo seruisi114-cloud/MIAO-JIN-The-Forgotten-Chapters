@@ -28,8 +28,12 @@ export function MoonlitShaderPlane({ playing, reducedMotion }: MoonlitShaderPlan
     material.uniforms.uPlaying.value = THREE.MathUtils.damp(material.uniforms.uPlaying.value, playing ? 1 : 0, 1.4, delta);
     material.uniforms.uAspect.value = size.width / Math.max(size.height, 1);
     material.uniforms.uPointer.value.lerp(reducedMotion ? new THREE.Vector2() : pointer, 1 - Math.exp(-delta * 1.25));
-    const driftX = reducedMotion ? 0 : Math.sin(clock.elapsedTime * 0.11) * 0.0024;
-    const driftY = reducedMotion ? 0 : Math.cos(clock.elapsedTime * 0.085) * 0.0032;
+    const driftX = reducedMotion
+      ? 0
+      : Math.sin(clock.elapsedTime * 0.09) * 0.0031 + Math.sin(clock.elapsedTime * 0.031) * 0.0012;
+    const driftY = reducedMotion
+      ? 0
+      : Math.cos(clock.elapsedTime * 0.071) * 0.0041 + Math.sin(clock.elapsedTime * 0.027) * 0.0014;
     material.uniforms.uCameraFloat.value.x = THREE.MathUtils.damp(material.uniforms.uCameraFloat.value.x, driftX, 0.8, delta);
     material.uniforms.uCameraFloat.value.y = THREE.MathUtils.damp(material.uniforms.uCameraFloat.value.y, driftY, 0.8, delta);
   });
