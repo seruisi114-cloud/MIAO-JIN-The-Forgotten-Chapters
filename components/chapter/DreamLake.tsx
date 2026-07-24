@@ -16,7 +16,7 @@ function seededRandom(seed: number) {
 }
 
 const random = seededRandom(20260719);
-const lakeSparkles = Array.from({ length: 22 }, (_, id) => ({
+const lakeSparkles = Array.from({ length: 30 }, (_, id) => ({
   id,
   style: {
     "--lake-sparkle-x": `${7 + random() * 86}%`,
@@ -37,6 +37,9 @@ export function DreamLake() {
       </div>
       <div className="moonlit-lake-sparkles" aria-hidden="true">
         {lakeSparkles.map((sparkle) => <i key={sparkle.id} style={sparkle.style} />)}
+      </div>
+      <div className="moonlit-lake-caustics" aria-hidden="true">
+        <i /><i /><i /><i />
       </div>
     </>
   );

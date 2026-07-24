@@ -3832,6 +3832,121 @@ select {
   opacity: 0.13;
 }
 
+.lunar-dust-halo {
+  position: absolute;
+  z-index: 2;
+  top: 23.5%;
+  left: var(--moon-axis);
+  width: 0;
+  height: 0;
+  transform: translate3d(var(--moonlit-parallax-soft-x), var(--moonlit-parallax-soft-y), 0);
+  pointer-events: none;
+  transition: transform 2s cubic-bezier(0.2, 0.65, 0.24, 1);
+}
+
+.lunar-atmospheric-rings,
+.lunar-dust-orbit,
+.lunar-dust-veil {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.lunar-atmospheric-rings i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: clamp(7.8rem, 13vw, 12.5rem);
+  aspect-ratio: 1;
+  border: 1px solid rgba(196, 214, 238, 0.055);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 2.4rem rgba(147, 181, 224, 0.045),
+    inset 0 0 2rem rgba(110, 145, 199, 0.035);
+  opacity: 0.62;
+  animation: lunar-ring-breathe 9s ease-in-out infinite alternate;
+}
+
+.lunar-atmospheric-rings i:nth-child(2) {
+  width: clamp(9.8rem, 16vw, 15.5rem);
+  border-color: rgba(157, 185, 224, 0.035);
+  animation-delay: -3s;
+  animation-duration: 12s;
+}
+
+.lunar-atmospheric-rings i:nth-child(3) {
+  width: clamp(12rem, 20vw, 19rem);
+  border-style: dashed;
+  border-color: rgba(207, 182, 129, 0.032);
+  animation-delay: -7s;
+  animation-duration: 18s;
+}
+
+.lunar-dust {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--lunar-size);
+  height: var(--lunar-size);
+  border-radius: 50%;
+  opacity: var(--lunar-opacity);
+  background: rgba(230, 235, 240, 0.9);
+  box-shadow:
+    0 0 0.55rem rgba(198, 216, 239, 0.36),
+    0 0 1.3rem rgba(120, 157, 211, 0.12);
+  animation: lunar-dust-orbit var(--lunar-duration) var(--lunar-delay) linear infinite;
+  transition: opacity 2s ease, filter 2s ease;
+}
+
+.lunar-dust--gold {
+  background: rgba(222, 201, 158, 0.88);
+  box-shadow:
+    0 0 0.5rem rgba(216, 190, 137, 0.28),
+    0 0 1.2rem rgba(185, 144, 73, 0.1);
+}
+
+.lunar-dust--blue {
+  background: rgba(195, 216, 243, 0.92);
+  box-shadow:
+    0 0 0.6rem rgba(170, 203, 241, 0.38),
+    0 0 1.4rem rgba(96, 142, 210, 0.14);
+}
+
+.lunar-dust-veil i {
+  position: absolute;
+  display: block;
+  width: clamp(8rem, 15vw, 14rem);
+  height: clamp(2.6rem, 5vw, 4.8rem);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(151, 185, 226, 0.075), rgba(73, 106, 166, 0.025) 44%, transparent 72%);
+  filter: blur(12px);
+  opacity: 0.5;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  animation: lunar-dust-veil-drift 17s ease-in-out infinite alternate;
+}
+
+.lunar-dust-veil i:last-child {
+  opacity: 0.34;
+  transform: translate(-50%, -50%) rotate(23deg) scale(1.28);
+  animation-delay: -9s;
+  animation-direction: alternate-reverse;
+}
+
+.lunar-dust-halo.is-playing .lunar-dust {
+  opacity: var(--lunar-playing-opacity);
+  filter: brightness(1.12);
+  animation-duration: var(--lunar-playing-duration);
+}
+
+.lunar-dust-halo.is-playing .lunar-atmospheric-rings i {
+  border-color: rgba(205, 221, 241, 0.09);
+  box-shadow:
+    0 0 3rem rgba(145, 183, 229, 0.075),
+    inset 0 0 2.6rem rgba(105, 151, 215, 0.055);
+}
+
 .moonlit-depth-layers {
   z-index: 0;
   overflow: hidden;
@@ -4090,6 +4205,41 @@ select {
   background: linear-gradient(90deg, transparent, rgba(217, 190, 132, 0.52), transparent);
   box-shadow: 0 0 0.7rem rgba(198, 165, 103, 0.18);
 }
+
+.moonlit-lake-caustics {
+  position: absolute;
+  z-index: 1;
+  top: 57%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  opacity: 0.34;
+  transform: translate3d(var(--moonlit-parallax-soft-x), var(--moonlit-parallax-soft-y), 0);
+  transition: opacity 2.2s ease, transform 2s ease;
+  pointer-events: none;
+}
+
+.moonlit-lake-caustics i {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  width: clamp(7rem, 18vw, 18rem);
+  height: 1px;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 4%, rgba(214, 224, 237, 0.05) 34%, rgba(224, 203, 158, 0.16) 51%, rgba(178, 202, 232, 0.06) 68%, transparent 96%);
+  box-shadow:
+    0 0 0.8rem rgba(176, 201, 231, 0.06),
+    0 0 1.8rem rgba(199, 169, 110, 0.035);
+  transform: translateX(-50%) scaleX(0.68);
+  animation: moonlit-caustic-breathe 12s ease-in-out infinite alternate;
+}
+
+.moonlit-lake-caustics i:nth-child(1) { top: 8%; }
+.moonlit-lake-caustics i:nth-child(2) { top: 26%; width: clamp(10rem, 25vw, 25rem); animation-delay: -3s; }
+.moonlit-lake-caustics i:nth-child(3) { top: 44%; width: clamp(13rem, 32vw, 32rem); animation-delay: -6s; }
+.moonlit-lake-caustics i:nth-child(4) { top: 62%; width: clamp(16rem, 39vw, 39rem); animation-delay: -9s; }
 
 .golden-melody-trails {
   position: absolute;
@@ -4422,6 +4572,15 @@ select {
 
 .moonlit-atmosphere.is-playing .moonlit-lake-sparkles i {
   animation-duration: 6.8s;
+}
+
+.moonlit-atmosphere.is-playing .moonlit-lake-caustics {
+  opacity: 0.62;
+}
+
+.moonlit-atmosphere.is-playing .moonlit-lake-caustics i {
+  animation-duration: 7.8s;
+  filter: brightness(1.15);
 }
 
 .moonlit-atmosphere.is-playing .moonlit-galaxy-bands {
@@ -5358,6 +5517,22 @@ select {
   to { transform: translate3d(3%, -1%, 0) rotate(3deg) scaleX(1.04); opacity: 0.72; }
 }
 
+@keyframes lunar-ring-breathe {
+  from { opacity: 0.32; transform: translate(-50%, -50%) scale(0.94); }
+  to { opacity: 0.76; transform: translate(-50%, -50%) scale(1.06); }
+}
+
+@keyframes lunar-dust-orbit {
+  from { transform: rotate(var(--lunar-angle)) translateX(var(--lunar-radius)) scale(0.72); }
+  48% { opacity: 0.88; }
+  to { transform: rotate(calc(var(--lunar-angle) + 360deg)) translateX(var(--lunar-radius)) scale(1.08); }
+}
+
+@keyframes lunar-dust-veil-drift {
+  from { margin: -0.2rem 0 0 -0.5rem; filter: blur(14px); }
+  to { margin: 0.35rem 0 0 0.6rem; filter: blur(9px); }
+}
+
 @keyframes moonlit-lake-breathe {
   from { transform: translateX(-50%) scaleX(0.86); filter: blur(0.15px); }
   to { transform: translateX(-50%) scaleX(1.04); filter: blur(0.45px); }
@@ -5366,6 +5541,11 @@ select {
 @keyframes moonlit-lake-sparkle {
   from { opacity: 0.12; transform: translateX(-50%) scaleX(0.72); filter: blur(0.45px); }
   to { opacity: 0.72; transform: translateX(-50%) scaleX(1.18); filter: blur(0.08px); }
+}
+
+@keyframes moonlit-caustic-breathe {
+  from { opacity: 0.22; transform: translateX(-50%) scaleX(0.64); filter: blur(0.5px); }
+  to { opacity: 0.78; transform: translateX(-50%) scaleX(1.12); filter: blur(0.12px); }
 }
 
 @keyframes golden-melody-flow {
@@ -5516,6 +5696,7 @@ select {
   .moonlit-light-road i,
   .moonlit-lake-ripples i,
   .moonlit-lake-sparkles i,
+  .moonlit-lake-caustics i,
   .moonlit-galaxy-bands i,
   .moonlit-violet-reaches i,
   .moonlit-cloud-veil i,
@@ -5527,6 +5708,9 @@ select {
   .moonlit-memory-thread--pulse,
   .moonlit-memory-mote,
   .moonlit-lens-haze i,
+  .lunar-atmospheric-rings i,
+  .lunar-dust,
+  .lunar-dust-veil i,
   .moon-firefly span,
   .moonlit-horizon-lights i,
   .moonlit-parallax-mist i,

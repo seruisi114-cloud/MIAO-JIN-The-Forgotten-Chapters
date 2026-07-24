@@ -12,7 +12,7 @@ export function ChapterInfoLayer({ playing }: ChapterInfoLayerProps) {
   const [readingCycle, setReadingCycle] = useState(0);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setVisible(false), 7600);
+    const timer = window.setTimeout(() => setVisible(false), 6200);
     return () => window.clearTimeout(timer);
   }, [readingCycle]);
 
@@ -31,7 +31,7 @@ export function ChapterInfoLayer({ playing }: ChapterInfoLayerProps) {
           <div><dt>作者</dt><dd>金淼</dd></div>
           <div><dt>作品</dt><dd>《月下星海》</dd></div>
         </dl>
-        <blockquote>月光落入沉睡的星海，<br />旋律在寂静中寻找归途。</blockquote>
+        <blockquote>月光落入沉睡的星海，<br />旋律在遗忘的宇宙中苏醒。</blockquote>
       </header>
       <p className={`chapter-lasting-caption${visible ? "" : " is-revealed"}${playing ? " is-playing" : ""}`}>
         来自东方创作者的一段月光叙事。

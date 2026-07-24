@@ -49,10 +49,11 @@ export const moonlitSceneFragmentShader = /* glsl */ `
   }
 
   float moonCrater(vec2 p, vec2 center, float radius) {
-    float distanceFromCenter = length(p - center) / radius;
+    float edgeNoise = (valueNoise((p - center) * 18.0 + center * 9.0) - 0.5) * 0.09;
+    float distanceFromCenter = length(p - center) / radius + edgeNoise;
     float bowl = 1.0 - smoothstep(0.0, 0.82, distanceFromCenter);
     float rim = smoothstep(0.7, 0.9, distanceFromCenter) * (1.0 - smoothstep(0.9, 1.08, distanceFromCenter));
-    return rim * 0.7 - bowl * 0.34;
+    return rim * 0.4 - bowl * 0.28;
   }
 
   float starLayer(vec2 uv, float scale, float threshold, float radius) {
@@ -118,6 +119,9 @@ export const moonlitSceneFragmentShader = /* glsl */ `
     float moonFineTexture = fbm(moonSurfaceUv * 15.0 - vec2(2.8, 7.4));
     float moonMaria = smoothstep(0.49, 0.72, fbm(moonSurfaceUv * vec2(2.8, 4.1) + vec2(8.2, 1.7)));
     float lunarGrain = valueNoise(moonSurfaceUv * 39.0 + moonFineTexture * 2.3);
+    float mariaBasinOne = 1.0 - smoothstep(0.0, 0.52, length((moonSurfaceUv - vec2(-0.24, 0.13)) * vec2(1.0, 1.35)));
+    float mariaBasinTwo = 1.0 - smoothstep(0.0, 0.4, length((moonSurfaceUv - vec2(0.27, 0.22)) * vec2(1.3, 1.0)));
+    float mariaBasinThree = 1.0 - smoothstep(0.0, 0.3, length((moonSurfaceUv - vec2(0.08, -0.36)) * vec2(0.9, 1.4)));
     float moonCraters =
       moonCrater(moonSurfaceUv, vec2(-0.34, 0.26), 0.22) +
       moonCrater(moonSurfaceUv, vec2(0.28, -0.14), 0.17) +
@@ -127,6 +131,7 @@ export const moonlitSceneFragmentShader = /* glsl */ `
     vec3 moonColor = mix(vec3(0.42, 0.53, 0.7), vec3(0.9, 0.94, 0.98), moonLight);
     moonColor *= 0.75 + moonTexture * 0.22 + moonFineTexture * 0.065 + lunarGrain * 0.035 + moonCraters * 0.13;
     moonColor *= 1.0 - moonMaria * 0.13;
+    moonColor *= 1.0 - mariaBasinOne * 0.11 - mariaBasinTwo * 0.075 - mariaBasinThree * 0.06;
     moonColor += vec3(0.08, 0.13, 0.22) * pow(1.0 - moonZ, 2.2);
     float musicalBreath = 0.5 + 0.5 * sin(uTime * mix(0.48, 0.74, uPlaying));
     float moonBreath = 0.95 + (0.045 + uPlaying * 0.045) * sin(uTime * 0.62) + musicalBreath * uPlaying * 0.018;

@@ -3,6 +3,7 @@
 import { CSSProperties, useEffect, useMemo, useRef } from "react";
 import { DreamLake } from "./DreamLake";
 import { GoldenMelodyTrails } from "./GoldenMelodyTrails";
+import { LunarDustHalo } from "./LunarDustHalo";
 import { MoonFireflies } from "./MoonFireflies";
 import { MoonlitDepthLayers } from "./MoonlitDepthLayers";
 import { MoonlitMemoryVeil } from "./MoonlitMemoryVeil";
@@ -84,6 +85,7 @@ export function MoonlitAtmosphere({ playing }: MoonlitAtmosphereProps) {
         <i className="moonlit-distant-body moonlit-distant-body--three" />
       </div>
 
+      <LunarDustHalo playing={playing} />
       <MoonlitDepthLayers playing={playing} />
       <MoonlightPath />
       <DreamLake />
