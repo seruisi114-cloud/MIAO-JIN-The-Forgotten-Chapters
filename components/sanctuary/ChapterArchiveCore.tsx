@@ -152,6 +152,16 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
 
       {isMoonPlanet ? (
         <>
+          <group position={[0, 1.42, -0.18]}>
+            <mesh position={[-0.62, 0.02, -0.08]} scale={[0.24, 0.82, 0.2]} rotation={[0.08, 0.18, -0.22]}>
+              <octahedronGeometry args={[0.78, 1]} />
+              <meshPhysicalMaterial color={sanctuaryPalette.moonBlue} roughness={0.18} transmission={0.66} thickness={0.9} ior={1.42} clearcoat={0.82} transparent opacity={0.24} depthWrite={false} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.08} />
+            </mesh>
+            <mesh position={[0.6, -0.06, -0.12]} scale={[0.2, 0.68, 0.18]} rotation={[-0.05, -0.2, 0.25]}>
+              <octahedronGeometry args={[0.78, 1]} />
+              <meshPhysicalMaterial color={sanctuaryPalette.moonWhite} roughness={0.16} transmission={0.7} thickness={0.82} ior={1.42} clearcoat={0.86} transparent opacity={0.18} depthWrite={false} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.06} />
+            </mesh>
+          </group>
           <mesh position={[0, MOON_BASE_Y, 0]}>
             <cylinderGeometry args={[0.4, 0.5, 0.12, 64]} />
             <meshPhysicalMaterial color={sanctuaryPalette.obsidian} roughness={0.38} metalness={0.46} clearcoat={0.42} clearcoatRoughness={0.4} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.08} />

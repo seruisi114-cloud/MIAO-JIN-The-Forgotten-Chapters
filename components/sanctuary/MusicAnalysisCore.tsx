@@ -67,9 +67,17 @@ export function MusicAnalysisCore({ position, index, skipIntro = false, onHoverC
       </mesh>
 
       <group ref={nebulaRef} position={[0, 1.08, 0]}>
-        <mesh scale={[1.2, 0.78, 0.72]}>
-          <sphereGeometry args={[0.82, 48, 32]} />
-          <meshPhysicalMaterial color={sanctuaryPalette.indigoMist} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={isHovered ? 0.17 : 0.07} roughness={0.35} transmission={0.52} thickness={1.2} transparent opacity={0.26} depthWrite={false} />
+        <mesh position={[-0.62, -0.14, -0.18]} scale={[0.24, 0.88, 0.22]} rotation={[0.08, 0.24, -0.2]}>
+          <octahedronGeometry args={[0.72, 2]} />
+          <meshPhysicalMaterial color={sanctuaryPalette.indigoMist} roughness={0.18} transmission={0.62} thickness={1.05} ior={1.45} clearcoat={0.82} transparent opacity={isHovered ? 0.32 : 0.2} depthWrite={false} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.1} />
+        </mesh>
+        <mesh position={[0.58, -0.22, -0.1]} scale={[0.2, 0.7, 0.18]} rotation={[-0.04, -0.3, 0.24]}>
+          <octahedronGeometry args={[0.72, 2]} />
+          <meshPhysicalMaterial color={sanctuaryPalette.moonBlue} roughness={0.22} transmission={0.55} thickness={0.9} ior={1.42} clearcoat={0.74} transparent opacity={isHovered ? 0.22 : 0.12} depthWrite={false} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.07} />
+        </mesh>
+        <mesh scale={[1.1, 0.9, 0.76]} rotation={[0.08, 0.18, -0.04]}>
+          <octahedronGeometry args={[0.82, 4]} />
+          <meshPhysicalMaterial color={sanctuaryPalette.indigoMist} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={isHovered ? 0.24 : 0.13} roughness={0.24} transmission={0.46} thickness={1.34} clearcoat={0.72} clearcoatRoughness={0.24} transparent opacity={isHovered ? 0.46 : 0.36} depthWrite={false} />
         </mesh>
         <mesh scale={[1.48, 0.94, 0.82]} rotation={[0.2, 0.35, -0.12]}>
           <sphereGeometry args={[0.82, 40, 28]} />
@@ -79,6 +87,7 @@ export function MusicAnalysisCore({ position, index, skipIntro = false, onHoverC
           <torusGeometry args={[1.08, 0.008, 8, 120, Math.PI * 1.18]} />
           <meshBasicMaterial color={sanctuaryPalette.champagneGold} transparent opacity={isHovered ? 0.34 : 0.13} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
+        <pointLight color={sanctuaryPalette.moonBlue} intensity={isHovered ? 0.62 : 0.28} distance={3.6} decay={2.2} position={[0, 0.08, 0.4]} />
       </group>
 
       <points>

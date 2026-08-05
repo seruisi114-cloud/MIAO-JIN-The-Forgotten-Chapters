@@ -35,9 +35,13 @@ function MelodyPath({ points, delay }: MelodyPathProps) {
 
   return (
     <group>
-      <Line points={linePoints} color={sanctuaryPalette.agedGold} lineWidth={2.8} transparent opacity={0.075} />
-      <Line points={linePoints} color={sanctuaryPalette.champagneGold} lineWidth={0.62} transparent opacity={0.48} />
-      {[0, 1, 2].map((index) => (
+      <mesh renderOrder={12}>
+        <tubeGeometry args={[curve, 96, 0.052, 8, false]} />
+        <meshBasicMaterial color={sanctuaryPalette.agedGold} transparent opacity={0.055} depthWrite={false} blending={THREE.AdditiveBlending} />
+      </mesh>
+      <Line points={linePoints} color={sanctuaryPalette.agedGold} lineWidth={4.6} transparent opacity={0.055} />
+      <Line points={linePoints} color={sanctuaryPalette.champagneGold} lineWidth={0.78} transparent opacity={0.56} />
+      {[0, 1, 2, 3].map((index) => (
         <mesh
           key={index}
           ref={(node) => {
@@ -45,7 +49,7 @@ function MelodyPath({ points, delay }: MelodyPathProps) {
           }}
           renderOrder={18}
         >
-          <sphereGeometry args={[index === 0 ? 0.035 : 0.024, 14, 14]} />
+          <sphereGeometry args={[index === 0 ? 0.038 : 0.022, 14, 14]} />
           <meshBasicMaterial
             color={index === 2 ? sanctuaryPalette.moonWhite : sanctuaryPalette.champagneGold}
             transparent
@@ -59,9 +63,19 @@ function MelodyPath({ points, delay }: MelodyPathProps) {
   );
 }
 
-export function SanctuaryMelodyPaths() {
+export function SanctuaryMelodyPaths({ skipIntro = false }: { skipIntro?: boolean }) {
+  const rootRef = useRef<THREE.Group>(null);
+  const elapsed = useRef(skipIntro ? 20 : 0);
+
+  useFrame((_, delta) => {
+    elapsed.current += delta;
+    if (!rootRef.current) return;
+    const reveal = THREE.MathUtils.smoothstep(elapsed.current, 5.65, 7.2);
+    rootRef.current.scale.setScalar(THREE.MathUtils.damp(rootRef.current.scale.x, Math.max(0.001, reveal), 2.15, delta));
+  });
+
   return (
-    <group>
+    <group ref={rootRef} scale={skipIntro ? 1 : 0.001}>
       <MelodyPath
         delay={0.04}
         points={[

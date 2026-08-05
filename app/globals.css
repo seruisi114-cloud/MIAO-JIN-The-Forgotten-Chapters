@@ -437,7 +437,9 @@ select {
   inset: 0;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 50% 34%, rgba(16, 38, 74, 0.62), transparent 48%),
+    radial-gradient(ellipse at 50% 30%, rgba(24, 48, 86, 0.72), transparent 44%),
+    radial-gradient(ellipse at 18% 48%, rgba(18, 35, 69, 0.26), transparent 30%),
+    radial-gradient(ellipse at 82% 46%, rgba(12, 29, 62, 0.28), transparent 32%),
     linear-gradient(180deg, var(--mj-deep-indigo), var(--mj-void));
   opacity: 0;
   pointer-events: none;
@@ -659,9 +661,9 @@ select {
   bottom: -15%;
   height: 44%;
   background:
-    radial-gradient(ellipse at 24% 55%, rgba(35, 58, 98, 0.2), transparent 37%),
-    radial-gradient(ellipse at 72% 46%, rgba(22, 41, 77, 0.24), transparent 41%),
-    linear-gradient(180deg, transparent, rgba(12, 23, 46, 0.25));
+    radial-gradient(ellipse at 24% 55%, rgba(35, 58, 98, 0.24), transparent 37%),
+    radial-gradient(ellipse at 72% 46%, rgba(22, 41, 77, 0.28), transparent 41%),
+    linear-gradient(180deg, transparent, rgba(12, 23, 46, 0.3));
   animation: sanctuary-mist-drift 24s ease-in-out infinite alternate;
 }
 
@@ -712,24 +714,24 @@ select {
 .sacred-mist-beam {
   top: -7%;
   left: 50%;
-  width: 38%;
-  height: 76%;
+  width: 32%;
+  height: 82%;
   transform: translateX(-50%);
-  clip-path: polygon(42% 0, 58% 0, 94% 100%, 6% 100%);
-  background: linear-gradient(180deg, rgba(220, 226, 236, 0.12), rgba(186, 199, 220, 0.047) 52%, transparent 100%);
-  filter: blur(17px);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(228, 232, 238, 0.2), rgba(190, 205, 225, 0.075) 36%, transparent 75%);
+  filter: blur(24px);
   mix-blend-mode: screen;
   animation: sanctuary-beam-breathe 8s ease-in-out infinite alternate;
 }
 
 .sacred-mist-core {
-  top: 49%;
+  top: 45%;
   left: 50%;
-  width: 22%;
+  width: 18%;
   aspect-ratio: 2.3;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(224, 227, 230, 0.16), rgba(181, 162, 117, 0.04) 38%, transparent 72%);
+  background: radial-gradient(ellipse, rgba(230, 232, 229, 0.22), rgba(197, 169, 109, 0.055) 38%, transparent 72%);
   filter: blur(15px);
   mix-blend-mode: screen;
   animation: sanctuary-core-pulse 6.5s ease-in-out infinite alternate;
