@@ -218,10 +218,10 @@ export const archiveMonumentFragmentShader = /* glsl */ `
     float ribbon = exp(-pow(abs(centered.x - sin(vUv.y * 7.0 + uTime * 0.06) * 0.11), 2.0) * 34.0);
     float dust = step(0.976, hash(floor(vUv * vec2(54.0, 76.0)) + floor(uTime * 0.06)));
     float edge = smoothstep(0.5, 0.17, abs(centered.x)) * smoothstep(0.5, 0.14, abs(centered.y));
-    vec3 blueNebula = vec3(0.04, 0.11, 0.22) * veil * 0.68;
-    vec3 violetVeil = vec3(0.12, 0.065, 0.19) * ribbon * veil * 0.28;
-    vec3 goldDust = vec3(0.72, 0.57, 0.3) * dust * (0.25 + uHover * 0.28);
-    vec3 color = blueNebula + violetVeil + goldDust;
+    vec3 blueNebula = vec3(0.025, 0.075, 0.17) * veil * 0.78;
+    vec3 indigoVeil = vec3(0.055, 0.12, 0.25) * ribbon * veil * 0.24;
+    vec3 goldDust = vec3(0.67, 0.54, 0.31) * dust * (0.22 + uHover * 0.26);
+    vec3 color = blueNebula + indigoVeil + goldDust;
     gl_FragColor = vec4(color, edge * (0.26 + veil * 0.34 + uHover * 0.09));
   }
 `;

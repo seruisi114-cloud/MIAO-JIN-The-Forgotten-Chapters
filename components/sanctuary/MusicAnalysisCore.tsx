@@ -4,6 +4,7 @@ import { Html } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { sanctuaryMotion, sanctuaryPalette } from "./visualSystem";
 
 type MusicAnalysisCoreProps = {
   position: [number, number, number];
@@ -13,14 +14,6 @@ type MusicAnalysisCoreProps = {
   onOpen: () => void;
 };
 
-function seededRandom(seed: number) {
-  let state = seed >>> 0;
-  return () => {
-    state = (state * 1664525 + 1013904223) >>> 0;
-    return state / 4294967296;
-  };
-}
-
 export function MusicAnalysisCore({ position, index, skipIntro = false, onHoverChange, onOpen }: MusicAnalysisCoreProps) {
   const rootRef = useRef<THREE.Group>(null);
   const nebulaRef = useRef<THREE.Group>(null);
@@ -28,14 +21,14 @@ export function MusicAnalysisCore({ position, index, skipIntro = false, onHoverC
   const elapsed = useRef(skipIntro ? 20 : 0);
   const [isHovered, setIsHovered] = useState(false);
   const particles = useMemo(() => {
-    const random = seededRandom(98413);
     const points = new Float32Array(24 * 3);
     for (let i = 0; i < 24; i += 1) {
-      const angle = random() * Math.PI * 2;
-      const radius = 0.32 + random() * 1.12;
+      const progress = i / 23;
+      const angle = progress * Math.PI * 3.4;
+      const radius = 0.34 + Math.sin(progress * Math.PI) * 0.86;
       points[i * 3] = Math.cos(angle) * radius;
-      points[i * 3 + 1] = 1.05 + (random() - 0.5) * 1.55;
-      points[i * 3 + 2] = Math.sin(angle) * radius * 0.56;
+      points[i * 3 + 1] = 0.36 + progress * 1.46;
+      points[i * 3 + 2] = Math.sin(angle) * radius * 0.42;
     }
     return points;
   }, []);
@@ -46,11 +39,11 @@ export function MusicAnalysisCore({ position, index, skipIntro = false, onHoverC
     if (rootRef.current) {
       const target = Math.max(0.001, reveal * (hovered.current ? 1.06 : 1));
       rootRef.current.scale.setScalar(THREE.MathUtils.damp(rootRef.current.scale.x, target, 2.4, delta));
-      rootRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * 0.28 + 2.1) * 0.035;
+      rootRef.current.position.y = position[1];
     }
     if (nebulaRef.current) {
-      nebulaRef.current.rotation.y += delta * (hovered.current ? 0.09 : 0.025);
-      nebulaRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.16) * 0.08;
+      const breathe = 1 + Math.sin(clock.elapsedTime * sanctuaryMotion.breathe) * (hovered.current ? 0.035 : 0.018);
+      nebulaRef.current.scale.setScalar(THREE.MathUtils.damp(nebulaRef.current.scale.x, breathe, 1.8, delta));
     }
   });
 
@@ -76,21 +69,21 @@ export function MusicAnalysisCore({ position, index, skipIntro = false, onHoverC
       <group ref={nebulaRef} position={[0, 1.08, 0]}>
         <mesh scale={[1.2, 0.78, 0.72]}>
           <sphereGeometry args={[0.82, 48, 32]} />
-          <meshPhysicalMaterial color="#182948" emissive="#284875" emissiveIntensity={isHovered ? 0.2 : 0.09} roughness={0.35} transmission={0.52} thickness={1.2} transparent opacity={0.26} depthWrite={false} />
+          <meshPhysicalMaterial color={sanctuaryPalette.indigoMist} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={isHovered ? 0.17 : 0.07} roughness={0.35} transmission={0.52} thickness={1.2} transparent opacity={0.26} depthWrite={false} />
         </mesh>
         <mesh scale={[1.48, 0.94, 0.82]} rotation={[0.2, 0.35, -0.12]}>
           <sphereGeometry args={[0.82, 40, 28]} />
-          <meshBasicMaterial color="#3f4c86" transparent opacity={isHovered ? 0.075 : 0.035} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color={sanctuaryPalette.indigoMist} transparent opacity={isHovered ? 0.075 : 0.035} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
         <mesh rotation={[Math.PI / 2, 0.22, 0.5]} scale={[1, 0.62, 1]}>
           <torusGeometry args={[1.08, 0.008, 8, 120, Math.PI * 1.18]} />
-          <meshBasicMaterial color="#b9a06d" transparent opacity={isHovered ? 0.34 : 0.13} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color={sanctuaryPalette.champagneGold} transparent opacity={isHovered ? 0.34 : 0.13} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
       </group>
 
       <points>
         <bufferGeometry><bufferAttribute attach="attributes-position" args={[particles, 3]} /></bufferGeometry>
-        <pointsMaterial color="#cab178" size={0.022} transparent opacity={isHovered ? 0.36 : 0.12} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
+        <pointsMaterial color={sanctuaryPalette.champagneGold} size={0.022} transparent opacity={isHovered ? 0.36 : 0.12} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
       </points>
 
       <Html center position={[0, -0.05, 0.1]} distanceFactor={9.2} zIndexRange={[30, 10]} style={{ pointerEvents: "none" }}>

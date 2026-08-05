@@ -8,6 +8,7 @@ import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransit
 import { chapter01 } from "@/config/chapters";
 import { archiveCoreVertexShader, dormantCrystalFragmentShader, frozenNebulaFragmentShader, moonPlanetFragmentShader } from "@/three/shaders/archiveCore";
 import { GoldenStarRibbon } from "./GoldenStarRibbon";
+import { sanctuaryPalette } from "./visualSystem";
 
 const MOON_CORE_Y = 1.96;
 const MOON_CORE_RADIUS = 0.58;
@@ -95,30 +96,27 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
     if (rootRef.current) {
       const target = Math.max(0.001, reveal * (activating ? 1.22 : hovered.current ? 1.055 : 1));
       rootRef.current.scale.setScalar(THREE.MathUtils.damp(rootRef.current.scale.x, target, 2.65, delta));
-      rootRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * 0.34 + index * 1.8) * 0.035;
+      rootRef.current.position.y = position[1];
     }
     if (orbitRef.current) {
-      orbitRef.current.rotation.y += delta * (activating ? 0.72 : hovered.current ? 0.12 : 0.018);
-      orbitRef.current.rotation.z += delta * (activating ? 0.16 : 0.006);
+      orbitRef.current.rotation.y += delta * (activating ? 0.72 : hovered.current ? 0.08 : 0);
+      orbitRef.current.rotation.z += delta * (activating ? 0.16 : 0);
     }
     if (moonCoreRef.current) {
-      moonCoreRef.current.rotation.y += delta * (activating ? 0.18 : hovered.current ? 0.065 : 0.026);
-      moonCoreRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.12) * 0.025;
+      moonCoreRef.current.rotation.y += delta * (activating ? 0.18 : hovered.current ? 0.05 : 0.012);
     }
     if (particleRef.current) {
-      particleRef.current.rotation.y += delta * (activating ? 0.95 : isMoonPlanet ? 0.055 : 0.018);
+      particleRef.current.rotation.y += delta * (activating ? 0.95 : hovered.current ? 0.035 : 0);
       const target = activating ? 1.38 : hovered.current ? 1.1 : 1;
       particleRef.current.scale.setScalar(THREE.MathUtils.damp(particleRef.current.scale.x, target, 2.3, delta));
     }
     if (relicEnergyRef.current) {
-      relicEnergyRef.current.rotation.y += delta * (hovered.current ? 0.44 : 0.12);
-      relicEnergyRef.current.rotation.z -= delta * 0.025;
+      relicEnergyRef.current.rotation.y += delta * (hovered.current ? 0.24 : 0);
       const pulse = 1 + Math.sin(clock.elapsedTime * 0.72) * (hovered.current ? 0.08 : 0.035);
       relicEnergyRef.current.scale.setScalar(THREE.MathUtils.damp(relicEnergyRef.current.scale.x, pulse, 2.1, delta));
     }
     if (nebulaShellRef.current) {
-      nebulaShellRef.current.rotation.y += delta * (hovered.current ? 0.055 : 0.018);
-      nebulaShellRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.11) * 0.06;
+      nebulaShellRef.current.rotation.y += delta * (hovered.current ? 0.035 : 0);
     }
     if (lightRef.current) lightRef.current.intensity = THREE.MathUtils.damp(lightRef.current.intensity, isMoonPlanet ? (activating ? 3.8 : hovered.current ? 1.25 : 0.44) : isRelicCore ? (hovered.current ? 0.36 : 0.14) : 0.05, 3.1, delta);
 
@@ -156,10 +154,10 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
         <>
           <mesh position={[0, MOON_BASE_Y, 0]}>
             <cylinderGeometry args={[0.4, 0.5, 0.12, 64]} />
-            <meshPhysicalMaterial color="#08101d" roughness={0.38} metalness={0.46} clearcoat={0.42} clearcoatRoughness={0.4} emissive="#10213a" emissiveIntensity={0.08} />
+            <meshPhysicalMaterial color={sanctuaryPalette.obsidian} roughness={0.38} metalness={0.46} clearcoat={0.42} clearcoatRoughness={0.4} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.08} />
           </mesh>
           <group position={[0, MOON_BASE_Y + 0.07, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <mesh><torusGeometry args={[0.48, 0.01, 8, 96, Math.PI * 1.55]} /><meshBasicMaterial color="#b79b64" transparent opacity={isHovered ? 0.58 : 0.28} depthWrite={false} /></mesh>
+            <mesh><torusGeometry args={[0.48, 0.01, 8, 96, Math.PI * 1.55]} /><meshBasicMaterial color={sanctuaryPalette.champagneGold} transparent opacity={isHovered ? 0.58 : 0.28} depthWrite={false} /></mesh>
           </group>
         </>
       ) : (
@@ -192,13 +190,13 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
           <group ref={orbitRef} position={[0, MOON_CORE_Y, 0]} rotation={[0.42, 0.12, -0.28]}>
             <mesh rotation={[Math.PI / 2, 0.18, 0]} scale={[1, 0.64, 1]}>
               <torusGeometry args={[0.94, 0.009, 8, 128, Math.PI * 1.28]} />
-              <meshBasicMaterial color="#c2a66b" transparent opacity={activating ? 0.68 : isHovered ? 0.36 : 0.14} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} />
+              <meshBasicMaterial color={sanctuaryPalette.champagneGold} transparent opacity={activating ? 0.68 : isHovered ? 0.36 : 0.14} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} />
             </mesh>
           </group>
           <group position={[0, MOON_CORE_Y, 0]}>
             <GoldenStarRibbon active={activating} hovered={isHovered} />
           </group>
-          <pointLight ref={lightRef} position={[0, MOON_CORE_Y + 0.01, 0.42]} color="#b8d8ff" intensity={0.44} distance={4.8} decay={2.1} />
+          <pointLight ref={lightRef} position={[0, MOON_CORE_Y + 0.01, 0.42]} color={sanctuaryPalette.moonWhite} intensity={0.44} distance={4.8} decay={2.1} />
         </>
       ) : isRelicCore ? (
         <>
@@ -268,7 +266,7 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[particlePositions, 3]} />
         </bufferGeometry>
-        <pointsMaterial color={isMoonPlanet ? "#d7c48d" : isRelicCore ? "#9c7b43" : "#7d90a8"} size={isMoonPlanet ? 0.028 : isFrozenNebula ? 0.022 : 0.018} transparent opacity={isMoonPlanet ? (activating ? 0.88 : isHovered ? 0.58 : 0.32) : isHovered ? 0.24 : 0.09} depthTest={!isMoonPlanet} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
+        <pointsMaterial color={isMoonPlanet ? sanctuaryPalette.champagneGold : isRelicCore ? sanctuaryPalette.agedGold : sanctuaryPalette.moonBlue} size={isMoonPlanet ? 0.028 : isFrozenNebula ? 0.022 : 0.018} transparent opacity={isMoonPlanet ? (activating ? 0.88 : isHovered ? 0.58 : 0.32) : isHovered ? 0.24 : 0.09} depthTest={!isMoonPlanet} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
       </points>
 
       <Html center position={labelPosition} distanceFactor={9.2} zIndexRange={[30, 10]} style={{ pointerEvents: "none" }}>

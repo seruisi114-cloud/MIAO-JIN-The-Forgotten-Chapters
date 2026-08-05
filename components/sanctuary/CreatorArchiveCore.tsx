@@ -5,6 +5,7 @@ import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { archiveCoreVertexShader, archiveMonumentFragmentShader } from "@/three/shaders/archiveCore";
+import { sanctuaryMotion, sanctuaryPalette } from "./visualSystem";
 
 type CreatorArchiveCoreProps = {
   position: [number, number, number];
@@ -13,12 +14,6 @@ type CreatorArchiveCoreProps = {
   onHoverChange: (index: number | null) => void;
   onOpenCreatorArchive: () => void;
 };
-
-const archiveGlyphs: Array<Array<[number, number, number]>> = [
-  [[-0.52, 0.74, 0.19], [-0.31, 0.83, 0.2], [-0.08, 0.78, 0.2], [0.12, 0.88, 0.2], [0.36, 0.8, 0.2], [0.52, 0.86, 0.19]],
-  [[-0.42, 0.28, 0.2], [-0.18, 0.36, 0.21], [0.03, 0.31, 0.21], [0.27, 0.4, 0.21], [0.45, 0.34, 0.2]],
-  [[-0.36, -0.25, 0.2], [-0.15, -0.15, 0.21], [0.08, -0.22, 0.21], [0.34, -0.12, 0.2]],
-];
 
 export function CreatorArchiveCore({ position, index, skipIntro = false, onHoverChange, onOpenCreatorArchive }: CreatorArchiveCoreProps) {
   const rootRef = useRef<THREE.Group>(null);
@@ -29,6 +24,8 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
   const lightRef = useRef<THREE.PointLight>(null);
   const rippleRef = useRef<THREE.Mesh>(null);
   const rippleMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const memoryRef = useRef<THREE.Points>(null);
+  const memoryMaterialRef = useRef<THREE.PointsMaterial>(null);
   const hovered = useRef(false);
   const elapsed = useRef(skipIntro ? 20 : 0);
   const rippleTime = useRef(-1);
@@ -52,12 +49,24 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
     shape.closePath();
     return shape;
   }, []);
+  const memoryPositions = useMemo(() => {
+    const positions = new Float32Array(18 * 3);
+    for (let particleIndex = 0; particleIndex < 18; particleIndex += 1) {
+      const progress = particleIndex / 17;
+      const angle = particleIndex * 2.399;
+      const radius = 0.18 + Math.sin(progress * Math.PI) * 0.24;
+      positions[particleIndex * 3] = Math.cos(angle) * radius;
+      positions[particleIndex * 3 + 1] = -1.22 + progress * 2.46;
+      positions[particleIndex * 3 + 2] = 0.34 + Math.sin(angle) * 0.13;
+    }
+    return positions;
+  }, []);
 
   useFrame(({ clock }, delta) => {
     elapsed.current += delta;
     const reveal = THREE.MathUtils.smoothstep(elapsed.current, 4.1, 5.8);
     if (rootRef.current) rootRef.current.scale.setScalar(THREE.MathUtils.damp(rootRef.current.scale.x, Math.max(0.001, reveal), 2.25, delta));
-    if (monumentRef.current) monumentRef.current.position.y = 1.65 + Math.sin(clock.elapsedTime * 0.35) * 0.035;
+    if (monumentRef.current) monumentRef.current.position.y = 1.65;
     if (nebulaMaterialRef.current) {
       nebulaMaterialRef.current.uniforms.uTime.value = clock.elapsedTime;
       nebulaMaterialRef.current.uniforms.uHover.value = THREE.MathUtils.damp(nebulaMaterialRef.current.uniforms.uHover.value, hovered.current ? 1 : 0, 2.3, delta);
@@ -68,6 +77,18 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
       coreMaterialRef.current.opacity = THREE.MathUtils.damp(coreMaterialRef.current.opacity, hovered.current ? 0.92 : 0.58, 2.3, delta);
     }
     if (lightRef.current) lightRef.current.intensity = THREE.MathUtils.damp(lightRef.current.intensity, hovered.current ? 1.15 : 0.42, 2, delta);
+    if (memoryRef.current) {
+      const positionAttribute = memoryRef.current.geometry.getAttribute("position") as THREE.BufferAttribute;
+      for (let particleIndex = 0; particleIndex < positionAttribute.count; particleIndex += 1) {
+        const nextY = positionAttribute.getY(particleIndex) + delta * 0.055;
+        positionAttribute.setY(particleIndex, nextY > 1.3 ? -1.28 : nextY);
+      }
+      positionAttribute.needsUpdate = true;
+    }
+    if (memoryMaterialRef.current) {
+      const breath = 0.42 + Math.sin(clock.elapsedTime * sanctuaryMotion.breathe) * 0.08;
+      memoryMaterialRef.current.opacity = THREE.MathUtils.damp(memoryMaterialRef.current.opacity, hovered.current ? breath + 0.18 : breath, 1.8, delta);
+    }
 
     if (rippleTime.current >= 0 && rippleRef.current && rippleMaterialRef.current) {
       rippleTime.current += delta;
@@ -96,53 +117,57 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
       <group ref={monumentRef} position={[0, 1.65, 0]}>
         <mesh onPointerEnter={(event) => handlePointer(event, true)} onPointerLeave={(event) => handlePointer(event, false)} onClick={handleClick}>
           <extrudeGeometry args={[archiveShape, { depth: 0.24, bevelEnabled: true, bevelSegments: 3, bevelSize: 0.075, bevelThickness: 0.055, curveSegments: 8 }]} />
-          <meshPhysicalMaterial color="#0b1627" roughness={0.16} metalness={0.18} transmission={0.62} thickness={1.42} ior={1.47} clearcoat={0.88} clearcoatRoughness={0.14} envMapIntensity={1.2} transparent opacity={0.56} emissive="#183354" emissiveIntensity={isHovered ? 0.18 : 0.07} />
-          <Edges scale={1.002} threshold={20} color={isHovered ? "#bea66f" : "#665a41"} />
+          <meshPhysicalMaterial color={sanctuaryPalette.moonBlue} roughness={0.12} metalness={0.04} transmission={0.84} thickness={1.68} ior={1.46} clearcoat={0.92} clearcoatRoughness={0.1} envMapIntensity={1.18} transparent opacity={0.34} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={isHovered ? 0.16 : 0.065} />
+          <Edges scale={1.002} threshold={20} color={isHovered ? sanctuaryPalette.champagneGold : sanctuaryPalette.agedGold} />
         </mesh>
         <mesh position={[0, 0, -0.08]} scale={[1.055, 1.04, 1]}>
           <shapeGeometry args={[archiveShape, 8]} />
-          <meshBasicMaterial color="#13223a" transparent opacity={0.22} depthWrite={false} />
+          <meshBasicMaterial color={sanctuaryPalette.deepIndigo} transparent opacity={0.18} depthWrite={false} />
         </mesh>
         <mesh position={[0, 0, 0.251]}>
           <shapeGeometry args={[archiveShape, 8]} />
           <shaderMaterial ref={nebulaMaterialRef} uniforms={nebulaUniforms} vertexShader={archiveCoreVertexShader} fragmentShader={archiveMonumentFragmentShader} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
 
-        <Line points={[[-0.58, 1.31, 0.27], [-0.94, 0.78, 0.27], [-0.9, 0.18, 0.27]]} color="#b99a60" lineWidth={0.52} transparent opacity={isHovered ? 0.74 : 0.36} />
-        <Line points={[[0.58, 1.31, 0.27], [0.94, 0.78, 0.27], [0.9, 0.18, 0.27]]} color="#b99a60" lineWidth={0.52} transparent opacity={isHovered ? 0.74 : 0.36} />
-        <Line points={[[-0.86, -0.92, 0.27], [-0.55, -1.28, 0.27], [-0.16, -1.38, 0.27]]} color="#8c774e" lineWidth={0.4} transparent opacity={isHovered ? 0.62 : 0.27} />
-        <Line points={[[0.86, -0.92, 0.27], [0.55, -1.28, 0.27], [0.16, -1.38, 0.27]]} color="#8c774e" lineWidth={0.4} transparent opacity={isHovered ? 0.62 : 0.27} />
-
-        {archiveGlyphs.map((points, index) => (
-          <Line key={index} points={points} color={index === 1 ? "#d5c79f" : "#ad935e"} lineWidth={0.38} transparent opacity={isHovered ? 0.46 : 0.21} />
-        ))}
+        <Line points={[[-0.58, 1.31, 0.27], [-0.94, 0.78, 0.27], [-0.9, -0.82, 0.27], [-0.55, -1.28, 0.27]]} color={sanctuaryPalette.champagneGold} lineWidth={0.52} transparent opacity={isHovered ? 0.72 : 0.34} />
+        <Line points={[[0.58, 1.31, 0.27], [0.94, 0.78, 0.27], [0.9, -0.82, 0.27], [0.55, -1.28, 0.27]]} color={sanctuaryPalette.champagneGold} lineWidth={0.52} transparent opacity={isHovered ? 0.72 : 0.34} />
 
         <mesh position={[0, 0, -0.22]} rotation={[0, 0, 0.32]} scale={[1, 0.72, 1]}>
           <torusGeometry args={[1.64, 0.009, 8, 128, Math.PI * 1.16]} />
-          <meshBasicMaterial color="#b79b68" transparent opacity={isHovered ? 0.34 : 0.14} depthWrite={false} />
+          <meshBasicMaterial color={sanctuaryPalette.champagneGold} transparent opacity={isHovered ? 0.3 : 0.12} depthWrite={false} />
         </mesh>
 
         <mesh ref={coreRef} position={[0, -0.02, 0.26]}>
-          <icosahedronGeometry args={[0.105, 3]} />
-          <meshBasicMaterial ref={coreMaterialRef} color="#edf0ea" transparent opacity={0.58} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <sphereGeometry args={[0.095, 24, 24]} />
+          <meshBasicMaterial ref={coreMaterialRef} color={sanctuaryPalette.moonWhite} transparent opacity={0.58} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
         <mesh position={[0, -0.02, 0.22]} scale={4.2}>
           <sphereGeometry args={[0.105, 24, 24]} />
-          <meshBasicMaterial color="#b8cce8" transparent opacity={0.042} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color={sanctuaryPalette.moonBlue} transparent opacity={0.042} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
-        <pointLight ref={lightRef} position={[0, -0.02, 0.3]} color="#dae5f3" intensity={0.42} distance={5.2} decay={2.2} />
+        <pointLight ref={lightRef} position={[0, -0.02, 0.3]} color={sanctuaryPalette.moonWhite} intensity={0.42} distance={5.2} decay={2.2} />
+
+        <points ref={memoryRef} renderOrder={20}>
+          <bufferGeometry>
+            <bufferAttribute attach="attributes-position" args={[memoryPositions, 3]} />
+          </bufferGeometry>
+          <pointsMaterial ref={memoryMaterialRef} color={sanctuaryPalette.champagneGold} size={0.022} sizeAttenuation transparent opacity={0.42} depthWrite={false} blending={THREE.AdditiveBlending} />
+        </points>
+
+        <Html center position={[0, 0.02, 0.34]} distanceFactor={8.8} zIndexRange={[30, 10]} style={{ pointerEvents: "none" }}>
+          <div className={`creator-star-stele-copy${isHovered ? " is-awake" : ""}`}>
+            <span>创作者档案</span>
+            <strong>金淼</strong>
+            <i aria-hidden="true" />
+            <small>《月下星海》</small>
+          </div>
+        </Html>
       </group>
 
       <mesh ref={rippleRef} position={[0, 0.26, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.82, 0.84, 96]} />
-        <meshBasicMaterial ref={rippleMaterialRef} color="#e0e6ed" transparent opacity={0} depthWrite={false} />
+        <meshBasicMaterial ref={rippleMaterialRef} color={sanctuaryPalette.moonWhite} transparent opacity={0} depthWrite={false} />
       </mesh>
-      <Html center position={[0, 3.48, 0.1]} distanceFactor={9.4} zIndexRange={[30, 10]} style={{ pointerEvents: "none" }}>
-        <div className={`sanctuary-label sanctuary-label--entry sanctuary-label--creator${isHovered ? " is-hovered" : ""}`}>
-          <span>创作者档案</span>
-          <small>金淼 · 宇宙档案空间</small>
-        </div>
-      </Html>
     </group>
   );
 }

@@ -1,16 +1,27 @@
 @import "tailwindcss";
 
+:root {
+  --mj-void: #030714;
+  --mj-deep-indigo: #07142d;
+  --mj-indigo-mist: #10264a;
+  --mj-obsidian: #080e18;
+  --mj-moon-white: #e7e8e2;
+  --mj-moon-blue: #b9cbe0;
+  --mj-champagne-gold: #c5a96d;
+  --mj-aged-gold: #8f7547;
+}
+
 html,
 body {
   width: 100%;
   min-height: 100%;
   overflow: hidden;
-  background: #05060a;
+  background: var(--mj-void);
 }
 
 body {
   margin: 0;
-  color: #e8e5dc;
+  color: var(--mj-moon-white);
   overscroll-behavior: none;
 }
 
@@ -425,7 +436,9 @@ select {
   z-index: 4;
   inset: 0;
   overflow: hidden;
-  background: #071126;
+  background:
+    radial-gradient(ellipse at 50% 34%, rgba(16, 38, 74, 0.62), transparent 48%),
+    linear-gradient(180deg, var(--mj-deep-indigo), var(--mj-void));
   opacity: 0;
   pointer-events: none;
 }
@@ -1170,6 +1183,61 @@ select {
   text-shadow: 0 0 1rem rgba(209, 214, 224, 0.09);
   white-space: nowrap;
   transition: color 0.7s ease, text-shadow 0.7s ease;
+}
+
+.creator-star-stele-copy {
+  width: 8.8rem;
+  color: rgba(231, 232, 226, 0.78);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  text-align: center;
+  text-shadow: 0 0 1.5rem rgba(185, 203, 224, 0.14);
+  transition: color 0.9s ease, text-shadow 0.9s ease, transform 0.9s ease;
+}
+
+.creator-star-stele-copy span,
+.creator-star-stele-copy strong,
+.creator-star-stele-copy small {
+  display: block;
+  font-style: normal;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.creator-star-stele-copy span {
+  color: rgba(197, 169, 109, 0.82);
+  font-size: 0.58rem;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+}
+
+.creator-star-stele-copy strong {
+  margin-top: 0.42rem;
+  color: rgba(231, 232, 226, 0.92);
+  font-size: 0.92rem;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+}
+
+.creator-star-stele-copy i {
+  display: block;
+  width: 4.8rem;
+  height: 1px;
+  margin: 0.48rem auto 0.42rem;
+  background: linear-gradient(90deg, transparent, rgba(197, 169, 109, 0.68), transparent);
+  box-shadow: 0 0 0.7rem rgba(197, 169, 109, 0.12);
+}
+
+.creator-star-stele-copy small {
+  color: rgba(185, 203, 224, 0.62);
+  font-size: 0.54rem;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+}
+
+.creator-star-stele-copy.is-awake {
+  color: var(--mj-moon-white);
+  text-shadow: 0 0 1.8rem rgba(197, 169, 109, 0.22);
+  transform: translateY(-0.08rem);
 }
 
 .sanctuary-label::before,

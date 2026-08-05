@@ -14,6 +14,8 @@ import { StarDome } from "./StarDome";
 import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { ChapterEntryCameraRig } from "./ChapterEntryCameraRig";
 import { MusicAnalysisCore } from "./MusicAnalysisCore";
+import { SanctuaryMelodyPaths } from "./SanctuaryMelodyPaths";
+import { sanctuaryPalette } from "./visualSystem";
 
 const moonPosition: [number, number, number] = [-4.15, -0.5, 2.45];
 const creatorPosition: [number, number, number] = [0, 0.55, -1.55];
@@ -57,6 +59,7 @@ function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingI
       <ChapterArchiveCore kind="moon-planet" labelPlacement="left" position={moonPosition} chapter="核心作品" revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <CreatorArchiveCore position={creatorPosition} index={2} skipIntro={restoring} onHoverChange={onActiveChange} onOpenCreatorArchive={onOpenCreatorArchive} />
       <MusicAnalysisCore position={analysisPosition} index={3} skipIntro={restoring} onHoverChange={onActiveChange} onOpen={onOpenMusicAnalysis} />
+      <SanctuaryMelodyPaths />
       <SanctuaryParticles skipIntro={restoring} />
       <ChapterEntryCameraRig active={enteringChapter} reducedMotion={reducedMotion} />
     </group>
@@ -97,11 +100,11 @@ export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, o
           camera.zoom = 1;
           camera.updateProjectionMatrix();
         }
-        gl.setClearColor("#071126", 1);
+        gl.setClearColor(sanctuaryPalette.deepIndigo, 1);
         gl.outputColorSpace = "srgb";
         gl.toneMapping = THREE.ACESFilmicToneMapping;
         gl.toneMappingExposure = 1.72;
-        scene.fog = new THREE.FogExp2("#0a1831", 0.024);
+        scene.fog = new THREE.FogExp2(sanctuaryPalette.deepIndigo, 0.024);
       }}
     >
       <StarDome />
