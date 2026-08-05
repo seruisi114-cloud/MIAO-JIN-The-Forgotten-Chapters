@@ -1,14 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
-import { FlowingGoldenStreams } from "./FlowingGoldenStreams";
 import { ForegroundVeil } from "./ForegroundVeil";
-import { GoldenDustField } from "./GoldenDustField";
-import { GoldenOrnaments } from "./GoldenOrnaments";
 import { SacredMist } from "./SacredMist";
 import { SanctuaryCanvas } from "./SanctuaryCanvas";
-import { ArchiveRunesLayer } from "./ArchiveRunesLayer";
 
 type SanctuarySceneProps = {
   active: boolean;
@@ -23,22 +19,12 @@ type SanctuarySceneProps = {
 };
 
 export function SanctuaryScene({ active, settled, restoring, enteringChapter, activeStatueId, onBeginChapterActivation, onActivationPosition, onOpenCreatorArchive, onOpenMusicAnalysis }: SanctuarySceneProps) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const activeIndex = activeStatueId ?? hoveredIndex;
-
-  const handleHoverChange = useCallback(
-    (index: number | null) => {
-      if (activeStatueId !== null) return;
-      setHoveredIndex(index);
-    },
-    [activeStatueId],
-  );
+  const handleHoverChange = useCallback(() => undefined, []);
 
   const handleActivate = useCallback(
     (index: number) => {
       if (activeStatueId !== null) return;
       if (index !== 1) return;
-      setHoveredIndex(1);
       onBeginChapterActivation(1);
     },
     [activeStatueId, onBeginChapterActivation],
@@ -57,10 +43,6 @@ export function SanctuaryScene({ active, settled, restoring, enteringChapter, ac
         onOpenMusicAnalysis={onOpenMusicAnalysis}
       />
       <SacredMist />
-      <FlowingGoldenStreams activeIndex={activeIndex} />
-      <ArchiveRunesLayer />
-      <GoldenOrnaments activeIndex={activeIndex} />
-      <GoldenDustField />
       <ForegroundVeil />
       <div className="sanctuary-vignette" aria-hidden="true" />
     </section>

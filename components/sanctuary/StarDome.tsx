@@ -58,27 +58,21 @@ const fragmentShader = /* glsl */ `
 `;
 
 export function StarDome() {
-  const groupRef = useRef<THREE.Group>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const uniforms = useMemo(() => ({ uTime: { value: 0 } }), []);
 
-  useFrame(({ clock, pointer }, delta) => {
+  useFrame(({ clock }) => {
     if (materialRef.current) materialRef.current.uniforms.uTime.value = clock.elapsedTime;
-    if (groupRef.current) {
-      groupRef.current.rotation.y = THREE.MathUtils.damp(groupRef.current.rotation.y, pointer.x * 0.008, 0.75, delta);
-      groupRef.current.rotation.x = THREE.MathUtils.damp(groupRef.current.rotation.x, -pointer.y * 0.005, 0.75, delta);
-    }
   });
 
   return (
-    <group ref={groupRef}>
+    <group>
       <mesh scale={34} renderOrder={-4}>
         <sphereGeometry args={[1, 64, 40]} />
         <shaderMaterial ref={materialRef} uniforms={uniforms} vertexShader={vertexShader} fragmentShader={fragmentShader} side={THREE.BackSide} depthWrite={false} />
       </mesh>
-      <Stars radius={42} depth={24} count={960} factor={2.1} saturation={0} fade speed={0.12} />
-      <Stars radius={34} depth={18} count={86} factor={4.2} saturation={0} fade speed={0.08} />
-      <Stars radius={29} depth={13} count={32} factor={6.2} saturation={0.08} fade speed={0.055} />
+      <Stars radius={42} depth={24} count={420} factor={1.7} saturation={0} fade speed={0.018} />
+      <Stars radius={34} depth={18} count={28} factor={3.4} saturation={0} fade speed={0.012} />
     </group>
   );
 }

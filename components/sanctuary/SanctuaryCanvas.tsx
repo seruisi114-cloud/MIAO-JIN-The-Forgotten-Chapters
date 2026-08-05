@@ -5,7 +5,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { CelestialVaultRuins } from "./CelestialVaultRuins";
 import { CreatorArchiveCore } from "./CreatorArchiveCore";
-import { ArchiveOrbitField } from "./ArchiveOrbitField";
 import { ChapterArchiveCore } from "./ChapterArchiveCore";
 import { SanctuaryFloor } from "./SanctuaryFloor";
 import { SanctuaryLighting } from "./SanctuaryLighting";
@@ -52,14 +51,13 @@ function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingI
 
   return (
     <group ref={rootRef}>
-      <CelestialVaultRuins reducedMotion={reducedMotion} />
-      <ArchiveOrbitField reducedMotion={reducedMotion} />
+      <CelestialVaultRuins />
       <SanctuaryFloor skipIntro={restoring} />
       <SanctuaryPillars skipIntro={restoring} />
       <ChapterArchiveCore kind="moon-planet" labelPlacement="left" position={moonPosition} chapter="核心作品" revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <CreatorArchiveCore position={creatorPosition} index={2} skipIntro={restoring} onHoverChange={onActiveChange} onOpenCreatorArchive={onOpenCreatorArchive} />
       <MusicAnalysisCore position={analysisPosition} index={3} skipIntro={restoring} onHoverChange={onActiveChange} onOpen={onOpenMusicAnalysis} />
-      <SanctuaryParticles reducedMotion={reducedMotion} skipIntro={restoring} />
+      <SanctuaryParticles skipIntro={restoring} />
       <ChapterEntryCameraRig active={enteringChapter} reducedMotion={reducedMotion} />
     </group>
   );

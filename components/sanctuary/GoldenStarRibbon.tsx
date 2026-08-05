@@ -28,23 +28,21 @@ export function GoldenStarRibbon({ active, hovered }: GoldenStarRibbonProps) {
   const particleRef = useRef<THREE.Points>(null);
   const materialRef = useRef<THREE.PointsMaterial>(null);
   const primaryCurve = useMemo(() => makeRibbonCurve(0.92, 0.19, 0.2), []);
-  const echoCurve = useMemo(() => makeRibbonCurve(1.08, 0.13, 2.1), []);
   const primaryPoints = useMemo(() => primaryCurve.getPoints(180), [primaryCurve]);
-  const echoPoints = useMemo(() => echoCurve.getPoints(160), [echoCurve]);
-  const movingPositions = useMemo(() => new Float32Array(42 * 3), []);
+  const movingPositions = useMemo(() => new Float32Array(14 * 3), []);
 
   useFrame(({ clock }, delta) => {
-    const speed = active ? 0.23 : hovered ? 0.055 : 0.024;
+    const speed = active ? 0.16 : hovered ? 0.034 : 0.009;
     if (rootRef.current) {
-      rootRef.current.rotation.y += delta * (active ? 1.34 : hovered ? 0.18 : 0.055);
-      rootRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.12) * 0.055;
+      rootRef.current.rotation.y += delta * (active ? 0.78 : hovered ? 0.08 : 0.012);
+      rootRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.08) * 0.026;
     }
     if (particleRef.current) {
       const attribute = particleRef.current.geometry.attributes.position as THREE.BufferAttribute;
-      for (let index = 0; index < 42; index += 1) {
-        const trailOffset = index % 7 * 0.0028;
-        const progress = (clock.elapsedTime * speed + index / 42 - trailOffset) % 1;
-        const point = (index % 3 === 0 ? echoCurve : primaryCurve).getPointAt(progress);
+      for (let index = 0; index < 14; index += 1) {
+        const trailOffset = index % 4 * 0.0028;
+        const progress = (clock.elapsedTime * speed + index / 14 - trailOffset) % 1;
+        const point = primaryCurve.getPointAt(progress);
         const offset = index * 3;
         attribute.array[offset] = point.x;
         attribute.array[offset + 1] = point.y;
@@ -53,15 +51,14 @@ export function GoldenStarRibbon({ active, hovered }: GoldenStarRibbonProps) {
       attribute.needsUpdate = true;
     }
     if (materialRef.current) {
-      materialRef.current.opacity = THREE.MathUtils.damp(materialRef.current.opacity, active ? 1 : hovered ? 0.66 : 0.38, 3.4, delta);
-      materialRef.current.size = THREE.MathUtils.damp(materialRef.current.size, active ? 0.068 : hovered ? 0.043 : 0.032, 3.4, delta);
+      materialRef.current.opacity = THREE.MathUtils.damp(materialRef.current.opacity, active ? 0.76 : hovered ? 0.42 : 0.2, 3.4, delta);
+      materialRef.current.size = THREE.MathUtils.damp(materialRef.current.size, active ? 0.054 : hovered ? 0.036 : 0.026, 3.4, delta);
     }
   });
 
   return (
     <group ref={rootRef} rotation={[0.38, -0.18, -0.24]}>
       <Line points={primaryPoints} color="#d4b975" lineWidth={active ? 1.05 : hovered ? 0.78 : 0.5} transparent opacity={active ? 0.82 : hovered ? 0.57 : 0.31} depthTest={false} depthWrite={false} />
-      <Line points={echoPoints} color="#9b7d45" lineWidth={active ? 0.62 : 0.36} transparent opacity={active ? 0.5 : hovered ? 0.33 : 0.16} depthTest={false} depthWrite={false} />
       <points ref={particleRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[movingPositions, 3]} />

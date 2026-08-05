@@ -95,9 +95,9 @@ function ParticleCloud({ count, kind, seed, playing, reducedMotion, mobile }: Pa
 export function MoonlitParticleField({ playing, reducedMotion, mobile }: MoonlitParticleFieldProps) {
   return (
     <>
-      <ParticleCloud count={mobile ? 76 : 132} kind="dust" seed={71901} playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
-      <ParticleCloud count={mobile ? 22 : 32} kind="fireflies" seed={190726} playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
-      <ParticleCloud count={mobile ? 18 : 34} kind="rising" seed={260722} playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
+      <ParticleCloud count={mobile ? 28 : 48} kind="dust" seed={71901} playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
+      <ParticleCloud count={mobile ? 8 : 12} kind="fireflies" seed={190726} playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
+      <ParticleCloud count={mobile ? 6 : 10} kind="rising" seed={260722} playing={playing} reducedMotion={reducedMotion} mobile={mobile} />
     </>
   );
 }

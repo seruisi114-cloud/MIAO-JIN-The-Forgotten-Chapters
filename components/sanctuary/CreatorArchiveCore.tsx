@@ -1,6 +1,6 @@
 "use client";
 
-import { Edges, Html, Line, Sparkles } from "@react-three/drei";
+import { Edges, Html, Line } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
@@ -23,7 +23,6 @@ const archiveGlyphs: Array<Array<[number, number, number]>> = [
 export function CreatorArchiveCore({ position, index, skipIntro = false, onHoverChange, onOpenCreatorArchive }: CreatorArchiveCoreProps) {
   const rootRef = useRef<THREE.Group>(null);
   const monumentRef = useRef<THREE.Group>(null);
-  const haloRef = useRef<THREE.Group>(null);
   const coreRef = useRef<THREE.Mesh>(null);
   const coreMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
   const nebulaMaterialRef = useRef<THREE.ShaderMaterial>(null);
@@ -63,10 +62,6 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
       nebulaMaterialRef.current.uniforms.uTime.value = clock.elapsedTime;
       nebulaMaterialRef.current.uniforms.uHover.value = THREE.MathUtils.damp(nebulaMaterialRef.current.uniforms.uHover.value, hovered.current ? 1 : 0, 2.3, delta);
     }
-    if (haloRef.current) {
-      haloRef.current.rotation.z += delta * (hovered.current ? 0.12 : 0.025);
-      haloRef.current.rotation.y += delta * 0.008;
-    }
     if (coreRef.current && coreMaterialRef.current) {
       const pulse = 1 + Math.sin(clock.elapsedTime * (hovered.current ? 1.15 : 0.52)) * (hovered.current ? 0.14 : 0.055);
       coreRef.current.scale.setScalar(THREE.MathUtils.damp(coreRef.current.scale.x, pulse, 2.1, delta));
@@ -98,11 +93,6 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
 
   return (
     <group ref={rootRef} position={position} scale={skipIntro ? 1 : 0.001}>
-      <group position={[0, 0.22, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <mesh><torusGeometry args={[0.92, 0.012, 8, 112, Math.PI * 1.58]} /><meshBasicMaterial color="#b89a61" transparent opacity={isHovered ? 0.56 : 0.3} depthWrite={false} /></mesh>
-        <mesh rotation={[0, 0, 2.08]}><torusGeometry args={[1.14, 0.006, 8, 112, Math.PI * 0.84]} /><meshBasicMaterial color="#d0bc8c" transparent opacity={0.16} depthWrite={false} /></mesh>
-      </group>
-
       <group ref={monumentRef} position={[0, 1.65, 0]}>
         <mesh onPointerEnter={(event) => handlePointer(event, true)} onPointerLeave={(event) => handlePointer(event, false)} onClick={handleClick}>
           <extrudeGeometry args={[archiveShape, { depth: 0.24, bevelEnabled: true, bevelSegments: 3, bevelSize: 0.075, bevelThickness: 0.055, curveSegments: 8 }]} />
@@ -127,14 +117,10 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
           <Line key={index} points={points} color={index === 1 ? "#d5c79f" : "#ad935e"} lineWidth={0.38} transparent opacity={isHovered ? 0.46 : 0.21} />
         ))}
 
-        <group ref={haloRef} position={[0, 0, -0.22]} rotation={[0, 0, 0.32]}>
-          {[1.52, 1.75, 2.04].map((radius, index) => (
-            <mesh key={radius} rotation={[0, index * 0.2, index * 0.64]} scale={[1, 0.72 + index * 0.04, 1]}>
-              <torusGeometry args={[radius, index === 0 ? 0.013 : 0.007, 8, 128, Math.PI * (index === 1 ? 1.4 : 1.68)]} />
-              <meshBasicMaterial color={index === 2 ? "#8ca1c0" : "#bfa269"} transparent opacity={(isHovered ? 0.44 : 0.22) - index * 0.04} depthWrite={false} />
-            </mesh>
-          ))}
-        </group>
+        <mesh position={[0, 0, -0.22]} rotation={[0, 0, 0.32]} scale={[1, 0.72, 1]}>
+          <torusGeometry args={[1.64, 0.009, 8, 128, Math.PI * 1.16]} />
+          <meshBasicMaterial color="#b79b68" transparent opacity={isHovered ? 0.34 : 0.14} depthWrite={false} />
+        </mesh>
 
         <mesh ref={coreRef} position={[0, -0.02, 0.26]}>
           <icosahedronGeometry args={[0.105, 3]} />
@@ -145,8 +131,6 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
           <meshBasicMaterial color="#b8cce8" transparent opacity={0.042} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
         <pointLight ref={lightRef} position={[0, -0.02, 0.3]} color="#dae5f3" intensity={0.42} distance={5.2} decay={2.2} />
-        <Sparkles count={62} scale={[2.8, 3.35, 1.6]} size={0.58} speed={isHovered ? 0.18 : 0.065} color="#c8ac70" opacity={isHovered ? 0.52 : 0.26} noise={0.42} />
-        <Sparkles count={32} scale={[2.35, 2.9, 1.35]} size={0.42} speed={isHovered ? 0.12 : 0.04} color="#91acd1" opacity={isHovered ? 0.28 : 0.13} noise={0.7} />
       </group>
 
       <mesh ref={rippleRef} position={[0, 0.26, 0]} rotation={[Math.PI / 2, 0, 0]}>

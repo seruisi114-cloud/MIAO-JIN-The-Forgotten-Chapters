@@ -3882,7 +3882,8 @@ select {
 }
 
 .moonlit-star-sea-world.has-webgl .dream-nebula {
-  opacity: 0.18;
+  opacity: 0;
+  transition: opacity 1.8s ease;
 }
 
 .dream-sky,
