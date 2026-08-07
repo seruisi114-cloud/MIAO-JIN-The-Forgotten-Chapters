@@ -1,50 +1,40 @@
 "use client";
 
-import type { CSSProperties } from "react";
-
 type CreatorArchiveSpaceProps = {
   onClose: () => void;
 };
 
 const archiveSections = [
   {
-    label: "作者简介",
-    body: "金淼，以旋律构筑梦境的东方创作者。她的作品关注月光、记忆与静默之间的情绪回响。",
+    label: "作者",
+    body: "金淼，一位以旋律保存梦境与记忆的东方创作者。",
   },
   {
-    label: "创作理念",
-    body: "让音乐成为可以停留的空间，而非转瞬即逝的声音。",
+    label: "作品",
+    body: "《月下星海》——一段关于月光、沉睡与回响的原创音乐。",
   },
   {
-    label: "作品方向",
-    body: "以器乐叙事、氛围音乐与电影感声音景观为核心，探索东方诗意与宇宙意象的交汇。",
+    label: "创作方向",
+    body: "以器乐叙事和氛围声音构筑画面，让听者在旋律留下的空白中找到自己的故事。",
   },
 ];
 
 export function CreatorArchiveSpace({ onClose }: CreatorArchiveSpaceProps) {
   return (
-    <section className="content-cosmos content-cosmos--creator" aria-label="创作者档案">
-      <div className="content-cosmos__nebula" aria-hidden="true"><i /><i /><i /></div>
-      <div className="creator-stele" aria-hidden="true"><i /><i /><i /></div>
-      <div className="content-cosmos__dust" aria-hidden="true">
-        {Array.from({ length: 32 }, (_, index) => (
-          <i
-            key={index}
-            style={{
-              "--dust-left": `${5 + index * 2.85}%`,
-              "--dust-top": `${12 + (index % 7) * 10}%`,
-              "--dust-size": `${1 + (index % 3) * 0.6}px`,
-              "--dust-duration": `${11 + (index % 6) * 2}s`,
-              "--dust-delay": `${index * -0.7}s`,
-            } as CSSProperties}
-          />
-        ))}
-      </div>
-      <article className="content-cosmos__copy">
-        <p className="content-cosmos__kicker">星辰收藏册</p>
-        <h1>金淼</h1>
-        <span className="content-cosmos__ornament" aria-hidden="true" />
-        <div className="creator-archive-sections">
+    <section className="manuscript-room" aria-label="创作者手稿">
+      <div className="manuscript-room__moonlight" aria-hidden="true" />
+      <div className="manuscript-room__desk" aria-hidden="true" />
+      <div className="manuscript-room__folio" aria-hidden="true" />
+      <article className="manuscript-document">
+        <div className="manuscript-document__clip" aria-hidden="true" />
+        <header>
+          <p>创作者手稿 · 壹</p>
+          <span>CREATOR&apos;S MANUSCRIPT</span>
+          <h1>金淼</h1>
+          <small>《月下星海》</small>
+        </header>
+        <div className="manuscript-document__rule" aria-hidden="true"><i /></div>
+        <div className="manuscript-document__entries">
           {archiveSections.map((section) => (
             <section key={section.label}>
               <h2>{section.label}</h2>
@@ -53,10 +43,13 @@ export function CreatorArchiveSpace({ onClose }: CreatorArchiveSpaceProps) {
           ))}
         </div>
         <blockquote>月光落入沉寂的星海，<br />沉睡的旋律在遗忘之境中醒来。</blockquote>
-        <cite>MIAO JIN</cite>
+        <footer>
+          <span>现存作品记录 · 01</span>
+          <cite>MIAO JIN</cite>
+        </footer>
       </article>
-      <button type="button" className="content-cosmos__return" onClick={onClose}>返回星穹圣殿<i aria-hidden="true" /></button>
-      <div className="content-cosmos__vignette" aria-hidden="true" />
+      <button type="button" className="manuscript-room__return" onClick={onClose}>合上手稿<i aria-hidden="true" /></button>
+      <div className="manuscript-room__vignette" aria-hidden="true" />
     </section>
   );
 }

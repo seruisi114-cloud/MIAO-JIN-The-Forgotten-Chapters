@@ -7,6 +7,7 @@ import { SanctuaryLighting } from "./SanctuaryLighting";
 import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { ChapterEntryCameraRig } from "./ChapterEntryCameraRig";
 import { CreatorArchiveCore } from "./CreatorArchiveCore";
+import { GiftLetterCore } from "./GiftLetterCore";
 import { MoonlitReliquaryRoom } from "./MoonlitReliquaryRoom";
 import { MoonSeaMusicBox } from "./MoonSeaMusicBox";
 
@@ -20,9 +21,10 @@ type SanctuaryCanvasProps = {
   onActivate: (index: number) => void;
   onActivationPosition: (origin: TransitionOrigin) => void;
   onOpenCreatorArchive: () => void;
+  onOpenGiftLetter: () => void;
 };
 
-function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
+function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive, onOpenGiftLetter }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
   return (
     <group>
       <MoonlitReliquaryRoom skipIntro={restoring} />
@@ -32,6 +34,13 @@ function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingI
         skipIntro={restoring}
         onHoverChange={onActiveChange}
         onOpenCreatorArchive={onOpenCreatorArchive}
+      />
+      <GiftLetterCore
+        position={[3.18, 0.08, 0.04]}
+        index={3}
+        skipIntro={restoring}
+        onHoverChange={onActiveChange}
+        onOpenGiftLetter={onOpenGiftLetter}
       />
       <MoonSeaMusicBox
         position={musicBoxPosition}
@@ -46,7 +55,7 @@ function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingI
   );
 }
 
-export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive }: SanctuaryCanvasProps) {
+export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive, onOpenGiftLetter }: SanctuaryCanvasProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [compactLayout, setCompactLayout] = useState(false);
 
@@ -103,6 +112,7 @@ export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, o
         onActivate={onActivate}
         onActivationPosition={onActivationPosition}
         onOpenCreatorArchive={onOpenCreatorArchive}
+        onOpenGiftLetter={onOpenGiftLetter}
       />
     </Canvas>
   );

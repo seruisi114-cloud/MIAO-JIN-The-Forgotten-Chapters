@@ -30,11 +30,11 @@ const CosmicDissolveTransition = dynamic(
 const CreatorArchiveSpace = dynamic(() => import("@/components/creator/CreatorArchiveSpace").then((module) => module.CreatorArchiveSpace), {
   ssr: false,
 });
-const MusicAnalysisSpace = dynamic(() => import("@/components/analysis/MusicAnalysisSpace").then((module) => module.MusicAnalysisSpace), {
+const GiftLetterSpace = dynamic(() => import("@/components/gift/GiftLetterSpace").then((module) => module.GiftLetterSpace), {
   ssr: false,
 });
 
-type SanctuaryContent = "creator-archive" | "music-analysis" | null;
+type SanctuaryContent = "creator-archive" | "gift-letter" | null;
 
 export function ForgottenKeyGate() {
   const { prepareSanctuary, playSanctuary, leaveSanctuaryForChapter, playChapter, stopChapter } = useAudioManager();
@@ -97,8 +97,8 @@ export function ForgottenKeyGate() {
   const openCreatorArchive = useCallback(() => {
     if (phase === "sanctuary") setSanctuaryContent("creator-archive");
   }, [phase]);
-  const openMusicAnalysis = useCallback(() => {
-    if (phase === "sanctuary") setSanctuaryContent("music-analysis");
+  const openGiftLetter = useCallback(() => {
+    if (phase === "sanctuary") setSanctuaryContent("gift-letter");
   }, [phase]);
   const beginReturnToSanctuary = useCallback(() => {
     if (returnTimerRef.current) return;
@@ -168,7 +168,7 @@ export function ForgottenKeyGate() {
           onBeginChapterActivation={beginChapterActivation}
           onActivationPosition={captureTransitionOrigin}
           onOpenCreatorArchive={openCreatorArchive}
-          onOpenMusicAnalysis={openMusicAnalysis}
+          onOpenGiftLetter={openGiftLetter}
         />
       ) : null}
       <OpeningSequence phase={phase} onPhaseChange={setPhase} />
@@ -189,8 +189,8 @@ export function ForgottenKeyGate() {
       {sanctuaryContent === "creator-archive" && phase === "sanctuary" ? (
         <CreatorArchiveSpace onClose={() => setSanctuaryContent(null)} />
       ) : null}
-      {sanctuaryContent === "music-analysis" && phase === "sanctuary" ? (
-        <MusicAnalysisSpace onClose={() => setSanctuaryContent(null)} />
+      {sanctuaryContent === "gift-letter" && phase === "sanctuary" ? (
+        <GiftLetterSpace onClose={() => setSanctuaryContent(null)} />
       ) : null}
     </div>
   );

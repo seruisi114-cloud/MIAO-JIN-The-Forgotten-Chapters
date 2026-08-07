@@ -11,6 +11,498 @@
   --mj-aged-gold: #8f7547;
 }
 
+/* The two secondary rooms are physical keepsakes, not cosmic information panels. */
+.gift-letter-copy {
+  min-width: 7rem;
+  color: rgba(222, 216, 201, 0.52);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  text-align: center;
+  transition: color 1s ease, text-shadow 1s ease, transform 1s ease;
+}
+
+.gift-letter-copy span,
+.gift-letter-copy small {
+  display: block;
+  white-space: nowrap;
+}
+
+.gift-letter-copy span {
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+}
+
+.gift-letter-copy small {
+  margin-top: 0.28rem;
+  color: rgba(181, 158, 112, 0.46);
+  font-size: 0.38rem;
+  letter-spacing: 0.16em;
+}
+
+.gift-letter-copy.is-readable {
+  color: rgba(242, 235, 219, 0.86);
+  text-shadow: 0 0 1rem rgba(194, 162, 101, 0.18);
+  transform: translateY(-0.08rem);
+}
+
+.gift-letter-monogram {
+  display: block;
+  color: rgba(30, 24, 17, 0.7);
+  font-family: "Times New Roman", serif;
+  font-size: 0.42rem;
+  font-style: italic;
+  transition: color 1s ease, text-shadow 1s ease;
+}
+
+.gift-letter-monogram.is-readable {
+  color: rgba(45, 32, 17, 0.95);
+  text-shadow: 0 0 0.4rem rgba(239, 218, 174, 0.22);
+}
+
+.manuscript-room,
+.gift-letter-room {
+  position: absolute;
+  z-index: 110;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  background:
+    radial-gradient(ellipse at 66% 12%, rgba(105, 133, 169, 0.2), transparent 38%),
+    linear-gradient(145deg, #030710 0%, #071222 48%, #02050b 100%);
+  animation: keepsake-room-arrive 1.25s both ease-out;
+}
+
+.manuscript-room__moonlight,
+.gift-letter-room__moonlight,
+.manuscript-room__desk,
+.manuscript-room__folio,
+.gift-letter-room__envelope,
+.manuscript-room__vignette,
+.gift-letter-room__vignette {
+  position: absolute;
+  pointer-events: none;
+}
+
+.manuscript-room__moonlight,
+.gift-letter-room__moonlight {
+  top: -26%;
+  left: 58%;
+  width: 34%;
+  height: 145%;
+  transform: translateX(-50%) rotate(-13deg);
+  border-radius: 48%;
+  background: linear-gradient(180deg, rgba(232, 236, 234, 0.25), rgba(153, 180, 212, 0.1) 52%, transparent 84%);
+  filter: blur(54px);
+  mix-blend-mode: screen;
+  animation: keepsake-moon-breathe 12s ease-in-out infinite alternate;
+}
+
+.manuscript-room__desk {
+  right: 8%;
+  bottom: -8%;
+  left: 8%;
+  height: 43%;
+  transform: perspective(70rem) rotateX(62deg);
+  transform-origin: bottom;
+  border-top: 1px solid rgba(154, 128, 82, 0.32);
+  background:
+    linear-gradient(90deg, transparent, rgba(184, 153, 96, 0.04) 48%, transparent 72%),
+    linear-gradient(180deg, #111d2a, #050910 72%);
+  box-shadow: 0 -2rem 6rem rgba(0, 0, 0, 0.3), inset 0 1px rgba(211, 190, 149, 0.04);
+}
+
+.manuscript-room__folio {
+  top: 50%;
+  left: 50%;
+  width: min(70vw, 52rem);
+  height: min(79vh, 39rem);
+  transform: translate(-52%, -48%) rotate(-1.4deg);
+  border: 1px solid rgba(109, 131, 158, 0.12);
+  background: linear-gradient(145deg, rgba(22, 39, 59, 0.96), rgba(7, 14, 24, 0.98));
+  box-shadow: 1.5rem 2rem 4rem rgba(0, 0, 0, 0.46);
+}
+
+.manuscript-document,
+.gift-letter-sheet {
+  position: relative;
+  z-index: 3;
+  box-sizing: border-box;
+  color: #383124;
+  background:
+    repeating-linear-gradient(11deg, rgba(98, 74, 40, 0.018) 0 1px, transparent 1px 6px),
+    radial-gradient(circle at 22% 18%, rgba(255, 250, 224, 0.42), transparent 24%),
+    linear-gradient(145deg, #b9ad91, #9d9075);
+  box-shadow:
+    0.85rem 1.15rem 2.8rem rgba(0, 0, 0, 0.52),
+    inset 0 0 3rem rgba(74, 55, 30, 0.08),
+    inset 0 0 0 1px rgba(255, 248, 222, 0.16);
+}
+
+.manuscript-document {
+  width: min(64vw, 46rem);
+  min-height: min(72vh, 35rem);
+  padding: clamp(2rem, 4.2vw, 3.6rem) clamp(2rem, 5vw, 4.5rem) clamp(1.8rem, 3.6vw, 3rem);
+  transform: rotate(-0.55deg);
+}
+
+.manuscript-document::before,
+.gift-letter-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid rgba(92, 70, 39, 0.18);
+  pointer-events: none;
+}
+
+.manuscript-document__clip {
+  position: absolute;
+  top: -0.2rem;
+  right: 2.4rem;
+  width: 2.2rem;
+  height: 0.55rem;
+  border-radius: 0.12rem;
+  background: linear-gradient(180deg, #75603d, #3d321f);
+  box-shadow: 0 0.25rem 0.45rem rgba(0, 0, 0, 0.35), inset 0 1px rgba(240, 215, 165, 0.18);
+}
+
+.manuscript-document header {
+  position: relative;
+  text-align: center;
+}
+
+.manuscript-document header p,
+.manuscript-document header span,
+.manuscript-document header h1,
+.manuscript-document header small,
+.manuscript-document h2,
+.manuscript-document p,
+.manuscript-document blockquote,
+.manuscript-document cite,
+.gift-letter-sheet p,
+.gift-letter-sheet h1 {
+  margin: 0;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.manuscript-document header p {
+  color: rgba(65, 52, 32, 0.72);
+  font-size: 0.66rem;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+}
+
+.manuscript-document header span {
+  display: block;
+  margin-top: 0.35rem;
+  color: rgba(76, 60, 37, 0.42);
+  font-family: "Times New Roman", serif;
+  font-size: 0.48rem;
+  letter-spacing: 0.25em;
+}
+
+.manuscript-document header h1 {
+  margin-top: 0.75rem;
+  font-size: clamp(1.65rem, 3.2vw, 2.65rem);
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+}
+
+.manuscript-document header small {
+  display: block;
+  margin-top: 0.45rem;
+  color: rgba(65, 51, 31, 0.7);
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+}
+
+.manuscript-document__rule,
+.gift-letter-sheet__rule {
+  position: relative;
+  width: 9rem;
+  height: 1px;
+  margin: 1.2rem auto 1.45rem;
+  background: linear-gradient(90deg, transparent, rgba(84, 62, 31, 0.55), transparent);
+}
+
+.manuscript-document__rule i,
+.gift-letter-sheet__rule i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.38rem;
+  height: 0.38rem;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1px solid rgba(84, 62, 31, 0.45);
+  background: #a99c80;
+}
+
+.manuscript-document__entries {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.manuscript-document__entries section {
+  display: grid;
+  grid-template-columns: 5.4rem 1fr;
+  gap: 1.1rem;
+  align-items: baseline;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(84, 63, 34, 0.15);
+}
+
+.manuscript-document__entries h2 {
+  color: rgba(63, 48, 29, 0.75);
+  font-size: 0.65rem;
+  letter-spacing: 0.27em;
+}
+
+.manuscript-document__entries p {
+  color: rgba(48, 41, 30, 0.76);
+  font-size: clamp(0.69rem, 0.95vw, 0.82rem);
+  letter-spacing: 0.09em;
+  line-height: 2;
+}
+
+.manuscript-document blockquote {
+  margin-top: 1.2rem;
+  color: rgba(52, 43, 29, 0.7);
+  font-size: 0.76rem;
+  letter-spacing: 0.15em;
+  line-height: 2;
+  text-align: center;
+}
+
+.manuscript-document footer {
+  display: flex;
+  margin-top: 1.1rem;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(68, 54, 33, 0.48);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+}
+
+.manuscript-document cite {
+  font-family: "Times New Roman", serif;
+  letter-spacing: 0.35em;
+}
+
+.manuscript-room__return,
+.gift-letter-room__return {
+  position: absolute;
+  z-index: 5;
+  right: 5vw;
+  bottom: 8vh;
+  padding: 0.65rem 0;
+  border: 0;
+  color: rgba(220, 199, 158, 0.65);
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  cursor: pointer;
+  transition: color 0.7s ease, text-shadow 0.7s ease;
+}
+
+.manuscript-room__return i,
+.gift-letter-room__return i {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 0.5rem;
+  background: linear-gradient(90deg, transparent, rgba(198, 166, 104, 0.7), transparent);
+  transform: scaleX(0.66);
+  transition: transform 0.7s ease;
+}
+
+.manuscript-room__return:hover,
+.manuscript-room__return:focus-visible,
+.gift-letter-room__return:hover,
+.gift-letter-room__return:focus-visible {
+  color: rgba(243, 224, 184, 0.92);
+  outline: none;
+  text-shadow: 0 0 1rem rgba(194, 162, 101, 0.22);
+}
+
+.manuscript-room__return:hover i,
+.manuscript-room__return:focus-visible i,
+.gift-letter-room__return:hover i,
+.gift-letter-room__return:focus-visible i {
+  transform: scaleX(1);
+}
+
+.manuscript-room__vignette,
+.gift-letter-room__vignette {
+  z-index: 6;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 2, 7, 0.65), transparent 17%, transparent 83%, rgba(0, 2, 7, 0.64)),
+    radial-gradient(ellipse at center, transparent 48%, rgba(0, 2, 7, 0.46));
+}
+
+.gift-letter-room {
+  background:
+    radial-gradient(ellipse at 44% 18%, rgba(117, 137, 163, 0.2), transparent 36%),
+    radial-gradient(ellipse at 57% 58%, rgba(95, 72, 42, 0.08), transparent 38%),
+    linear-gradient(145deg, #030710 0%, #081426 50%, #02050b 100%);
+}
+
+.gift-letter-room__moonlight {
+  left: 43%;
+  transform: translateX(-50%) rotate(11deg);
+}
+
+.gift-letter-room__envelope {
+  top: 50%;
+  left: 50%;
+  width: min(59vw, 43rem);
+  height: min(74vh, 36rem);
+  transform: translate(-47%, -47%) rotate(1.2deg);
+  border: 1px solid rgba(116, 94, 58, 0.15);
+  background: linear-gradient(145deg, #0d1723, #050912);
+  box-shadow: 1.7rem 2.2rem 4rem rgba(0, 0, 0, 0.5);
+}
+
+.gift-letter-room__envelope::before,
+.gift-letter-room__envelope::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 54%;
+  height: 56%;
+  border-top: 1px solid rgba(146, 117, 71, 0.14);
+  background: linear-gradient(145deg, rgba(25, 39, 55, 0.7), rgba(6, 10, 17, 0.8));
+}
+
+.gift-letter-room__envelope::before {
+  left: 0;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.gift-letter-room__envelope::after {
+  right: 0;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.gift-letter-room__envelope i {
+  position: absolute;
+  right: 2rem;
+  bottom: 1.4rem;
+  z-index: 2;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid rgba(185, 151, 92, 0.26);
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #94794c, #4f3f27 72%);
+  box-shadow: 0 0.45rem 1rem rgba(0, 0, 0, 0.38);
+}
+
+.gift-letter-sheet {
+  width: min(52vw, 37rem);
+  min-height: min(68vh, 33rem);
+  padding: clamp(2.5rem, 5vw, 4.4rem) clamp(2.2rem, 5.4vw, 4.8rem) 2.8rem;
+  transform: rotate(0.35deg);
+  text-align: center;
+}
+
+.gift-letter-sheet__kicker {
+  color: rgba(68, 52, 31, 0.7);
+  font-size: 0.65rem;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+}
+
+.gift-letter-sheet__date {
+  display: block;
+  margin-top: 0.45rem;
+  color: rgba(74, 57, 35, 0.38);
+  font-family: "Times New Roman", serif;
+  font-size: 0.46rem;
+  letter-spacing: 0.24em;
+}
+
+.gift-letter-sheet h1 {
+  margin-top: 1rem;
+  font-size: clamp(1.45rem, 2.8vw, 2.35rem);
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+}
+
+.gift-letter-sheet__body {
+  display: grid;
+  gap: 1.05rem;
+  color: rgba(47, 39, 28, 0.76);
+  font-size: clamp(0.72rem, 1vw, 0.86rem);
+  letter-spacing: 0.12em;
+  line-height: 2.2;
+}
+
+.gift-letter-sheet footer {
+  display: flex;
+  margin-top: 2rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  color: rgba(63, 48, 29, 0.55);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+}
+
+.gift-letter-sheet footer i {
+  display: grid;
+  width: 1.9rem;
+  height: 1.9rem;
+  place-items: center;
+  border: 1px solid rgba(87, 63, 31, 0.4);
+  border-radius: 50%;
+  color: rgba(57, 41, 22, 0.76);
+  font-family: "Times New Roman", serif;
+  font-size: 0.68rem;
+}
+
+@keyframes keepsake-room-arrive {
+  from { opacity: 0; filter: blur(10px) brightness(0.55); }
+  to { opacity: 1; filter: blur(0) brightness(1); }
+}
+
+@keyframes keepsake-moon-breathe {
+  from { opacity: 0.78; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 760px) {
+  .manuscript-document,
+  .gift-letter-sheet {
+    width: min(84vw, 36rem);
+    max-height: 76vh;
+    overflow-y: auto;
+  }
+
+  .manuscript-document__entries section {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .manuscript-room__return,
+  .gift-letter-room__return {
+    right: 50%;
+    bottom: 3.5vh;
+    transform: translateX(50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manuscript-room,
+  .gift-letter-room,
+  .manuscript-room__moonlight,
+  .gift-letter-room__moonlight {
+    animation: none;
+  }
+}
+
 html,
 body {
   width: 100%;

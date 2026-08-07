@@ -15,11 +15,11 @@ type SanctuarySceneProps = {
   onBeginChapterActivation: (statueId: number) => void;
   onActivationPosition: (origin: TransitionOrigin) => void;
   onOpenCreatorArchive: () => void;
-  onOpenMusicAnalysis: () => void;
+  onOpenGiftLetter: () => void;
 };
 
 export function SanctuaryScene(props: SanctuarySceneProps) {
-  const { active, settled, restoring, enteringChapter, activeStatueId, onBeginChapterActivation, onActivationPosition, onOpenCreatorArchive } = props;
+  const { active, settled, restoring, enteringChapter, activeStatueId, onBeginChapterActivation, onActivationPosition, onOpenCreatorArchive, onOpenGiftLetter } = props;
   const handleHoverChange = useCallback(() => undefined, []);
 
   const handleActivate = useCallback(
@@ -41,6 +41,7 @@ export function SanctuaryScene(props: SanctuarySceneProps) {
         onActivate={handleActivate}
         onActivationPosition={onActivationPosition}
         onOpenCreatorArchive={onOpenCreatorArchive}
+        onOpenGiftLetter={onOpenGiftLetter}
       />
       <SacredMist />
       <ForegroundVeil />
