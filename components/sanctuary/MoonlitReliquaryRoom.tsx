@@ -3,7 +3,7 @@
 import { useFrame } from "@react-three/fiber";
 import { ReactNode, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { createBlackLacquerTexture, createMoonSurfaceTexture, createStarSeaTexture } from "./ReliquaryTextures";
+import { createBlackLacquerTexture, createMoonGlowTexture, createMoonSurfaceTexture, createStarSeaTexture } from "./ReliquaryTextures";
 import { sanctuaryPalette } from "./visualSystem";
 
 function createArchShape(width: number, height: number) {
@@ -71,6 +71,7 @@ export function MoonlitReliquaryRoom({ skipIntro = false }: { skipIntro?: boolea
   const elapsed = useRef(skipIntro ? 20 : 0);
   const lacquerTexture = useMemo(() => createBlackLacquerTexture(), []);
   const moonTexture = useMemo(() => createMoonSurfaceTexture(), []);
+  const moonGlowTexture = useMemo(() => createMoonGlowTexture(), []);
   const starSeaTexture = useMemo(() => createStarSeaTexture(), []);
   const archWindow = useMemo(() => createArchShape(5.65, 7.15), []);
   const archFrame = useMemo(() => createArchFrameShape(6.12, 7.62, 0.31), []);
@@ -89,8 +90,9 @@ export function MoonlitReliquaryRoom({ skipIntro = false }: { skipIntro?: boolea
   useEffect(() => () => {
     lacquerTexture.dispose();
     moonTexture.dispose();
+    moonGlowTexture.dispose();
     starSeaTexture.dispose();
-  }, [lacquerTexture, moonTexture, starSeaTexture]);
+  }, [lacquerTexture, moonGlowTexture, moonTexture, starSeaTexture]);
 
   useFrame(({ clock }, delta) => {
     elapsed.current += delta;
@@ -101,60 +103,59 @@ export function MoonlitReliquaryRoom({ skipIntro = false }: { skipIntro?: boolea
 
   return (
     <group>
-      <group ref={windowRef} position={[1.48, 3.12, -5.62]} visible={skipIntro}>
+      <group ref={windowRef} position={[1.62, 3.18, -5.62]} visible={skipIntro}>
         <mesh position={[0, 0, -0.08]}>
           <shapeGeometry args={[archWindow, 32]} />
-          <meshBasicMaterial map={starSeaTexture} color="#6f829f" />
+          <meshBasicMaterial map={starSeaTexture} color="#8ba0bd" />
         </mesh>
         <points position={[0, 0, 0.008]}>
           <bufferGeometry><bufferAttribute attach="attributes-position" args={[windowStars, 3]} /></bufferGeometry>
           <pointsMaterial color={sanctuaryPalette.moonWhite} size={0.018} transparent opacity={0.28} depthWrite={false} sizeAttenuation />
         </points>
-        <mesh position={[0.82, 0.5, 0.035]}>
-          <circleGeometry args={[1.28, 96]} />
-          <meshStandardMaterial ref={moonMaterialRef} map={moonTexture} bumpMap={moonTexture} bumpScale={0.055} color="#c5ced4" roughness={0.92} metalness={0} emissive="#536b88" emissiveIntensity={0.15} />
+        <mesh position={[0.86, 0.31, 0.02]} rotation={[-0.04, -0.46, 0.02]}>
+          <sphereGeometry args={[1.05, 96, 64]} />
+          <meshStandardMaterial ref={moonMaterialRef} map={moonTexture} bumpMap={moonTexture} bumpScale={0.075} color="#e0dfd8" roughness={0.95} metalness={0} emissive="#53657c" emissiveMap={moonTexture} emissiveIntensity={0.14} />
         </mesh>
-        <mesh position={[0.82, 0.5, -0.01]} scale={1.09}>
-          <circleGeometry args={[1.28, 96]} />
-          <meshBasicMaterial color="#8ea9c6" transparent opacity={0.045} depthWrite={false} blending={THREE.AdditiveBlending} />
-        </mesh>
+        <sprite position={[0.86, 0.31, -0.12]} scale={[2.62, 2.62, 1]}>
+          <spriteMaterial map={moonGlowTexture} color="#a8bed6" transparent opacity={0.16} depthWrite={false} blending={THREE.AdditiveBlending} />
+        </sprite>
         <mesh position={[0, 0, 0.12]} castShadow>
           <extrudeGeometry args={[archFrame, { depth: 0.28, bevelEnabled: true, bevelSegments: 4, bevelSize: 0.07, bevelThickness: 0.065 }]} />
-          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.02} color="#0a1320" roughness={0.48} metalness={0.2} clearcoat={0.36} clearcoatRoughness={0.48} />
+          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.018} color="#111e2d" roughness={0.43} metalness={0.18} clearcoat={0.44} clearcoatRoughness={0.42} />
         </mesh>
         <mesh position={[0, 0, 0.43]}>
           <extrudeGeometry args={[archInlay, { depth: 0.018, bevelEnabled: false }]} />
-          <meshStandardMaterial color="#786342" roughness={0.55} metalness={0.82} transparent opacity={0.62} />
+          <meshStandardMaterial color="#92774d" roughness={0.5} metalness={0.84} transparent opacity={0.72} />
         </mesh>
       </group>
 
       <mesh position={[-4.72, 3.15, -5.35]} receiveShadow>
         <boxGeometry args={[5.6, 7.1, 0.44]} />
-        <meshStandardMaterial bumpMap={lacquerTexture} bumpScale={0.016} color="#060c16" roughness={0.85} metalness={0.04} />
+        <meshStandardMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#0a1422" roughness={0.8} metalness={0.04} />
       </mesh>
       <mesh position={[5.53, 3.15, -5.35]} receiveShadow>
         <boxGeometry args={[3.35, 7.1, 0.44]} />
-        <meshStandardMaterial bumpMap={lacquerTexture} bumpScale={0.016} color="#060c16" roughness={0.85} metalness={0.04} />
+        <meshStandardMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#091320" roughness={0.8} metalness={0.04} />
       </mesh>
       <mesh position={[0.4, 7.05, -5.35]} receiveShadow>
         <boxGeometry args={[14, 1.25, 0.44]} />
-        <meshStandardMaterial color="#02050b" roughness={0.92} metalness={0.02} />
+        <meshStandardMaterial color="#050a13" roughness={0.9} metalness={0.02} />
       </mesh>
 
       <mesh position={[0, -0.18, -0.3]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[15.5, 15]} />
-        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.009} color="#050b14" roughness={0.66} metalness={0.08} clearcoat={0.12} clearcoatRoughness={0.75} />
+        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.009} color="#081321" roughness={0.61} metalness={0.08} clearcoat={0.17} clearcoatRoughness={0.69} />
       </mesh>
 
       <group ref={pedestalRef} visible={skipIntro}>
-        <OctagonalPedestal width={5.1} depth={3.55} height={0.13} y={0.065}>
-          <meshStandardMaterial color="#6d593b" roughness={0.55} metalness={0.78} />
+        <OctagonalPedestal width={4.85} depth={3.3} height={0.1} y={0.05}>
+          <meshStandardMaterial color="#7a633f" roughness={0.53} metalness={0.8} />
         </OctagonalPedestal>
-        <OctagonalPedestal width={4.92} depth={3.37} height={0.46} y={0.29}>
-          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.018} color="#111f30" roughness={0.48} metalness={0.14} clearcoat={0.34} clearcoatRoughness={0.52} />
+        <OctagonalPedestal width={4.68} depth={3.13} height={0.34} y={0.22}>
+          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.016} color="#132438" roughness={0.44} metalness={0.13} clearcoat={0.4} clearcoatRoughness={0.48} />
         </OctagonalPedestal>
-        <OctagonalPedestal width={4.66} depth={3.12} height={0.085} y={0.555}>
-          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.012} color="#1b2c40" roughness={0.32} metalness={0.18} clearcoat={0.62} clearcoatRoughness={0.34} />
+        <OctagonalPedestal width={4.43} depth={2.9} height={0.07} y={0.43}>
+          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.011} color="#21364e" roughness={0.31} metalness={0.16} clearcoat={0.65} clearcoatRoughness={0.32} />
         </OctagonalPedestal>
       </group>
     </group>

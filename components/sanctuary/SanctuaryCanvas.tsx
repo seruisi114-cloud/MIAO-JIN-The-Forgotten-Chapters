@@ -6,11 +6,11 @@ import * as THREE from "three";
 import { SanctuaryLighting } from "./SanctuaryLighting";
 import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { ChapterEntryCameraRig } from "./ChapterEntryCameraRig";
-import { sanctuaryPalette } from "./visualSystem";
+import { CreatorArchiveCore } from "./CreatorArchiveCore";
 import { MoonlitReliquaryRoom } from "./MoonlitReliquaryRoom";
 import { MoonSeaMusicBox } from "./MoonSeaMusicBox";
 
-const musicBoxPosition: [number, number, number] = [-0.56, 0.61, 0.86];
+const musicBoxPosition: [number, number, number] = [-0.56, 0.46, 0.86];
 
 type SanctuaryCanvasProps = {
   restoring: boolean;
@@ -19,12 +19,20 @@ type SanctuaryCanvasProps = {
   onActiveChange: (index: number | null) => void;
   onActivate: (index: number) => void;
   onActivationPosition: (origin: TransitionOrigin) => void;
+  onOpenCreatorArchive: () => void;
 };
 
-function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
+function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
   return (
     <group>
       <MoonlitReliquaryRoom skipIntro={restoring} />
+      <CreatorArchiveCore
+        position={[-3.72, 0.08, 0.12]}
+        index={2}
+        skipIntro={restoring}
+        onHoverChange={onActiveChange}
+        onOpenCreatorArchive={onOpenCreatorArchive}
+      />
       <MoonSeaMusicBox
         position={musicBoxPosition}
         activating={activatingIndex === 1}
@@ -38,7 +46,7 @@ function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingI
   );
 }
 
-export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition }: SanctuaryCanvasProps) {
+export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive }: SanctuaryCanvasProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [compactLayout, setCompactLayout] = useState(false);
 
@@ -57,32 +65,32 @@ export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, o
     };
   }, []);
 
-  const cameraPosition: [number, number, number] = compactLayout ? [1.15, 3.45, 14.1] : [1.36, 2.9, 11.9];
-  const cameraTarget: [number, number, number] = compactLayout ? [-0.38, 1.38, 0.46] : [-0.46, 1.28, 0.36];
+  const cameraPosition: [number, number, number] = compactLayout ? [1.05, 3.25, 13.2] : [1.18, 2.62, 10.75];
+  const cameraTarget: [number, number, number] = compactLayout ? [-0.43, 1.28, 0.5] : [-0.56, 1.13, 0.52];
 
   return (
     <Canvas
       key={`${compactLayout ? "compact" : "wide"}-${restoring ? "restored" : "initial"}`}
       dpr={[1, 1.5]}
       shadows
-      camera={{ position: cameraPosition, fov: compactLayout ? 43 : 34, near: 0.1, far: 90 }}
+      camera={{ position: cameraPosition, fov: compactLayout ? 42 : 33, near: 0.1, far: 90 }}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       onCreated={({ camera, gl, scene }) => {
         camera.position.set(...cameraPosition);
         camera.rotation.set(0, 0, 0);
         camera.lookAt(...cameraTarget);
         if (camera instanceof THREE.PerspectiveCamera) {
-          camera.fov = compactLayout ? 43 : 34;
+          camera.fov = compactLayout ? 42 : 33;
           camera.zoom = 1;
           camera.updateProjectionMatrix();
         }
-        gl.setClearColor(sanctuaryPalette.deepIndigo, 1);
+        gl.setClearColor("#091528", 1);
         gl.outputColorSpace = "srgb";
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 2.18;
+        gl.toneMappingExposure = 2.58;
         gl.shadowMap.enabled = true;
         gl.shadowMap.type = THREE.PCFShadowMap;
-        scene.fog = new THREE.FogExp2("#030711", 0.026);
+        scene.fog = new THREE.FogExp2("#07101e", 0.021);
       }}
     >
       <SanctuaryLighting />
@@ -94,6 +102,7 @@ export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, o
         onActiveChange={onActiveChange}
         onActivate={onActivate}
         onActivationPosition={onActivationPosition}
+        onOpenCreatorArchive={onOpenCreatorArchive}
       />
     </Canvas>
   );

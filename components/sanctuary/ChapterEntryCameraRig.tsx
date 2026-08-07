@@ -9,9 +9,9 @@ type ChapterEntryCameraRigProps = {
   reducedMotion: boolean;
 };
 
-const START_TARGET = new THREE.Vector3(-0.5, 1.24, 0.62);
-const PLANET_TARGET = new THREE.Vector3(-0.56, 1.25, 0.86);
-const PLANET_APPROACH = new THREE.Vector3(0.02, 1.82, 3.65);
+const START_TARGET = new THREE.Vector3(-0.56, 1.13, 0.52);
+const PLANET_TARGET = new THREE.Vector3(-0.56, 1.14, 0.86);
+const PLANET_APPROACH = new THREE.Vector3(0.02, 1.7, 3.45);
 
 export function ChapterEntryCameraRig({ active, reducedMotion }: ChapterEntryCameraRigProps) {
   const startPosition = useRef(new THREE.Vector3());

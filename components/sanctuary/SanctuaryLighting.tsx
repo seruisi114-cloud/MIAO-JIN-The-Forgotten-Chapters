@@ -8,41 +8,40 @@ export function SanctuaryLighting() {
   const moonlightTarget = useMemo(() => new THREE.Object3D(), []);
 
   useEffect(() => {
-    moonlightTarget.position.set(-0.56, 0.78, 0.86);
+    moonlightTarget.position.set(-0.56, 1.08, 0.86);
     moonlightTarget.updateMatrixWorld();
   }, [moonlightTarget]);
 
   return (
     <>
       <primitive object={moonlightTarget} />
-      <hemisphereLight color="#8299b4" groundColor="#010308" intensity={0.72} />
+      <hemisphereLight color="#9cb1cb" groundColor="#020711" intensity={1.08} />
       <spotLight
         color={sanctuaryPalette.moonWhite}
-        intensity={9.2}
-        position={[2.35, 7.9, -3.9]}
+        intensity={12.6}
+        position={[3.05, 7.65, -3.72]}
         target={moonlightTarget}
-        angle={0.5}
-        penumbra={0.96}
-        distance={19}
-        decay={1.62}
+        angle={0.58}
+        penumbra={0.98}
+        distance={20}
+        decay={1.58}
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
         shadow-bias={-0.0004}
       />
       <spotLight
-        color="#7890ab"
-        intensity={4.2}
-        position={[3.8, 4.4, 6.8]}
+        color="#8099bb"
+        intensity={5.5}
+        position={[-4.2, 4.5, 5.6]}
         target={moonlightTarget}
-        angle={0.48}
+        angle={0.64}
         penumbra={1}
-        distance={16}
-        decay={1.7}
+        distance={17}
+        decay={1.65}
       />
-      <directionalLight color="#6f89aa" intensity={0.9} position={[-4.2, 3.6, 3.8]} />
-      <pointLight color="#93a9c1" intensity={2.8} distance={10.5} decay={1.8} position={[2.8, 3.35, 4.6]} />
-      <pointLight color="#ad8d58" intensity={1.1} distance={5.2} decay={2.05} position={[-0.55, 1.24, 2.12]} />
+      <directionalLight color="#6f86a7" intensity={1.15} position={[-4.4, 3.2, 4.4]} />
+      <pointLight color="#b89961" intensity={0.68} distance={4.1} decay={2.08} position={[-0.55, 0.9, 1.7]} />
     </>
   );
 }

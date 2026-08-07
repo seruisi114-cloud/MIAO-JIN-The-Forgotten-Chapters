@@ -437,8 +437,9 @@ select {
   inset: 0;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 61% 25%, rgba(25, 43, 69, 0.34), transparent 32%),
-    linear-gradient(180deg, #040914 0%, #02050b 62%, #010205 100%);
+    radial-gradient(ellipse at 62% 28%, rgba(43, 68, 102, 0.42), transparent 38%),
+    radial-gradient(ellipse at 28% 54%, rgba(24, 39, 63, 0.3), transparent 43%),
+    linear-gradient(180deg, #091528 0%, #050b16 64%, #02050b 100%);
   opacity: 0;
   pointer-events: none;
 }
@@ -1016,8 +1017,8 @@ select {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(1, 2, 5, 0.3), transparent 27%, transparent 68%, rgba(0, 1, 3, 0.54)),
-    radial-gradient(ellipse at 47% 48%, transparent 40%, rgba(0, 1, 4, 0.43) 100%);
+    linear-gradient(180deg, rgba(1, 3, 8, 0.2), transparent 24%, transparent 72%, rgba(0, 2, 6, 0.34)),
+    radial-gradient(ellipse at 48% 49%, transparent 48%, rgba(0, 2, 7, 0.28) 100%);
 }
 
 /* Moonlit Music Reliquary: physical atmosphere instead of interface decoration. */
@@ -1035,14 +1036,14 @@ select {
 }
 
 .reliquary-moon-wash {
-  top: -17%;
-  left: 58%;
-  width: 23%;
-  height: 128%;
-  transform: translateX(-50%) rotate(-13deg);
+  top: -19%;
+  left: 57%;
+  width: 34%;
+  height: 134%;
+  transform: translateX(-50%) rotate(-11deg);
   border-radius: 48%;
-  background: linear-gradient(180deg, rgba(222, 228, 230, 0.22), rgba(154, 180, 211, 0.085) 48%, transparent 84%);
-  filter: blur(42px);
+  background: linear-gradient(180deg, rgba(226, 232, 234, 0.27), rgba(157, 184, 218, 0.11) 51%, transparent 86%);
+  filter: blur(54px);
   mix-blend-mode: screen;
   animation: reliquary-moon-breathe 14s ease-in-out infinite alternate;
 }
@@ -1051,13 +1052,13 @@ select {
   right: -12%;
   bottom: 2%;
   left: -12%;
-  height: 22%;
+  height: 24%;
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at 40% 55%, rgba(24, 39, 64, 0.13), transparent 46%),
-    radial-gradient(ellipse at 66% 48%, rgba(15, 28, 49, 0.12), transparent 50%);
+    radial-gradient(ellipse at 40% 55%, rgba(39, 61, 94, 0.18), transparent 48%),
+    radial-gradient(ellipse at 66% 48%, rgba(24, 44, 73, 0.16), transparent 52%);
   filter: blur(42px);
-  opacity: 0.45;
+  opacity: 0.56;
 }
 
 .reliquary-floor-reflection {
@@ -1066,7 +1067,7 @@ select {
   width: 46%;
   height: 18%;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(185, 198, 211, 0.105), rgba(163, 137, 88, 0.022) 48%, transparent 72%);
+  background: radial-gradient(ellipse, rgba(194, 208, 221, 0.14), rgba(177, 146, 91, 0.035) 48%, transparent 72%);
   filter: blur(30px);
   transform: rotate(-4deg);
 }
@@ -1079,9 +1080,9 @@ select {
 .reliquary-threshold-right {
   top: -4%;
   bottom: -4%;
-  width: 19%;
-  background: linear-gradient(90deg, rgba(0, 1, 3, 0.99), rgba(1, 3, 8, 0.76) 54%, transparent);
-  filter: blur(5px);
+  width: 13%;
+  background: linear-gradient(90deg, rgba(0, 2, 6, 0.84), rgba(2, 6, 14, 0.48) 52%, transparent);
+  filter: blur(7px);
 }
 
 .reliquary-threshold-left {
@@ -1097,8 +1098,8 @@ select {
   top: -2%;
   right: 0;
   left: 0;
-  height: 18%;
-  background: linear-gradient(180deg, rgba(0, 1, 3, 0.97), rgba(1, 3, 8, 0.52) 52%, transparent);
+  height: 12%;
+  background: linear-gradient(180deg, rgba(0, 2, 6, 0.78), rgba(2, 6, 14, 0.34) 52%, transparent);
 }
 
 .reliquary-plaque {
@@ -1143,7 +1144,7 @@ select {
 }
 
 .reliquary-engraving {
-  min-width: 9.2rem;
+  min-width: 7.4rem;
   color: rgba(191, 162, 105, 0.72);
   font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
   text-align: center;
@@ -1162,7 +1163,7 @@ select {
 
 .reliquary-engraving strong {
   color: rgba(220, 201, 158, 0.9);
-  font-size: 0.66rem;
+  font-size: 0.61rem;
   letter-spacing: 0.22em;
   text-indent: 0.22em;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.65);
@@ -1172,7 +1173,7 @@ select {
   margin-top: 0.27rem;
   color: rgba(170, 145, 96, 0.76);
   font-family: "Times New Roman", serif;
-  font-size: 0.4rem;
+  font-size: 0.36rem;
   letter-spacing: 0.31em;
   text-indent: 0.31em;
 }
@@ -1188,8 +1189,8 @@ select {
 }
 
 .manuscript-copy {
-  width: 8.6rem;
-  color: rgba(37, 34, 29, 0.38);
+  width: 6.6rem;
+  color: rgba(45, 39, 29, 0.48);
   font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
   text-align: left;
   transform: translateY(0.12rem);
@@ -1205,13 +1206,13 @@ select {
 }
 
 .manuscript-copy span {
-  font-size: 0.72rem;
+  font-size: 0.59rem;
   letter-spacing: 0.32em;
 }
 
 .manuscript-copy strong {
   margin-top: 0.4rem;
-  font-size: 0.58rem;
+  font-size: 0.49rem;
   letter-spacing: 0.17em;
 }
 
@@ -1219,7 +1220,7 @@ select {
   margin-top: 0.55rem;
   padding-top: 0.42rem;
   border-top: 1px solid rgba(103, 83, 48, 0.28);
-  font-size: 0.43rem;
+  font-size: 0.36rem;
   line-height: 1.8;
   letter-spacing: 0.1em;
 }

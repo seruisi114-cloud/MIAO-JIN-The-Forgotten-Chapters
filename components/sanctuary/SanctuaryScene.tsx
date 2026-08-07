@@ -19,7 +19,7 @@ type SanctuarySceneProps = {
 };
 
 export function SanctuaryScene(props: SanctuarySceneProps) {
-  const { active, settled, restoring, enteringChapter, activeStatueId, onBeginChapterActivation, onActivationPosition } = props;
+  const { active, settled, restoring, enteringChapter, activeStatueId, onBeginChapterActivation, onActivationPosition, onOpenCreatorArchive } = props;
   const handleHoverChange = useCallback(() => undefined, []);
 
   const handleActivate = useCallback(
@@ -40,6 +40,7 @@ export function SanctuaryScene(props: SanctuarySceneProps) {
         onActiveChange={handleHoverChange}
         onActivate={handleActivate}
         onActivationPosition={onActivationPosition}
+        onOpenCreatorArchive={onOpenCreatorArchive}
       />
       <SacredMist />
       <ForegroundVeil />
