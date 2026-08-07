@@ -31,7 +31,7 @@ export function SanctuaryScene({ active, settled, restoring, enteringChapter, ac
   );
 
   return (
-    <section className={`sanctuary-scene${active ? " sanctuary-scene--active" : ""}${settled ? " sanctuary-scene--settled" : ""}${restoring ? " sanctuary-scene--restored" : ""}${enteringChapter ? " sanctuary-scene--entering-chapter" : ""}`} aria-label="星穹圣殿">
+    <section className={`sanctuary-scene${active ? " sanctuary-scene--active" : ""}${settled ? " sanctuary-scene--settled" : ""}${restoring ? " sanctuary-scene--restored" : ""}${enteringChapter ? " sanctuary-scene--entering-chapter" : ""}`} aria-label="月下藏音馆">
       <SanctuaryCanvas
         restoring={restoring}
         enteringChapter={enteringChapter}

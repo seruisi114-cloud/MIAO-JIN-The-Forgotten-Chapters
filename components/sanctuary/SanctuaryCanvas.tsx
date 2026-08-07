@@ -3,23 +3,19 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { CelestialVaultRuins } from "./CelestialVaultRuins";
 import { CreatorArchiveCore } from "./CreatorArchiveCore";
-import { ChapterArchiveCore } from "./ChapterArchiveCore";
-import { SanctuaryFloor } from "./SanctuaryFloor";
 import { SanctuaryLighting } from "./SanctuaryLighting";
-import { SanctuaryParticles } from "./SanctuaryParticles";
-import { SanctuaryPillars } from "./SanctuaryPillars";
 import { StarDome } from "./StarDome";
 import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { ChapterEntryCameraRig } from "./ChapterEntryCameraRig";
 import { MusicAnalysisCore } from "./MusicAnalysisCore";
-import { SanctuaryMelodyPaths } from "./SanctuaryMelodyPaths";
 import { sanctuaryPalette } from "./visualSystem";
+import { MoonlitReliquaryRoom } from "./MoonlitReliquaryRoom";
+import { MoonSeaMusicBox } from "./MoonSeaMusicBox";
 
-const moonPosition: [number, number, number] = [0, -0.24, 0.34];
-const creatorPosition: [number, number, number] = [-4.1, -0.18, 1.78];
-const analysisPosition: [number, number, number] = [4.12, -0.14, 1.72];
+const musicBoxPosition: [number, number, number] = [0, -0.02, 0.55];
+const creatorPosition: [number, number, number] = [-3.55, -0.02, -1.08];
+const analysisPosition: [number, number, number] = [3.55, -0.02, -1.36];
 
 type SanctuaryCanvasProps = {
   restoring: boolean;
@@ -44,23 +40,19 @@ function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingI
 
   useFrame(({ pointer }, delta) => {
     if (!rootRef.current) return;
-    const targetY = reducedMotion ? 0 : pointer.x * 0.018;
-    const targetX = reducedMotion ? 0 : -pointer.y * 0.012;
+    const targetY = reducedMotion ? 0 : pointer.x * 0.008;
+    const targetX = reducedMotion ? 0 : -pointer.y * 0.004;
     rootRef.current.rotation.y = THREE.MathUtils.damp(rootRef.current.rotation.y, targetY, 1.35, delta);
     rootRef.current.rotation.x = THREE.MathUtils.damp(rootRef.current.rotation.x, targetX, 1.35, delta);
-    rootRef.current.position.x = THREE.MathUtils.damp(rootRef.current.position.x, reducedMotion ? 0 : -pointer.x * 0.045, 1.2, delta);
+    rootRef.current.position.x = THREE.MathUtils.damp(rootRef.current.position.x, reducedMotion ? 0 : -pointer.x * 0.018, 1.2, delta);
   });
 
   return (
     <group ref={rootRef}>
-      <CelestialVaultRuins />
-      <SanctuaryFloor skipIntro={restoring} />
-      <SanctuaryPillars skipIntro={restoring} />
-      <ChapterArchiveCore kind="moon-planet" labelPlacement="bottom" position={moonPosition} chapter="核心音乐礼物" revealDelay={7.2} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <MoonlitReliquaryRoom skipIntro={restoring} />
+      <MoonSeaMusicBox position={musicBoxPosition} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <CreatorArchiveCore position={creatorPosition} index={2} skipIntro={restoring} onHoverChange={onActiveChange} onOpenCreatorArchive={onOpenCreatorArchive} />
       <MusicAnalysisCore position={analysisPosition} index={3} skipIntro={restoring} onHoverChange={onActiveChange} onOpen={onOpenMusicAnalysis} />
-      <SanctuaryMelodyPaths skipIntro={restoring} />
-      <SanctuaryParticles skipIntro={restoring} />
       <ChapterEntryCameraRig active={enteringChapter} reducedMotion={reducedMotion} />
     </group>
   );
@@ -89,22 +81,22 @@ export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, o
     <Canvas
       key={`${compactLayout ? "compact" : "wide"}-${restoring ? "restored" : "initial"}`}
       dpr={[1, 1.5]}
-      camera={{ position: compactLayout ? [0, 6.05, 16.4] : [0, 5.15, 13.65], fov: compactLayout ? 47 : 43, near: 0.1, far: 90 }}
+      camera={{ position: compactLayout ? [0.8, 5.25, 15.8] : [1.05, 4.35, 12.6], fov: compactLayout ? 48 : 42, near: 0.1, far: 90 }}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       onCreated={({ camera, gl, scene }) => {
-        camera.position.set(0, compactLayout ? 6.05 : 5.15, compactLayout ? 16.4 : 13.65);
+        camera.position.set(compactLayout ? 0.8 : 1.05, compactLayout ? 5.25 : 4.35, compactLayout ? 15.8 : 12.6);
         camera.rotation.set(0, 0, 0);
-        camera.lookAt(0, compactLayout ? 0.52 : 0.44, 0.42);
+        camera.lookAt(0.12, compactLayout ? 1.02 : 0.92, 0.08);
         if (camera instanceof THREE.PerspectiveCamera) {
-          camera.fov = compactLayout ? 47 : 43;
+          camera.fov = compactLayout ? 48 : 42;
           camera.zoom = 1;
           camera.updateProjectionMatrix();
         }
         gl.setClearColor(sanctuaryPalette.deepIndigo, 1);
         gl.outputColorSpace = "srgb";
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.72;
-        scene.fog = new THREE.FogExp2(sanctuaryPalette.deepIndigo, 0.024);
+        gl.toneMappingExposure = 1.48;
+        scene.fog = new THREE.FogExp2(sanctuaryPalette.deepIndigo, 0.032);
       }}
     >
       <StarDome />
