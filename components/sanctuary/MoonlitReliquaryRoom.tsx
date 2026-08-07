@@ -106,7 +106,7 @@ export function MoonlitReliquaryRoom({ skipIntro = false }: { skipIntro?: boolea
       <group ref={windowRef} position={[1.62, 3.18, -5.62]} visible={skipIntro}>
         <mesh position={[0, 0, -0.08]}>
           <shapeGeometry args={[archWindow, 32]} />
-          <meshBasicMaterial map={starSeaTexture} color="#8ba0bd" />
+          <meshBasicMaterial map={starSeaTexture} color="#a5b8d2" />
         </mesh>
         <points position={[0, 0, 0.008]}>
           <bufferGeometry><bufferAttribute attach="attributes-position" args={[windowStars, 3]} /></bufferGeometry>
@@ -114,10 +114,10 @@ export function MoonlitReliquaryRoom({ skipIntro = false }: { skipIntro?: boolea
         </points>
         <mesh position={[0.86, 0.31, 0.02]} rotation={[-0.04, -0.46, 0.02]}>
           <sphereGeometry args={[1.05, 96, 64]} />
-          <meshStandardMaterial ref={moonMaterialRef} map={moonTexture} bumpMap={moonTexture} bumpScale={0.075} color="#e0dfd8" roughness={0.95} metalness={0} emissive="#53657c" emissiveMap={moonTexture} emissiveIntensity={0.14} />
+          <meshStandardMaterial ref={moonMaterialRef} map={moonTexture} bumpMap={moonTexture} bumpScale={0.075} color="#efeadf" roughness={0.93} metalness={0} emissive="#607a9d" emissiveMap={moonTexture} emissiveIntensity={0.18} />
         </mesh>
         <sprite position={[0.86, 0.31, -0.12]} scale={[2.62, 2.62, 1]}>
-          <spriteMaterial map={moonGlowTexture} color="#a8bed6" transparent opacity={0.16} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <spriteMaterial map={moonGlowTexture} color="#bfd5eb" transparent opacity={0.21} depthWrite={false} blending={THREE.AdditiveBlending} />
         </sprite>
         <mesh position={[0, 0, 0.12]} castShadow>
           <extrudeGeometry args={[archFrame, { depth: 0.28, bevelEnabled: true, bevelSegments: 4, bevelSize: 0.07, bevelThickness: 0.065 }]} />
@@ -131,48 +131,48 @@ export function MoonlitReliquaryRoom({ skipIntro = false }: { skipIntro?: boolea
 
       <mesh position={[-4.72, 3.15, -5.35]} receiveShadow>
         <boxGeometry args={[5.6, 7.1, 0.44]} />
-        <meshStandardMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#0a1422" roughness={0.8} metalness={0.04} />
+        <meshStandardMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#102039" roughness={0.78} metalness={0.04} />
       </mesh>
       <mesh position={[5.53, 3.15, -5.35]} receiveShadow>
         <boxGeometry args={[3.35, 7.1, 0.44]} />
-        <meshStandardMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#091320" roughness={0.8} metalness={0.04} />
+        <meshStandardMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#0d1d34" roughness={0.78} metalness={0.04} />
       </mesh>
       <mesh position={[0.4, 7.05, -5.35]} receiveShadow>
         <boxGeometry args={[14, 1.25, 0.44]} />
-        <meshStandardMaterial color="#050a13" roughness={0.9} metalness={0.02} />
+        <meshStandardMaterial color="#081323" roughness={0.88} metalness={0.02} />
       </mesh>
 
       <mesh position={[0, -0.18, -0.3]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[15.5, 15]} />
-        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.009} color="#081321" roughness={0.61} metalness={0.08} clearcoat={0.17} clearcoatRoughness={0.69} />
+        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.009} color="#0d1c31" roughness={0.58} metalness={0.09} clearcoat={0.2} clearcoatRoughness={0.64} />
       </mesh>
 
       <group ref={pedestalRef} visible={skipIntro}>
         <OctagonalPedestal width={4.85} depth={3.3} height={0.1} y={0.05}>
-          <meshStandardMaterial color="#7a633f" roughness={0.53} metalness={0.8} />
+          <meshStandardMaterial color="#90764b" roughness={0.51} metalness={0.82} />
         </OctagonalPedestal>
         <OctagonalPedestal width={4.68} depth={3.13} height={0.34} y={0.22}>
-          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.016} color="#132438" roughness={0.44} metalness={0.13} clearcoat={0.4} clearcoatRoughness={0.48} />
+          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.016} color="#18304a" roughness={0.42} metalness={0.13} clearcoat={0.44} clearcoatRoughness={0.45} />
         </OctagonalPedestal>
         <OctagonalPedestal width={4.43} depth={2.9} height={0.07} y={0.43}>
-          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.011} color="#21364e" roughness={0.31} metalness={0.16} clearcoat={0.65} clearcoatRoughness={0.32} />
+          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.011} color="#294664" roughness={0.3} metalness={0.16} clearcoat={0.68} clearcoatRoughness={0.3} />
         </OctagonalPedestal>
         <OctagonalPedestal width={4.18} depth={2.68} height={0.025} y={0.47}>
-          <meshStandardMaterial color="#a18858" roughness={0.5} metalness={0.87} />
+          <meshStandardMaterial color="#b0955f" roughness={0.48} metalness={0.88} />
         </OctagonalPedestal>
         <OctagonalPedestal width={4.03} depth={2.53} height={0.035} y={0.495}>
-          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.008} color="#16283b" roughness={0.36} metalness={0.13} clearcoat={0.48} clearcoatRoughness={0.42} />
+          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.008} color="#1d3650" roughness={0.34} metalness={0.13} clearcoat={0.52} clearcoatRoughness={0.39} />
         </OctagonalPedestal>
       </group>
 
       <group position={[-0.56, -0.165, 4.22]}>
         <mesh rotation={[-Math.PI / 2, 0, -0.045]}>
           <planeGeometry args={[0.028, 5.5]} />
-          <meshStandardMaterial color="#9b7d4c" roughness={0.58} metalness={0.78} transparent opacity={0.5} />
+          <meshStandardMaterial color="#b2965b" roughness={0.56} metalness={0.8} transparent opacity={0.58} />
         </mesh>
         <mesh position={[0.34, 0, 0]} rotation={[-Math.PI / 2, 0, -0.045]}>
           <planeGeometry args={[0.012, 4.1]} />
-          <meshStandardMaterial color="#758aa7" roughness={0.74} metalness={0.2} transparent opacity={0.32} />
+          <meshStandardMaterial color="#769ec8" roughness={0.72} metalness={0.2} transparent opacity={0.4} />
         </mesh>
       </group>
     </group>

@@ -416,12 +416,203 @@
   box-shadow: 0 0.45rem 1rem rgba(0, 0, 0, 0.38);
 }
 
+.gift-letter-invitation {
+  position: relative;
+  z-index: 3;
+  box-sizing: border-box;
+  width: min(48vw, 34rem);
+  min-height: 27rem;
+  padding: clamp(2.5rem, 4.5vw, 3.8rem) clamp(2.2rem, 4.8vw, 4rem) 2.6rem;
+  border: 1px solid rgba(176, 145, 89, 0.34);
+  color: rgba(234, 226, 208, 0.9);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(203, 177, 124, 0.09), transparent 30%),
+    linear-gradient(145deg, rgba(18, 31, 47, 0.98), rgba(5, 10, 18, 0.985));
+  box-shadow:
+    1rem 1.45rem 3.8rem rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(232, 216, 182, 0.035),
+    inset 0 0 4rem rgba(44, 70, 104, 0.12);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  text-align: center;
+  animation: gift-letter-invitation-arrive 1.15s both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.gift-letter-invitation::before,
+.gift-letter-invitation::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.gift-letter-invitation::before {
+  inset: 0.85rem;
+  border: 1px solid rgba(176, 145, 89, 0.16);
+}
+
+.gift-letter-invitation::after {
+  top: 0;
+  left: 50%;
+  width: 7.5rem;
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(218, 190, 133, 0.76), transparent);
+  box-shadow: 0 26.9rem rgba(218, 190, 133, 0.38);
+}
+
+.gift-letter-invitation p,
+.gift-letter-invitation span,
+.gift-letter-invitation h1,
+.gift-letter-invitation blockquote {
+  margin: 0;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.gift-letter-invitation > p {
+  color: rgba(218, 196, 152, 0.7);
+  font-size: 0.62rem;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+}
+
+.gift-letter-invitation > span {
+  display: block;
+  margin-top: 0.4rem;
+  color: rgba(174, 190, 211, 0.38);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.43rem;
+  letter-spacing: 0.25em;
+}
+
+.gift-letter-invitation__seal {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  margin: 1.45rem auto 1.25rem;
+  place-items: center;
+  border: 1px solid rgba(226, 198, 140, 0.38);
+  border-radius: 50%;
+  color: rgba(239, 220, 180, 0.82);
+  background:
+    radial-gradient(circle at 36% 31%, rgba(211, 179, 117, 0.48), transparent 23%),
+    radial-gradient(circle, #8c7248, #3d311f 76%);
+  box-shadow:
+    0 0.55rem 1rem rgba(0, 0, 0, 0.4),
+    0 0 1.8rem rgba(191, 158, 97, 0.1);
+  font-family: "Times New Roman", serif;
+  font-size: 0.75rem;
+}
+
+.gift-letter-invitation h1 {
+  color: rgba(239, 235, 224, 0.94);
+  font-size: clamp(1.2rem, 2.1vw, 1.8rem);
+  letter-spacing: 0.13em;
+  line-height: 1.8;
+}
+
+.gift-letter-invitation blockquote {
+  margin-top: 0.55rem;
+  color: rgba(213, 187, 137, 0.78);
+  font-size: clamp(0.82rem, 1.25vw, 1rem);
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+}
+
+.gift-letter-invitation__rule {
+  position: relative;
+  width: 8rem;
+  height: 1px;
+  margin: 1.45rem auto 1.25rem;
+  background: linear-gradient(90deg, transparent, rgba(189, 157, 96, 0.46), transparent);
+}
+
+.gift-letter-invitation__rule i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.3rem;
+  height: 0.3rem;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1px solid rgba(211, 181, 121, 0.55);
+  background: #111d2c;
+}
+
+.gift-letter-invitation__choices {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.gift-letter-invitation__choices button {
+  position: relative;
+  display: grid;
+  gap: 0.22rem;
+  width: 100%;
+  padding: 0.78rem 1rem 0.85rem;
+  border: 0;
+  color: rgba(225, 216, 197, 0.66);
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.65s ease, background-color 0.65s ease, transform 0.65s ease;
+}
+
+.gift-letter-invitation__choices button strong,
+.gift-letter-invitation__choices button small {
+  font-style: normal;
+  font-weight: 400;
+}
+
+.gift-letter-invitation__choices button strong {
+  font-size: 0.72rem;
+  letter-spacing: 0.23em;
+  text-indent: 0.23em;
+}
+
+.gift-letter-invitation__choices button small {
+  color: rgba(158, 175, 197, 0.36);
+  font-size: 0.48rem;
+  letter-spacing: 0.15em;
+}
+
+.gift-letter-invitation__choices button i {
+  position: absolute;
+  right: 12%;
+  bottom: 0.32rem;
+  left: 12%;
+  height: 1px;
+  transform: scaleX(0.24);
+  background: linear-gradient(90deg, transparent, rgba(205, 172, 108, 0.72), transparent);
+  transition: transform 0.75s ease, filter 0.75s ease;
+}
+
+.gift-letter-invitation__choices button:hover,
+.gift-letter-invitation__choices button:focus-visible {
+  color: rgba(248, 236, 211, 0.96);
+  outline: none;
+  background: linear-gradient(90deg, transparent, rgba(162, 130, 75, 0.08), transparent);
+  transform: translateY(-1px);
+}
+
+.gift-letter-invitation__choices button:hover i,
+.gift-letter-invitation__choices button:focus-visible i {
+  transform: scaleX(0.86);
+  filter: drop-shadow(0 0 0.35rem rgba(202, 169, 105, 0.26));
+}
+
 .gift-letter-sheet {
   width: min(52vw, 37rem);
   min-height: min(68vh, 33rem);
   padding: clamp(2.5rem, 5vw, 4.4rem) clamp(2.2rem, 5.4vw, 4.8rem) 2.8rem;
   transform: rotate(0.35deg);
   text-align: center;
+}
+
+.gift-letter-sheet--revealed {
+  animation: gift-letter-unseal 1.35s both cubic-bezier(0.18, 0.72, 0.2, 1);
+}
+
+.gift-letter-room--reading .gift-letter-room__envelope {
+  animation: gift-envelope-yield 1.4s both cubic-bezier(0.18, 0.7, 0.2, 1);
 }
 
 .gift-letter-sheet__kicker {
@@ -489,9 +680,25 @@
   to { opacity: 1; }
 }
 
+@keyframes gift-letter-invitation-arrive {
+  from { opacity: 0; transform: translateY(1.4rem) rotate(0.45deg); filter: blur(4px) brightness(0.7); }
+  to { opacity: 1; transform: translateY(0) rotate(0); filter: blur(0) brightness(1); }
+}
+
+@keyframes gift-envelope-yield {
+  from { opacity: 1; transform: translate(-47%, -47%) rotate(1.2deg) scale(1); }
+  to { opacity: 0.72; transform: translate(-47%, -44%) rotate(0.2deg) scale(1.035); }
+}
+
+@keyframes gift-letter-unseal {
+  from { opacity: 0; transform: translateY(3.4rem) rotate(0.7deg) scale(0.96); filter: blur(5px) brightness(0.72); }
+  to { opacity: 1; transform: translateY(0) rotate(0.35deg) scale(1); filter: blur(0) brightness(1); }
+}
+
 @media (max-width: 760px) {
   .manuscript-document,
-  .gift-letter-sheet {
+  .gift-letter-sheet,
+  .gift-letter-invitation {
     width: min(84vw, 36rem);
     max-height: 76vh;
     overflow-y: auto;
@@ -514,7 +721,10 @@
   .manuscript-room,
   .gift-letter-room,
   .manuscript-room__moonlight,
-  .gift-letter-room__moonlight {
+  .gift-letter-room__moonlight,
+  .gift-letter-invitation,
+  .gift-letter-sheet--revealed,
+  .gift-letter-room--reading .gift-letter-room__envelope {
     animation: none;
   }
 }
@@ -945,9 +1155,11 @@ select {
   inset: 0;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 62% 28%, rgba(43, 68, 102, 0.42), transparent 38%),
-    radial-gradient(ellipse at 28% 54%, rgba(24, 39, 63, 0.3), transparent 43%),
-    linear-gradient(180deg, #091528 0%, #050b16 64%, #02050b 100%);
+    radial-gradient(ellipse at 64% 26%, rgba(54, 91, 137, 0.55), transparent 38%),
+    radial-gradient(ellipse at 82% 35%, rgba(79, 58, 100, 0.24), transparent 33%),
+    radial-gradient(ellipse at 26% 58%, rgba(38, 63, 99, 0.38), transparent 44%),
+    radial-gradient(ellipse at 48% 76%, rgba(152, 118, 70, 0.07), transparent 28%),
+    linear-gradient(180deg, #0b1c35 0%, #071326 62%, #030712 100%);
   opacity: 0;
   pointer-events: none;
 }
@@ -979,7 +1191,7 @@ select {
 
 .sanctuary-scene--entering-chapter {
   pointer-events: none;
-  animation: sanctuary-chapter-approach 3.15s both cubic-bezier(0.18, 0.72, 0.18, 1);
+  animation: sanctuary-chapter-approach 3.95s both cubic-bezier(0.18, 0.72, 0.18, 1);
 }
 
 .sanctuary-scene canvas {
@@ -1525,8 +1737,8 @@ select {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(1, 3, 8, 0.2), transparent 24%, transparent 72%, rgba(0, 2, 6, 0.34)),
-    radial-gradient(ellipse at 48% 49%, transparent 48%, rgba(0, 2, 7, 0.28) 100%);
+    linear-gradient(180deg, rgba(1, 3, 8, 0.14), transparent 26%, transparent 76%, rgba(0, 2, 6, 0.27)),
+    radial-gradient(ellipse at 48% 49%, transparent 53%, rgba(0, 2, 7, 0.22) 100%);
 }
 
 /* Moonlit Music Reliquary: physical atmosphere instead of interface decoration. */
@@ -1550,7 +1762,7 @@ select {
   height: 134%;
   transform: translateX(-50%) rotate(-11deg);
   border-radius: 48%;
-  background: linear-gradient(180deg, rgba(226, 232, 234, 0.27), rgba(157, 184, 218, 0.11) 51%, transparent 86%);
+  background: linear-gradient(180deg, rgba(239, 235, 220, 0.34), rgba(169, 201, 232, 0.17) 51%, transparent 86%);
   filter: blur(54px);
   mix-blend-mode: screen;
   animation: reliquary-moon-breathe 14s ease-in-out infinite alternate;
@@ -1563,10 +1775,11 @@ select {
   height: 24%;
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at 40% 55%, rgba(39, 61, 94, 0.18), transparent 48%),
-    radial-gradient(ellipse at 66% 48%, rgba(24, 44, 73, 0.16), transparent 52%);
+    radial-gradient(ellipse at 38% 55%, rgba(49, 87, 132, 0.24), transparent 48%),
+    radial-gradient(ellipse at 68% 46%, rgba(76, 59, 102, 0.18), transparent 49%),
+    radial-gradient(ellipse at 56% 72%, rgba(142, 110, 66, 0.08), transparent 42%);
   filter: blur(42px);
-  opacity: 0.56;
+  opacity: 0.72;
 }
 
 .reliquary-floor-reflection {
@@ -1575,7 +1788,7 @@ select {
   width: 46%;
   height: 18%;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(194, 208, 221, 0.14), rgba(177, 146, 91, 0.035) 48%, transparent 72%);
+  background: radial-gradient(ellipse, rgba(208, 222, 234, 0.2), rgba(191, 158, 96, 0.065) 48%, transparent 72%);
   filter: blur(30px);
   transform: rotate(-4deg);
 }
@@ -3778,23 +3991,23 @@ select {
 }
 
 .cosmic-dissolve--entering .cosmic-dissolve__veil {
-  animation: cosmic-dissolve-cover 1.34s 1.66s both ease-in-out;
+  animation: cosmic-dissolve-cover 1.34s 2.42s both ease-in-out;
 }
 
 .cosmic-dissolve--entering .cosmic-dissolve__core i:first-child {
-  animation: cosmic-core-awaken 1.25s 1.42s both ease-out;
+  animation: cosmic-core-awaken 1.25s 2.18s both ease-out;
 }
 
 .cosmic-dissolve--entering .cosmic-dissolve__core i:last-child {
-  animation: cosmic-core-awaken 1.34s 1.5s both ease-out;
+  animation: cosmic-core-awaken 1.34s 2.26s both ease-out;
 }
 
 .cosmic-dissolve--entering .cosmic-dissolve__particle {
-  animation: cosmic-dust-scatter var(--dissolve-duration) calc(1.42s + var(--dissolve-delay)) both ease-out;
+  animation: cosmic-dust-scatter var(--dissolve-duration) calc(2.18s + var(--dissolve-delay)) both ease-out;
 }
 
 .cosmic-dissolve--entering .cosmic-dissolve__copy {
-  animation: cosmic-copy-arrive 1.3s 1.67s both ease-in-out;
+  animation: cosmic-copy-arrive 1.3s 2.43s both ease-in-out;
 }
 
 .cosmic-dissolve--forming {

@@ -93,13 +93,13 @@ export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, o
           camera.zoom = 1;
           camera.updateProjectionMatrix();
         }
-        gl.setClearColor("#091528", 1);
+        gl.setClearColor("#0b1b32", 1);
         gl.outputColorSpace = "srgb";
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 2.76;
+        gl.toneMappingExposure = 3.08;
         gl.shadowMap.enabled = true;
         gl.shadowMap.type = THREE.PCFShadowMap;
-        scene.fog = new THREE.FogExp2("#07101e", 0.021);
+        scene.fog = new THREE.FogExp2("#09172b", 0.018);
       }}
     >
       <SanctuaryLighting />

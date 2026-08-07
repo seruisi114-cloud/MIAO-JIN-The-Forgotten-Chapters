@@ -126,27 +126,27 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
       activationElapsed.current = THREE.MathUtils.clamp(
         activationElapsed.current + (activating ? delta : -delta * 1.8),
         0,
-        3.2,
+        4.2,
       );
-      const openProgress = THREE.MathUtils.smoothstep(activationElapsed.current, 0.12, 1.48);
-      const targetRotation = activating ? -1.08 * openProgress : 0;
-      lidRef.current.rotation.x = THREE.MathUtils.damp(lidRef.current.rotation.x, targetRotation, activating ? 2.15 : 2.8, delta);
+      const openProgress = THREE.MathUtils.smoothstep(activationElapsed.current, 0.16, 2.28);
+      const targetRotation = activating ? -1.2 * openProgress : 0;
+      lidRef.current.rotation.x = THREE.MathUtils.damp(lidRef.current.rotation.x, targetRotation, activating ? 2.4 : 2.8, delta);
     }
 
     if (lidMaterialRef.current) {
       lidMaterialRef.current.emissiveIntensity = THREE.MathUtils.damp(
         lidMaterialRef.current.emissiveIntensity,
-        activating ? 0.2 : hovered.current ? 0.075 : 0.018,
+        activating ? 0.3 : hovered.current ? 0.085 : 0.022,
         1.8,
         delta,
       );
-      lidMaterialRef.current.opacity = THREE.MathUtils.damp(lidMaterialRef.current.opacity, activating ? 0.48 : hovered.current ? 0.9 : 0.97, 1.6, delta);
+      lidMaterialRef.current.opacity = THREE.MathUtils.damp(lidMaterialRef.current.opacity, activating ? 0.38 : hovered.current ? 0.9 : 0.97, 1.6, delta);
     }
 
     if (innerSeaMaterialRef.current) {
       innerSeaMaterialRef.current.emissiveIntensity = THREE.MathUtils.damp(
         innerSeaMaterialRef.current.emissiveIntensity,
-        activating ? 1.18 : hovered.current ? 0.48 : 0.16,
+        activating ? 1.58 : hovered.current ? 0.52 : 0.18,
         1.8,
         delta,
       );
@@ -155,7 +155,7 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
     if (sealMaterialRef.current) {
       sealMaterialRef.current.emissiveIntensity = THREE.MathUtils.damp(
         sealMaterialRef.current.emissiveIntensity,
-        activating ? 0.72 : hovered.current ? 0.12 : 0.015,
+        activating ? 0.94 : hovered.current ? 0.14 : 0.018,
         2.2,
         delta,
       );
@@ -202,10 +202,10 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
         <meshStandardMaterial map={brassTexture} bumpMap={brassTexture} bumpScale={0.004} color="#806943" roughness={0.46} metalness={0.88} />
       </OctagonalLayer>
       <OctagonalLayer width={3.84} depth={2.37} height={0.15} cut={0.42} y={0.12}>
-        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#0b121c" roughness={0.3} metalness={0.13} clearcoat={0.78} clearcoatRoughness={0.25} />
+        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#101b2a" roughness={0.29} metalness={0.13} clearcoat={0.8} clearcoatRoughness={0.24} />
       </OctagonalLayer>
       <OctagonalLayer width={3.74} depth={2.29} height={0.78} cut={0.4} y={0.55}>
-        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.021} color="#111d2b" roughness={0.27} metalness={0.16} clearcoat={0.86} clearcoatRoughness={0.22} />
+        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.021} color="#182b40" roughness={0.26} metalness={0.16} clearcoat={0.88} clearcoatRoughness={0.21} />
       </OctagonalLayer>
       <OctagonalLayer width={3.81} depth={2.34} height={0.045} cut={0.42} y={0.925}>
         <meshStandardMaterial map={brassTexture} color="#8f764d" roughness={0.43} metalness={0.9} />
@@ -232,7 +232,7 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
       <group ref={lidRef} position={[0, 0.962, -1.17]}>
         <group position={[0, 0, 1.17]}>
           <OctagonalLayer width={3.82} depth={2.34} height={0.13} cut={0.42} y={0.065}>
-            <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#162536" roughness={0.27} metalness={0.16} clearcoat={0.8} clearcoatRoughness={0.25} />
+            <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.014} color="#1b324a" roughness={0.26} metalness={0.16} clearcoat={0.82} clearcoatRoughness={0.23} />
           </OctagonalLayer>
           <OctagonalLayer width={3.55} depth={2.07} height={0.03} cut={0.36} y={0.154}>
             <meshStandardMaterial map={brassTexture} color="#947a4f" roughness={0.44} metalness={0.9} />
@@ -243,7 +243,7 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
               map={moonstoneTexture}
               bumpMap={moonstoneTexture}
               bumpScale={0.018}
-              color="#d7dedc"
+              color="#e8e2d4"
               roughness={0.46}
               metalness={0.01}
               transmission={0.025}
@@ -251,7 +251,7 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
               ior={1.39}
               clearcoat={0.22}
               clearcoatRoughness={0.52}
-              emissive="#1a3552"
+              emissive="#294d74"
               emissiveIntensity={0.025}
               transparent
               opacity={0.985}

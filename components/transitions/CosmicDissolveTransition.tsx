@@ -66,7 +66,7 @@ export function CosmicDissolveTransition({
     if (mode === "entering" && onCovered) {
       // Leave a deliberate beat for the physical music box to open before the
       // full-screen dissolve takes over the frame.
-      const timer = window.setTimeout(onCovered, reducedMotion ? 420 : 3020);
+      const timer = window.setTimeout(onCovered, reducedMotion ? 420 : 3850);
       return () => window.clearTimeout(timer);
     }
 

@@ -36,6 +36,8 @@ export function MusicBoxAwakening({ active, hovered }: MusicBoxAwakeningProps) {
   const dustRef = useRef<THREE.Points>(null);
   const dustMaterialRef = useRef<THREE.PointsMaterial>(null);
   const lightRef = useRef<THREE.PointLight>(null);
+  const relicRef = useRef<THREE.Group>(null);
+  const relicMaterialRef = useRef<THREE.MeshStandardMaterial>(null);
   const elapsed = useRef(0);
   const glowTexture = useMemo(() => createMoonGlowTexture(), []);
   const dust = useMemo(() => createRisingDust(), []);
@@ -49,14 +51,14 @@ export function MusicBoxAwakening({ active, hovered }: MusicBoxAwakeningProps) {
       4.8,
     );
 
-    const reveal = THREE.MathUtils.smoothstep(elapsed.current, 0.48, 2.15);
+    const reveal = THREE.MathUtils.smoothstep(elapsed.current, 0.56, 2.72);
     const hoverReveal = active ? 1 : hovered ? 0.16 : 0.025;
     const intensity = Math.max(reveal, hoverReveal);
 
     if (beamOuterRef.current) {
       beamOuterRef.current.opacity = THREE.MathUtils.damp(
         beamOuterRef.current.opacity,
-        active ? 0.082 : 0,
+        active ? reveal * 0.13 : 0,
         2.2,
         delta,
       );
@@ -64,7 +66,7 @@ export function MusicBoxAwakening({ active, hovered }: MusicBoxAwakeningProps) {
     if (beamInnerRef.current) {
       beamInnerRef.current.opacity = THREE.MathUtils.damp(
         beamInnerRef.current.opacity,
-        active ? 0.14 : 0,
+        active ? reveal * 0.23 : 0,
         2.5,
         delta,
       );
@@ -72,7 +74,7 @@ export function MusicBoxAwakening({ active, hovered }: MusicBoxAwakeningProps) {
     if (coreRef.current) {
       coreRef.current.opacity = THREE.MathUtils.damp(
         coreRef.current.opacity,
-        active ? 0.66 : hovered ? 0.14 : 0.035,
+        active ? reveal * 0.86 : hovered ? 0.14 : 0.035,
         2.4,
         delta,
       );
@@ -80,7 +82,7 @@ export function MusicBoxAwakening({ active, hovered }: MusicBoxAwakeningProps) {
     if (dustMaterialRef.current) {
       dustMaterialRef.current.opacity = THREE.MathUtils.damp(
         dustMaterialRef.current.opacity,
-        active ? 0.76 : hovered ? 0.18 : 0.045,
+        active ? reveal * 0.82 : hovered ? 0.18 : 0.045,
         2,
         delta,
       );
@@ -88,7 +90,7 @@ export function MusicBoxAwakening({ active, hovered }: MusicBoxAwakeningProps) {
     if (lightRef.current) {
       lightRef.current.intensity = THREE.MathUtils.damp(
         lightRef.current.intensity,
-        active ? 5.8 : hovered ? 1.1 : 0.16,
+        active ? 0.16 + reveal * 8.2 : hovered ? 1.1 : 0.16,
         2.2,
         delta,
       );
@@ -114,6 +116,20 @@ export function MusicBoxAwakening({ active, hovered }: MusicBoxAwakeningProps) {
     if (dustRef.current) {
       dustRef.current.scale.setScalar(0.82 + intensity * 0.18);
     }
+    if (relicRef.current) {
+      relicRef.current.visible = active || hovered;
+      relicRef.current.position.y = THREE.MathUtils.damp(relicRef.current.position.y, 0.06 + reveal * 0.9, 2.25, delta);
+      relicRef.current.scale.setScalar(THREE.MathUtils.damp(relicRef.current.scale.x, active ? 0.14 + reveal * 0.86 : hovered ? 0.14 : 0.06, 2.2, delta));
+      relicRef.current.rotation.y = THREE.MathUtils.damp(relicRef.current.rotation.y, active ? 0.18 : 0, 1.1, delta);
+    }
+    if (relicMaterialRef.current) {
+      relicMaterialRef.current.emissiveIntensity = THREE.MathUtils.damp(
+        relicMaterialRef.current.emissiveIntensity,
+        active ? 0.5 + reveal * 1.3 : hovered ? 0.24 : 0.08,
+        2.2,
+        delta,
+      );
+    }
   });
 
   return (
@@ -124,8 +140,30 @@ export function MusicBoxAwakening({ active, hovered }: MusicBoxAwakeningProps) {
         <spriteMaterial ref={coreRef} map={glowTexture} color="#dbe8f4" transparent opacity={0.035} depthWrite={false} blending={THREE.AdditiveBlending} />
       </sprite>
 
+      <group ref={relicRef} position={[0, 0.06, 0.08]} scale={0.06} visible={false}>
+        <mesh>
+          <sphereGeometry args={[0.18, 48, 32]} />
+          <meshStandardMaterial
+            ref={relicMaterialRef}
+            color={sanctuaryPalette.warmMoon}
+            roughness={0.28}
+            metalness={0.02}
+            emissive="#8daed2"
+            emissiveIntensity={0.08}
+          />
+        </mesh>
+        <mesh rotation={[Math.PI / 2, 0.28, -0.36]}>
+          <torusGeometry args={[0.3, 0.009, 8, 64, Math.PI * 0.72]} />
+          <meshStandardMaterial color={sanctuaryPalette.champagneGold} roughness={0.42} metalness={0.9} />
+        </mesh>
+        <mesh rotation={[Math.PI / 2, Math.PI + 0.28, -0.36]}>
+          <torusGeometry args={[0.3, 0.009, 8, 64, Math.PI * 0.72]} />
+          <meshStandardMaterial color={sanctuaryPalette.champagneGold} roughness={0.42} metalness={0.9} />
+        </mesh>
+      </group>
+
       <mesh position={[0, 2.34, 0.02]} rotation={[Math.PI, 0, 0]}>
-        <coneGeometry args={[1.48, 3.45, 64, 1, true]} />
+        <coneGeometry args={[1.62, 3.45, 64, 1, true]} />
         <meshBasicMaterial ref={beamOuterRef} color="#b9cde3" transparent opacity={0} depthWrite={false} side={THREE.DoubleSide} blending={THREE.AdditiveBlending} />
       </mesh>
       <mesh position={[0, 2.12, 0.02]} rotation={[Math.PI, 0, 0]}>

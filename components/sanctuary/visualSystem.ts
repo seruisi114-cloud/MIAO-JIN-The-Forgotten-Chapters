@@ -6,6 +6,9 @@ export const sanctuaryPalette = {
   obsidianLift: "#111b2a",
   moonWhite: "#e7e8e2",
   moonBlue: "#b9cbe0",
+  sapphireReflection: "#315d8c",
+  violetMist: "#514267",
+  warmMoon: "#f0e5cf",
   champagneGold: "#c5a96d",
   agedGold: "#8f7547",
 } as const;
