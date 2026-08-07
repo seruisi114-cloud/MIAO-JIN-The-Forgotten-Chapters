@@ -17,9 +17,9 @@ import { MusicAnalysisCore } from "./MusicAnalysisCore";
 import { SanctuaryMelodyPaths } from "./SanctuaryMelodyPaths";
 import { sanctuaryPalette } from "./visualSystem";
 
-const moonPosition: [number, number, number] = [-4.15, -0.5, 2.45];
-const creatorPosition: [number, number, number] = [0, 0.55, -1.55];
-const analysisPosition: [number, number, number] = [4.25, -0.25, 1.75];
+const moonPosition: [number, number, number] = [0, -0.24, 0.34];
+const creatorPosition: [number, number, number] = [-4.1, -0.18, 1.78];
+const analysisPosition: [number, number, number] = [4.12, -0.14, 1.72];
 
 type SanctuaryCanvasProps = {
   restoring: boolean;
@@ -56,7 +56,7 @@ function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingI
       <CelestialVaultRuins />
       <SanctuaryFloor skipIntro={restoring} />
       <SanctuaryPillars skipIntro={restoring} />
-      <ChapterArchiveCore kind="moon-planet" labelPlacement="left" position={moonPosition} chapter="核心作品" revealDelay={5.8} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
+      <ChapterArchiveCore kind="moon-planet" labelPlacement="bottom" position={moonPosition} chapter="核心音乐礼物" revealDelay={7.2} index={1} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
       <CreatorArchiveCore position={creatorPosition} index={2} skipIntro={restoring} onHoverChange={onActiveChange} onOpenCreatorArchive={onOpenCreatorArchive} />
       <MusicAnalysisCore position={analysisPosition} index={3} skipIntro={restoring} onHoverChange={onActiveChange} onOpen={onOpenMusicAnalysis} />
       <SanctuaryMelodyPaths skipIntro={restoring} />

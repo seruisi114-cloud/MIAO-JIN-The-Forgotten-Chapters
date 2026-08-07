@@ -4,6 +4,7 @@ import { Html } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { MelodyCorridor } from "./MelodyCorridor";
 import { sanctuaryMotion, sanctuaryPalette } from "./visualSystem";
 
 type MusicAnalysisCoreProps = {
@@ -88,6 +89,7 @@ export function MusicAnalysisCore({ position, index, skipIntro = false, onHoverC
           <meshBasicMaterial color={sanctuaryPalette.champagneGold} transparent opacity={isHovered ? 0.34 : 0.13} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
         <pointLight color={sanctuaryPalette.moonBlue} intensity={isHovered ? 0.62 : 0.28} distance={3.6} decay={2.2} position={[0, 0.08, 0.4]} />
+        <MelodyCorridor active={isHovered} />
       </group>
 
       <points>
@@ -97,8 +99,8 @@ export function MusicAnalysisCore({ position, index, skipIntro = false, onHoverC
 
       <Html center position={[0, -0.05, 0.1]} distanceFactor={9.2} zIndexRange={[30, 10]} style={{ pointerEvents: "none" }}>
         <div className={`sanctuary-label sanctuary-label--entry sanctuary-label--analysis${isHovered ? " is-hovered" : ""}`}>
-          <span>音乐解析</span>
-          <small>进入声音星云</small>
+          <span>旋律回廊</span>
+          <small>聆听声音的轨迹</small>
         </div>
       </Html>
     </group>

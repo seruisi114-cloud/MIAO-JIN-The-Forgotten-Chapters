@@ -16,7 +16,7 @@ export function SanctuaryPillars({ skipIntro = false }: { skipIntro?: boolean })
 
   useFrame((_, delta) => {
     elapsed.current += delta;
-    const reveal = THREE.MathUtils.smoothstep(elapsed.current, 9.05, 10.05);
+    const reveal = THREE.MathUtils.smoothstep(elapsed.current, 3.1, 4.45);
     edgeRef.current?.traverse((object) => {
       if (!(object instanceof THREE.Mesh || object instanceof THREE.Line)) return;
       const material = object.material as THREE.Material & { opacity?: number };

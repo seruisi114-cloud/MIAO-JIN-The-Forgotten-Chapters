@@ -10,9 +10,9 @@ import { archiveCoreVertexShader, dormantCrystalFragmentShader, frozenNebulaFrag
 import { GoldenStarRibbon } from "./GoldenStarRibbon";
 import { sanctuaryPalette } from "./visualSystem";
 
-const MOON_CORE_Y = 1.96;
-const MOON_CORE_RADIUS = 0.58;
-const MOON_BASE_Y = 1.3;
+const MOON_CORE_Y = 1.78;
+const MOON_CORE_RADIUS = 0.82;
+const MOON_BASE_Y = 0.82;
 
 type ChapterArchiveCoreProps = {
   kind: "moon-planet" | "relic-core" | "frozen-nebula";
@@ -81,6 +81,19 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
     }
     return positions;
   }, [index, isFrozenNebula, isMoonPlanet]);
+  const microStarSea = useMemo(() => {
+    const random = seededRandom(31019);
+    const positions = new Float32Array(46 * 3);
+    for (let starIndex = 0; starIndex < 46; starIndex += 1) {
+      const radius = Math.cbrt(random()) * MOON_CORE_RADIUS * 0.72;
+      const theta = random() * Math.PI * 2;
+      const phi = Math.acos(2 * random() - 1);
+      positions[starIndex * 3] = Math.sin(phi) * Math.cos(theta) * radius;
+      positions[starIndex * 3 + 1] = Math.cos(phi) * radius;
+      positions[starIndex * 3 + 2] = Math.sin(phi) * Math.sin(theta) * radius;
+    }
+    return positions;
+  }, []);
 
   useFrame(({ camera, clock }, delta) => {
     elapsed.current += delta;
@@ -146,28 +159,28 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
   return (
     <group ref={rootRef} position={position} scale={skipIntro ? 1 : 0.001}>
       <mesh position={[0, isMoonPlanet ? MOON_CORE_Y : 1, 0]} onPointerEnter={(event) => handlePointer(event, true)} onPointerLeave={(event) => handlePointer(event, false)} onClick={handleClick}>
-        <sphereGeometry args={[1.18, 24, 24]} />
+        <sphereGeometry args={[isMoonPlanet ? 1.48 : 1.18, 24, 24]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} colorWrite={false} />
       </mesh>
 
       {isMoonPlanet ? (
         <>
-          <group position={[0, 1.42, -0.18]}>
-            <mesh position={[-0.62, 0.02, -0.08]} scale={[0.24, 0.82, 0.2]} rotation={[0.08, 0.18, -0.22]}>
+          <group position={[0, 1.04, -0.18]}>
+            <mesh position={[-0.88, 0.08, -0.08]} scale={[0.3, 1.05, 0.25]} rotation={[0.08, 0.18, -0.22]}>
               <octahedronGeometry args={[0.78, 1]} />
               <meshPhysicalMaterial color={sanctuaryPalette.moonBlue} roughness={0.18} transmission={0.66} thickness={0.9} ior={1.42} clearcoat={0.82} transparent opacity={0.24} depthWrite={false} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.08} />
             </mesh>
-            <mesh position={[0.6, -0.06, -0.12]} scale={[0.2, 0.68, 0.18]} rotation={[-0.05, -0.2, 0.25]}>
+            <mesh position={[0.86, -0.02, -0.12]} scale={[0.26, 0.88, 0.22]} rotation={[-0.05, -0.2, 0.25]}>
               <octahedronGeometry args={[0.78, 1]} />
               <meshPhysicalMaterial color={sanctuaryPalette.moonWhite} roughness={0.16} transmission={0.7} thickness={0.82} ior={1.42} clearcoat={0.86} transparent opacity={0.18} depthWrite={false} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.06} />
             </mesh>
           </group>
           <mesh position={[0, MOON_BASE_Y, 0]}>
-            <cylinderGeometry args={[0.4, 0.5, 0.12, 64]} />
+            <cylinderGeometry args={[0.55, 0.68, 0.16, 64]} />
             <meshPhysicalMaterial color={sanctuaryPalette.obsidian} roughness={0.38} metalness={0.46} clearcoat={0.42} clearcoatRoughness={0.4} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.08} />
           </mesh>
           <group position={[0, MOON_BASE_Y + 0.07, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <mesh><torusGeometry args={[0.48, 0.01, 8, 96, Math.PI * 1.55]} /><meshBasicMaterial color={sanctuaryPalette.champagneGold} transparent opacity={isHovered ? 0.58 : 0.28} depthWrite={false} /></mesh>
+            <mesh><torusGeometry args={[0.65, 0.012, 8, 96, Math.PI * 1.55]} /><meshBasicMaterial color={sanctuaryPalette.champagneGold} transparent opacity={isHovered ? 0.62 : 0.34} depthWrite={false} /></mesh>
           </group>
         </>
       ) : (
@@ -193,17 +206,25 @@ export function ChapterArchiveCore({ kind, labelPlacement, position, chapter, re
             <sphereGeometry args={[MOON_CORE_RADIUS, 64, 40]} />
             <meshPhysicalMaterial color="#829ab3" roughness={0.42} metalness={0.03} transmission={0.08} thickness={0.5} ior={1.28} clearcoat={0.46} clearcoatRoughness={0.36} envMapIntensity={0.9} transparent opacity={0.14} depthWrite={false} />
           </mesh>
+          <mesh position={[0, MOON_CORE_Y, 0]} renderOrder={14}>
+            <icosahedronGeometry args={[MOON_CORE_RADIUS * 1.22, 3]} />
+            <meshPhysicalMaterial color={sanctuaryPalette.moonWhite} roughness={0.08} transmission={0.72} thickness={1.18} ior={1.46} clearcoat={0.94} clearcoatRoughness={0.08} transparent opacity={activating ? 0.3 : isHovered ? 0.24 : 0.15} depthWrite={false} emissive={sanctuaryPalette.deepIndigo} emissiveIntensity={0.1} />
+          </mesh>
+          <points position={[0, MOON_CORE_Y, 0]} renderOrder={16}>
+            <bufferGeometry><bufferAttribute attach="attributes-position" args={[microStarSea, 3]} /></bufferGeometry>
+            <pointsMaterial color={sanctuaryPalette.moonWhite} size={0.022} sizeAttenuation transparent opacity={activating ? 0.9 : isHovered ? 0.68 : 0.46} depthWrite={false} blending={THREE.AdditiveBlending} />
+          </points>
           <mesh position={[0, MOON_CORE_Y, 0]} scale={1.13} renderOrder={11}>
             <sphereGeometry args={[MOON_CORE_RADIUS, 48, 32]} />
             <meshBasicMaterial color="#afcff0" side={THREE.BackSide} transparent opacity={0.085} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} />
           </mesh>
           <group ref={orbitRef} position={[0, MOON_CORE_Y, 0]} rotation={[0.42, 0.12, -0.28]}>
             <mesh rotation={[Math.PI / 2, 0.18, 0]} scale={[1, 0.64, 1]}>
-              <torusGeometry args={[0.94, 0.009, 8, 128, Math.PI * 1.28]} />
+              <torusGeometry args={[1.28, 0.011, 8, 128, Math.PI * 1.28]} />
               <meshBasicMaterial color={sanctuaryPalette.champagneGold} transparent opacity={activating ? 0.68 : isHovered ? 0.36 : 0.14} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} />
             </mesh>
           </group>
-          <group position={[0, MOON_CORE_Y, 0]}>
+          <group position={[0, MOON_CORE_Y, 0]} scale={1.32}>
             <GoldenStarRibbon active={activating} hovered={isHovered} />
           </group>
           <pointLight ref={lightRef} position={[0, MOON_CORE_Y + 0.01, 0.42]} color={sanctuaryPalette.moonWhite} intensity={0.44} distance={4.8} decay={2.1} />

@@ -15,7 +15,7 @@ const analysis = [
 
 export function MusicAnalysisSpace({ onClose }: MusicAnalysisSpaceProps) {
   return (
-    <section className="content-cosmos content-cosmos--analysis" aria-label="月下星海音乐解析">
+    <section className="content-cosmos content-cosmos--analysis" aria-label="月下星海旋律回廊">
       <div className="sound-nebula" aria-hidden="true"><i /><i /><i /></div>
       <div className="sound-spectrum" aria-hidden="true">
         {Array.from({ length: 31 }, (_, index) => (
@@ -35,7 +35,7 @@ export function MusicAnalysisSpace({ onClose }: MusicAnalysisSpaceProps) {
         <path d="M30 276 C210 164 372 352 532 250 S812 142 970 246" />
       </svg>
       <article className="content-cosmos__copy content-cosmos__copy--analysis">
-        <p className="content-cosmos__kicker">音乐解析</p>
+        <p className="content-cosmos__kicker">旋律回廊</p>
         <h1>《月下星海》</h1>
         <span className="content-cosmos__ornament" aria-hidden="true" />
         <div className="music-analysis-sections">

@@ -70,7 +70,7 @@ export function SanctuaryMelodyPaths({ skipIntro = false }: { skipIntro?: boolea
   useFrame((_, delta) => {
     elapsed.current += delta;
     if (!rootRef.current) return;
-    const reveal = THREE.MathUtils.smoothstep(elapsed.current, 5.65, 7.2);
+    const reveal = THREE.MathUtils.smoothstep(elapsed.current, 8.05, 9.35);
     rootRef.current.scale.setScalar(THREE.MathUtils.damp(rootRef.current.scale.x, Math.max(0.001, reveal), 2.15, delta));
   });
 
@@ -79,21 +79,21 @@ export function SanctuaryMelodyPaths({ skipIntro = false }: { skipIntro?: boolea
       <MelodyPath
         delay={0.04}
         points={[
-          [0, 1.46, -1.2],
-          [-0.92, 1.28, -0.42],
-          [-2.16, 0.86, 0.76],
-          [-3.34, 0.62, 1.76],
-          [-4.15, 0.46, 2.42],
+          [0, 1.58, 0.36],
+          [-0.88, 1.46, 0.72],
+          [-2.08, 1.24, 1.18],
+          [-3.22, 1.12, 1.62],
+          [-4.08, 1.16, 1.77],
         ]}
       />
       <MelodyPath
         delay={0.47}
         points={[
-          [0, 1.42, -1.18],
-          [0.96, 1.22, -0.36],
-          [2.12, 0.88, 0.66],
-          [3.32, 0.66, 1.32],
-          [4.22, 0.58, 1.72],
+          [0, 1.54, 0.36],
+          [0.92, 1.42, 0.72],
+          [2.08, 1.22, 1.16],
+          [3.24, 1.08, 1.56],
+          [4.1, 1.16, 1.7],
         ]}
       />
     </group>

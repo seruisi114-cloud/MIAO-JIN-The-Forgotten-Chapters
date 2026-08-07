@@ -41,7 +41,7 @@ export function CreatorArchiveSpace({ onClose }: CreatorArchiveSpaceProps) {
         ))}
       </div>
       <article className="content-cosmos__copy">
-        <p className="content-cosmos__kicker">创作者档案</p>
+        <p className="content-cosmos__kicker">星辰收藏册</p>
         <h1>金淼</h1>
         <span className="content-cosmos__ornament" aria-hidden="true" />
         <div className="creator-archive-sections">
