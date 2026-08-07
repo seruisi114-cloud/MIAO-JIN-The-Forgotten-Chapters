@@ -6,6 +6,7 @@ import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { createAgedBrassTexture, createBlackLacquerTexture, createMoonstoneTexture, createStarSeaTexture } from "./ReliquaryTextures";
+import { MusicBoxAwakening } from "./MusicBoxAwakening";
 import { sanctuaryPalette } from "./visualSystem";
 
 type MoonSeaMusicBoxProps = {
@@ -99,6 +100,7 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
   const elapsed = useRef(skipIntro ? 20 : 0);
   const projectedCenter = useRef(new THREE.Vector3());
   const previousOrigin = useRef<TransitionOrigin>({ x: -100, y: -100 });
+  const activationElapsed = useRef(0);
   const [isHovered, setIsHovered] = useState(false);
   const lacquerTexture = useMemo(() => createBlackLacquerTexture(), []);
   const brassTexture = useMemo(() => createAgedBrassTexture(), []);
@@ -121,8 +123,14 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
     }
 
     if (lidRef.current) {
-      const targetRotation = activating ? -0.98 : 0;
-      lidRef.current.rotation.x = THREE.MathUtils.damp(lidRef.current.rotation.x, targetRotation, activating ? 1.5 : 2.6, delta);
+      activationElapsed.current = THREE.MathUtils.clamp(
+        activationElapsed.current + (activating ? delta : -delta * 1.8),
+        0,
+        3.2,
+      );
+      const openProgress = THREE.MathUtils.smoothstep(activationElapsed.current, 0.12, 1.48);
+      const targetRotation = activating ? -1.08 * openProgress : 0;
+      lidRef.current.rotation.x = THREE.MathUtils.damp(lidRef.current.rotation.x, targetRotation, activating ? 2.15 : 2.8, delta);
     }
 
     if (lidMaterialRef.current) {
@@ -207,9 +215,19 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
         <meshStandardMaterial map={brassTexture} color="#8d744b" roughness={0.5} metalness={0.86} />
       </RoundedBox>
 
-      <OctagonalLayer width={3.1} depth={1.68} height={0.035} cut={0.3} y={0.962}>
-        <meshStandardMaterial ref={innerSeaMaterialRef} map={innerSeaTexture} color="#6f8aa7" emissive="#19345a" emissiveIntensity={0.16} roughness={0.66} />
+      <OctagonalLayer width={3.28} depth={1.86} height={0.055} cut={0.32} y={0.936}>
+        <meshPhysicalMaterial color="#070b12" roughness={0.72} metalness={0.08} clearcoat={0.12} clearcoatRoughness={0.7} />
       </OctagonalLayer>
+      <OctagonalLayer width={3.06} depth={1.64} height={0.026} cut={0.28} y={0.972}>
+        <meshStandardMaterial ref={innerSeaMaterialRef} map={innerSeaTexture} color="#7792b1" emissive="#193a66" emissiveIntensity={0.16} roughness={0.62} />
+      </OctagonalLayer>
+
+      {[-1.18, -0.59, 0, 0.59, 1.18].map((x) => (
+        <mesh key={`inner-inlay-${x}`} position={[x, 0.994, 0.02]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.018, 0.026, 24]} />
+          <meshStandardMaterial map={brassTexture} color="#a58b5a" roughness={0.5} metalness={0.86} />
+        </mesh>
+      ))}
 
       <group ref={lidRef} position={[0, 0.962, -1.17]}>
         <group position={[0, 0, 1.17]}>
@@ -254,6 +272,18 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
         </RoundedBox>
       ))}
 
+      {[-1.33, 1.33].map((x) => (
+        <group key={`hinge-${x}`} position={[x, 1.01, -1.16]}>
+          <RoundedBox args={[0.34, 0.12, 0.12]} radius={0.025} smoothness={4}>
+            <meshStandardMaterial map={brassTexture} bumpMap={brassTexture} bumpScale={0.004} color="#9a8053" roughness={0.42} metalness={0.92} />
+          </RoundedBox>
+          <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.045, 0.045, 0.42, 32]} />
+            <meshStandardMaterial map={brassTexture} color="#ab9161" roughness={0.4} metalness={0.94} />
+          </mesh>
+        </group>
+      ))}
+
       <RoundedBox args={[0.66, 0.28, 0.055]} radius={0.025} smoothness={5} position={[0, 0.62, 1.183]}>
         <meshStandardMaterial ref={sealMaterialRef} map={brassTexture} bumpMap={brassTexture} bumpScale={0.004} color="#8c754d" roughness={0.42} metalness={0.9} emissive={sanctuaryPalette.champagneGold} emissiveIntensity={0.008} />
       </RoundedBox>
@@ -269,6 +299,8 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
         <circleGeometry args={[0.024, 24]} />
         <meshStandardMaterial color="#2a2117" roughness={0.58} metalness={0.62} />
       </mesh>
+
+      <MusicBoxAwakening active={activating} hovered={isHovered} />
 
       <Html center position={[0, 0.62, 1.222]} distanceFactor={8.5} zIndexRange={[24, 8]} style={{ pointerEvents: "none" }}>
         <div className={`reliquary-engraving${skipIntro ? " is-restored" : ""}${isHovered ? " is-awake" : ""}`}>

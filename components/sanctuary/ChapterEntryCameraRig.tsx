@@ -31,7 +31,7 @@ export function ChapterEntryCameraRig({ active, reducedMotion }: ChapterEntryCam
       if (camera instanceof THREE.PerspectiveCamera) startFov.current = camera.fov;
     }
     elapsed.current += delta;
-    const duration = reducedMotion ? 0.72 : 2.75;
+    const duration = reducedMotion ? 0.72 : 3.05;
     const rawProgress = THREE.MathUtils.clamp(elapsed.current / duration, 0, 1);
     const progress = 1 - Math.pow(1 - rawProgress, 3);
     const drift = Math.sin(rawProgress * Math.PI) * 0.08;

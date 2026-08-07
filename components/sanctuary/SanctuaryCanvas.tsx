@@ -29,14 +29,14 @@ function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingI
     <group>
       <MoonlitReliquaryRoom skipIntro={restoring} />
       <CreatorArchiveCore
-        position={[-3.72, 0.08, 0.12]}
+        position={[-3.48, 0.09, 0.44]}
         index={2}
         skipIntro={restoring}
         onHoverChange={onActiveChange}
         onOpenCreatorArchive={onOpenCreatorArchive}
       />
       <GiftLetterCore
-        position={[3.18, 0.08, 0.04]}
+        position={[3.12, 0.08, 0.82]}
         index={3}
         skipIntro={restoring}
         onHoverChange={onActiveChange}
@@ -96,7 +96,7 @@ export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, o
         gl.setClearColor("#091528", 1);
         gl.outputColorSpace = "srgb";
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 2.58;
+        gl.toneMappingExposure = 2.76;
         gl.shadowMap.enabled = true;
         gl.shadowMap.type = THREE.PCFShadowMap;
         scene.fog = new THREE.FogExp2("#07101e", 0.021);

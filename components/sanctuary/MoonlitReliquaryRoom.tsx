@@ -157,6 +157,23 @@ export function MoonlitReliquaryRoom({ skipIntro = false }: { skipIntro?: boolea
         <OctagonalPedestal width={4.43} depth={2.9} height={0.07} y={0.43}>
           <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.011} color="#21364e" roughness={0.31} metalness={0.16} clearcoat={0.65} clearcoatRoughness={0.32} />
         </OctagonalPedestal>
+        <OctagonalPedestal width={4.18} depth={2.68} height={0.025} y={0.47}>
+          <meshStandardMaterial color="#a18858" roughness={0.5} metalness={0.87} />
+        </OctagonalPedestal>
+        <OctagonalPedestal width={4.03} depth={2.53} height={0.035} y={0.495}>
+          <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.008} color="#16283b" roughness={0.36} metalness={0.13} clearcoat={0.48} clearcoatRoughness={0.42} />
+        </OctagonalPedestal>
+      </group>
+
+      <group position={[-0.56, -0.165, 4.22]}>
+        <mesh rotation={[-Math.PI / 2, 0, -0.045]}>
+          <planeGeometry args={[0.028, 5.5]} />
+          <meshStandardMaterial color="#9b7d4c" roughness={0.58} metalness={0.78} transparent opacity={0.5} />
+        </mesh>
+        <mesh position={[0.34, 0, 0]} rotation={[-Math.PI / 2, 0, -0.045]}>
+          <planeGeometry args={[0.012, 4.1]} />
+          <meshStandardMaterial color="#758aa7" roughness={0.74} metalness={0.2} transparent opacity={0.32} />
+        </mesh>
       </group>
     </group>
   );

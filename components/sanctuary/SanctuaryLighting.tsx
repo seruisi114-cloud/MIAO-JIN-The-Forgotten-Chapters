@@ -15,13 +15,13 @@ export function SanctuaryLighting() {
   return (
     <>
       <primitive object={moonlightTarget} />
-      <hemisphereLight color="#9cb1cb" groundColor="#020711" intensity={1.08} />
+      <hemisphereLight color="#a8bdd5" groundColor="#030915" intensity={1.34} />
       <spotLight
         color={sanctuaryPalette.moonWhite}
-        intensity={12.6}
+        intensity={14.2}
         position={[3.05, 7.65, -3.72]}
         target={moonlightTarget}
-        angle={0.58}
+        angle={0.64}
         penumbra={0.98}
         distance={20}
         decay={1.58}
@@ -32,7 +32,7 @@ export function SanctuaryLighting() {
       />
       <spotLight
         color="#8099bb"
-        intensity={5.5}
+        intensity={6.4}
         position={[-4.2, 4.5, 5.6]}
         target={moonlightTarget}
         angle={0.64}
@@ -40,8 +40,9 @@ export function SanctuaryLighting() {
         distance={17}
         decay={1.65}
       />
-      <directionalLight color="#6f86a7" intensity={1.15} position={[-4.4, 3.2, 4.4]} />
-      <pointLight color="#b89961" intensity={0.68} distance={4.1} decay={2.08} position={[-0.55, 0.9, 1.7]} />
+      <directionalLight color="#7892b5" intensity={1.42} position={[-4.4, 3.2, 4.4]} />
+      <pointLight color="#b89961" intensity={0.82} distance={4.8} decay={2.08} position={[-0.55, 0.9, 1.7]} />
+      <pointLight color="#8fa9c8" intensity={0.72} distance={7.5} decay={2.1} position={[3.4, 2.3, 2.6]} />
     </>
   );
 }
