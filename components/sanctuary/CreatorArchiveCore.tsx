@@ -1,9 +1,10 @@
 "use client";
 
-import { Html } from "@react-three/drei";
+import { Html, RoundedBox } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { createBlackLacquerTexture, createVellumTexture } from "./ReliquaryTextures";
 import { sanctuaryPalette } from "./visualSystem";
 
 type CreatorArchiveCoreProps = {
@@ -17,10 +18,17 @@ type CreatorArchiveCoreProps = {
 export function CreatorArchiveCore({ position, index, skipIntro = false, onHoverChange, onOpenCreatorArchive }: CreatorArchiveCoreProps) {
   const rootRef = useRef<THREE.Group>(null);
   const pageRef = useRef<THREE.Group>(null);
-  const moonLightRef = useRef<THREE.SpotLight>(null);
   const hovered = useRef(false);
   const elapsed = useRef(skipIntro ? 20 : 0);
   const [isHovered, setIsHovered] = useState(false);
+  const lacquerTexture = useMemo(() => createBlackLacquerTexture(), []);
+  const vellumTexture = useMemo(() => createVellumTexture(), []);
+
+  useEffect(() => () => {
+    lacquerTexture.dispose();
+    vellumTexture.dispose();
+    document.body.style.cursor = "";
+  }, [lacquerTexture, vellumTexture]);
 
   useFrame((_, delta) => {
     elapsed.current += delta;
@@ -31,9 +39,6 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
     }
     if (pageRef.current) {
       pageRef.current.rotation.x = THREE.MathUtils.damp(pageRef.current.rotation.x, hovered.current ? -0.47 : -0.54, 1.8, delta);
-    }
-    if (moonLightRef.current) {
-      moonLightRef.current.intensity = THREE.MathUtils.damp(moonLightRef.current.intensity, hovered.current ? 1.08 : 0.22, 1.8, delta);
     }
   });
 
@@ -52,14 +57,12 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
 
   return (
     <group ref={rootRef} position={position} scale={skipIntro ? 1 : 0.001}>
-      <mesh position={[0, 0.44, 0]} castShadow>
-        <boxGeometry args={[2.46, 0.22, 1.36]} />
-        <meshPhysicalMaterial color={sanctuaryPalette.obsidian} roughness={0.42} metalness={0.2} clearcoat={0.28} clearcoatRoughness={0.58} />
-      </mesh>
-      <mesh position={[0, 0.18, 0]}>
-        <boxGeometry args={[1.82, 0.48, 0.9]} />
-        <meshStandardMaterial color="#080c13" roughness={0.66} metalness={0.14} />
-      </mesh>
+      <RoundedBox args={[2.55, 0.2, 1.42]} radius={0.09} smoothness={5} position={[0, 0.53, 0]} castShadow>
+        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.01} color="#0d1520" roughness={0.5} metalness={0.12} clearcoat={0.24} clearcoatRoughness={0.62} />
+      </RoundedBox>
+      <RoundedBox args={[1.72, 0.48, 0.78]} radius={0.08} smoothness={5} position={[0, 0.2, 0]}>
+        <meshStandardMaterial bumpMap={lacquerTexture} bumpScale={0.008} color="#080d15" roughness={0.72} metalness={0.08} />
+      </RoundedBox>
       <mesh position={[0, 0.57, 0.68]}>
         <boxGeometry args={[2.0, 0.045, 0.035]} />
         <meshStandardMaterial color={sanctuaryPalette.agedGold} roughness={0.58} metalness={0.7} />
@@ -68,11 +71,11 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
       <group ref={pageRef} position={[0, 1.02, 0.08]} rotation={[-0.54, 0.04, -0.025]}>
         <mesh position={[-0.24, 0.04, -0.05]} rotation={[0, 0, -0.025]}>
           <planeGeometry args={[1.7, 1.18, 1, 1]} />
-          <meshStandardMaterial color="#b8b4a6" roughness={0.92} metalness={0} side={THREE.DoubleSide} transparent opacity={0.56} />
+          <meshStandardMaterial bumpMap={vellumTexture} bumpScale={0.004} color="#8f836d" roughness={0.94} metalness={0} side={THREE.DoubleSide} transparent opacity={0.76} />
         </mesh>
         <mesh position={[0.18, 0.02, 0]} rotation={[0, 0, 0.018]} onPointerEnter={(event) => handlePointer(event, true)} onPointerLeave={(event) => handlePointer(event, false)} onClick={handleClick}>
           <planeGeometry args={[1.78, 1.22, 1, 1]} />
-          <meshStandardMaterial color="#d3cdbd" roughness={0.94} metalness={0} side={THREE.DoubleSide} transparent opacity={isHovered ? 0.88 : 0.68} />
+          <meshStandardMaterial bumpMap={vellumTexture} bumpScale={0.004} color="#b6aa91" roughness={0.94} metalness={0} side={THREE.DoubleSide} transparent opacity={isHovered ? 0.96 : 0.82} />
         </mesh>
         <mesh position={[0.18, -0.34, 0.018]} scale={[1.28, 0.012, 0.012]}>
           <boxGeometry args={[1, 1, 1]} />
@@ -86,8 +89,6 @@ export function CreatorArchiveCore({ position, index, skipIntro = false, onHover
           </div>
         </Html>
       </group>
-
-      <spotLight ref={moonLightRef} position={[-0.6, 4.2, 2.1]} color={sanctuaryPalette.moonWhite} angle={0.42} penumbra={1} intensity={0.22} distance={8} decay={2.2} />
     </group>
   );
 }

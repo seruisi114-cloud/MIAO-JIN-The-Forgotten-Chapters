@@ -1,21 +1,16 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import { useEffect, useState } from "react";
 import * as THREE from "three";
-import { CreatorArchiveCore } from "./CreatorArchiveCore";
 import { SanctuaryLighting } from "./SanctuaryLighting";
-import { StarDome } from "./StarDome";
 import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
 import { ChapterEntryCameraRig } from "./ChapterEntryCameraRig";
-import { MusicAnalysisCore } from "./MusicAnalysisCore";
 import { sanctuaryPalette } from "./visualSystem";
 import { MoonlitReliquaryRoom } from "./MoonlitReliquaryRoom";
 import { MoonSeaMusicBox } from "./MoonSeaMusicBox";
 
-const musicBoxPosition: [number, number, number] = [0, -0.02, 0.55];
-const creatorPosition: [number, number, number] = [-3.55, -0.02, -1.08];
-const analysisPosition: [number, number, number] = [3.55, -0.02, -1.36];
+const musicBoxPosition: [number, number, number] = [-0.56, 0.61, 0.86];
 
 type SanctuaryCanvasProps = {
   restoring: boolean;
@@ -24,41 +19,26 @@ type SanctuaryCanvasProps = {
   onActiveChange: (index: number | null) => void;
   onActivate: (index: number) => void;
   onActivationPosition: (origin: TransitionOrigin) => void;
-  onOpenCreatorArchive: () => void;
-  onOpenMusicAnalysis: () => void;
 };
 
-function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive, onOpenMusicAnalysis }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
-  const rootRef = useRef<THREE.Group>(null);
-
-  useLayoutEffect(() => {
-    if (!rootRef.current) return;
-    rootRef.current.position.set(0, 0, 0);
-    rootRef.current.rotation.set(0, 0, 0);
-    rootRef.current.scale.set(1, 1, 1);
-  }, [restoring]);
-
-  useFrame(({ pointer }, delta) => {
-    if (!rootRef.current) return;
-    const targetY = reducedMotion ? 0 : pointer.x * 0.008;
-    const targetX = reducedMotion ? 0 : -pointer.y * 0.004;
-    rootRef.current.rotation.y = THREE.MathUtils.damp(rootRef.current.rotation.y, targetY, 1.35, delta);
-    rootRef.current.rotation.x = THREE.MathUtils.damp(rootRef.current.rotation.x, targetX, 1.35, delta);
-    rootRef.current.position.x = THREE.MathUtils.damp(rootRef.current.position.x, reducedMotion ? 0 : -pointer.x * 0.018, 1.2, delta);
-  });
-
+function SanctuaryWorld({ reducedMotion, restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition }: { reducedMotion: boolean } & SanctuaryCanvasProps) {
   return (
-    <group ref={rootRef}>
+    <group>
       <MoonlitReliquaryRoom skipIntro={restoring} />
-      <MoonSeaMusicBox position={musicBoxPosition} activating={activatingIndex === 1} skipIntro={restoring} onHoverChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} />
-      <CreatorArchiveCore position={creatorPosition} index={2} skipIntro={restoring} onHoverChange={onActiveChange} onOpenCreatorArchive={onOpenCreatorArchive} />
-      <MusicAnalysisCore position={analysisPosition} index={3} skipIntro={restoring} onHoverChange={onActiveChange} onOpen={onOpenMusicAnalysis} />
+      <MoonSeaMusicBox
+        position={musicBoxPosition}
+        activating={activatingIndex === 1}
+        skipIntro={restoring}
+        onHoverChange={onActiveChange}
+        onActivate={onActivate}
+        onActivationPosition={onActivationPosition}
+      />
       <ChapterEntryCameraRig active={enteringChapter} reducedMotion={reducedMotion} />
     </group>
   );
 }
 
-export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition, onOpenCreatorArchive, onOpenMusicAnalysis }: SanctuaryCanvasProps) {
+export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, onActiveChange, onActivate, onActivationPosition }: SanctuaryCanvasProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [compactLayout, setCompactLayout] = useState(false);
 
@@ -77,31 +57,44 @@ export function SanctuaryCanvas({ restoring, enteringChapter, activatingIndex, o
     };
   }, []);
 
+  const cameraPosition: [number, number, number] = compactLayout ? [1.15, 3.45, 14.1] : [1.36, 2.9, 11.9];
+  const cameraTarget: [number, number, number] = compactLayout ? [-0.38, 1.38, 0.46] : [-0.46, 1.28, 0.36];
+
   return (
     <Canvas
       key={`${compactLayout ? "compact" : "wide"}-${restoring ? "restored" : "initial"}`}
       dpr={[1, 1.5]}
-      camera={{ position: compactLayout ? [0.8, 5.25, 15.8] : [1.05, 4.35, 12.6], fov: compactLayout ? 48 : 42, near: 0.1, far: 90 }}
+      shadows
+      camera={{ position: cameraPosition, fov: compactLayout ? 43 : 34, near: 0.1, far: 90 }}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       onCreated={({ camera, gl, scene }) => {
-        camera.position.set(compactLayout ? 0.8 : 1.05, compactLayout ? 5.25 : 4.35, compactLayout ? 15.8 : 12.6);
+        camera.position.set(...cameraPosition);
         camera.rotation.set(0, 0, 0);
-        camera.lookAt(0.12, compactLayout ? 1.02 : 0.92, 0.08);
+        camera.lookAt(...cameraTarget);
         if (camera instanceof THREE.PerspectiveCamera) {
-          camera.fov = compactLayout ? 48 : 42;
+          camera.fov = compactLayout ? 43 : 34;
           camera.zoom = 1;
           camera.updateProjectionMatrix();
         }
         gl.setClearColor(sanctuaryPalette.deepIndigo, 1);
         gl.outputColorSpace = "srgb";
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.48;
-        scene.fog = new THREE.FogExp2(sanctuaryPalette.deepIndigo, 0.032);
+        gl.toneMappingExposure = 2.18;
+        gl.shadowMap.enabled = true;
+        gl.shadowMap.type = THREE.PCFShadowMap;
+        scene.fog = new THREE.FogExp2("#030711", 0.026);
       }}
     >
-      <StarDome />
       <SanctuaryLighting />
-      <SanctuaryWorld reducedMotion={reducedMotion} restoring={restoring} enteringChapter={enteringChapter} activatingIndex={activatingIndex} onActiveChange={onActiveChange} onActivate={onActivate} onActivationPosition={onActivationPosition} onOpenCreatorArchive={onOpenCreatorArchive} onOpenMusicAnalysis={onOpenMusicAnalysis} />
+      <SanctuaryWorld
+        reducedMotion={reducedMotion}
+        restoring={restoring}
+        enteringChapter={enteringChapter}
+        activatingIndex={activatingIndex}
+        onActiveChange={onActiveChange}
+        onActivate={onActivate}
+        onActivationPosition={onActivationPosition}
+      />
     </Canvas>
   );
 }

@@ -437,10 +437,8 @@ select {
   inset: 0;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(24, 48, 86, 0.72), transparent 44%),
-    radial-gradient(ellipse at 18% 48%, rgba(18, 35, 69, 0.26), transparent 30%),
-    radial-gradient(ellipse at 82% 46%, rgba(12, 29, 62, 0.28), transparent 32%),
-    linear-gradient(180deg, var(--mj-deep-indigo), var(--mj-void));
+    radial-gradient(ellipse at 61% 25%, rgba(25, 43, 69, 0.34), transparent 32%),
+    linear-gradient(180deg, #040914 0%, #02050b 62%, #010205 100%);
   opacity: 0;
   pointer-events: none;
 }
@@ -1018,8 +1016,8 @@ select {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(1, 3, 8, 0.14), transparent 30%, transparent 76%, rgba(1, 3, 7, 0.35)),
-    radial-gradient(ellipse at center, transparent 46%, rgba(1, 4, 10, 0.29) 100%);
+    linear-gradient(180deg, rgba(1, 2, 5, 0.3), transparent 27%, transparent 68%, rgba(0, 1, 3, 0.54)),
+    radial-gradient(ellipse at 47% 48%, transparent 40%, rgba(0, 1, 4, 0.43) 100%);
 }
 
 /* Moonlit Music Reliquary: physical atmosphere instead of interface decoration. */
@@ -1037,14 +1035,14 @@ select {
 }
 
 .reliquary-moon-wash {
-  top: -12%;
-  left: 48%;
-  width: 34%;
-  height: 108%;
-  transform: translateX(-50%) rotate(-7deg);
+  top: -17%;
+  left: 58%;
+  width: 23%;
+  height: 128%;
+  transform: translateX(-50%) rotate(-13deg);
   border-radius: 48%;
-  background: linear-gradient(180deg, rgba(228, 231, 230, 0.18), rgba(181, 198, 220, 0.06) 46%, transparent 88%);
-  filter: blur(30px);
+  background: linear-gradient(180deg, rgba(222, 228, 230, 0.22), rgba(154, 180, 211, 0.085) 48%, transparent 84%);
+  filter: blur(42px);
   mix-blend-mode: screen;
   animation: reliquary-moon-breathe 14s ease-in-out infinite alternate;
 }
@@ -1053,24 +1051,24 @@ select {
   right: -12%;
   bottom: 2%;
   left: -12%;
-  height: 28%;
+  height: 22%;
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at 34% 55%, rgba(26, 43, 72, 0.16), transparent 43%),
-    radial-gradient(ellipse at 70% 48%, rgba(18, 32, 57, 0.18), transparent 46%);
-  filter: blur(34px);
-  opacity: 0.56;
+    radial-gradient(ellipse at 40% 55%, rgba(24, 39, 64, 0.13), transparent 46%),
+    radial-gradient(ellipse at 66% 48%, rgba(15, 28, 49, 0.12), transparent 50%);
+  filter: blur(42px);
+  opacity: 0.45;
 }
 
 .reliquary-floor-reflection {
-  bottom: 8%;
-  left: 30%;
-  width: 42%;
+  bottom: 3%;
+  left: 23%;
+  width: 46%;
   height: 18%;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(197, 205, 214, 0.08), rgba(173, 146, 91, 0.018) 48%, transparent 74%);
-  filter: blur(18px);
-  transform: rotate(-2deg);
+  background: radial-gradient(ellipse, rgba(185, 198, 211, 0.105), rgba(163, 137, 88, 0.022) 48%, transparent 72%);
+  filter: blur(30px);
+  transform: rotate(-4deg);
 }
 
 .reliquary-threshold {
@@ -1081,9 +1079,9 @@ select {
 .reliquary-threshold-right {
   top: -4%;
   bottom: -4%;
-  width: 15%;
-  background: linear-gradient(90deg, rgba(1, 2, 5, 0.96), rgba(2, 5, 11, 0.72) 48%, transparent);
-  filter: blur(2px);
+  width: 19%;
+  background: linear-gradient(90deg, rgba(0, 1, 3, 0.99), rgba(1, 3, 8, 0.76) 54%, transparent);
+  filter: blur(5px);
 }
 
 .reliquary-threshold-left {
@@ -1099,8 +1097,8 @@ select {
   top: -2%;
   right: 0;
   left: 0;
-  height: 15%;
-  background: linear-gradient(180deg, rgba(1, 2, 5, 0.95), rgba(2, 5, 11, 0.54) 50%, transparent);
+  height: 18%;
+  background: linear-gradient(180deg, rgba(0, 1, 3, 0.97), rgba(1, 3, 8, 0.52) 52%, transparent);
 }
 
 .reliquary-plaque {
@@ -1142,6 +1140,51 @@ select {
 .reliquary-plaque.is-awake {
   border-color: rgba(197, 169, 109, 0.56);
   box-shadow: inset 0 0 0 1px rgba(227, 210, 171, 0.05), 0 0.8rem 2.2rem rgba(0, 0, 0, 0.38);
+}
+
+.reliquary-engraving {
+  min-width: 9.2rem;
+  color: rgba(191, 162, 105, 0.72);
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+  text-align: center;
+  opacity: 0;
+  animation: reliquary-engraving-reveal 1.4s 6.05s both ease-out;
+  transition: color 1.1s ease, text-shadow 1.1s ease;
+}
+
+.reliquary-engraving strong,
+.reliquary-engraving span {
+  display: block;
+  font-style: normal;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.reliquary-engraving strong {
+  color: rgba(220, 201, 158, 0.9);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.65);
+}
+
+.reliquary-engraving span {
+  margin-top: 0.27rem;
+  color: rgba(170, 145, 96, 0.76);
+  font-family: "Times New Roman", serif;
+  font-size: 0.4rem;
+  letter-spacing: 0.31em;
+  text-indent: 0.31em;
+}
+
+.reliquary-engraving.is-awake {
+  color: rgba(229, 207, 159, 0.95);
+  text-shadow: 0 0 0.8rem rgba(185, 153, 91, 0.18);
+}
+
+.reliquary-engraving.is-restored {
+  opacity: 1;
+  animation: none;
 }
 
 .manuscript-copy {
@@ -1220,6 +1263,19 @@ select {
 @keyframes reliquary-moon-breathe {
   from { opacity: 0.82; }
   to { opacity: 1; }
+}
+
+@keyframes reliquary-engraving-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.22rem);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 }
 
 @keyframes sanctuary-art-reveal {

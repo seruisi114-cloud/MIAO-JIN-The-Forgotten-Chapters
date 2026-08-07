@@ -1,10 +1,11 @@
 "use client";
 
-import { Edges, Html } from "@react-three/drei";
+import { Html, RoundedBox } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
-import { useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { TransitionOrigin } from "@/components/transitions/CosmicDissolveTransition";
+import { createBlackLacquerTexture, createMoonstoneTexture, createStarSeaTexture } from "./ReliquaryTextures";
 import { sanctuaryPalette } from "./visualSystem";
 
 type MoonSeaMusicBoxProps = {
@@ -16,67 +17,143 @@ type MoonSeaMusicBoxProps = {
   onActivationPosition: (origin: TransitionOrigin) => void;
 };
 
-function makeOctagonalShape(width: number, depth: number, cut: number) {
+type OctagonalLayerProps = {
+  width: number;
+  depth: number;
+  height: number;
+  cut: number;
+  y: number;
+  children: ReactNode;
+};
+
+function createOctagonalShape(width: number, depth: number, cut: number) {
+  const halfWidth = width / 2;
+  const halfDepth = depth / 2;
   const shape = new THREE.Shape();
-  const x = width / 2;
-  const y = depth / 2;
-  shape.moveTo(-x + cut, -y);
-  shape.lineTo(x - cut, -y);
-  shape.lineTo(x, -y + cut);
-  shape.lineTo(x, y - cut);
-  shape.lineTo(x - cut, y);
-  shape.lineTo(-x + cut, y);
-  shape.lineTo(-x, y - cut);
-  shape.lineTo(-x, -y + cut);
+  shape.moveTo(-halfWidth + cut, -halfDepth);
+  shape.lineTo(halfWidth - cut, -halfDepth);
+  shape.lineTo(halfWidth, -halfDepth + cut);
+  shape.lineTo(halfWidth, halfDepth - cut);
+  shape.lineTo(halfWidth - cut, halfDepth);
+  shape.lineTo(-halfWidth + cut, halfDepth);
+  shape.lineTo(-halfWidth, halfDepth - cut);
+  shape.lineTo(-halfWidth, -halfDepth + cut);
   shape.closePath();
   return shape;
 }
 
+function OctagonalLayer({ width, depth, height, cut, y, children }: OctagonalLayerProps) {
+  const geometry = useMemo(() => {
+    const result = new THREE.ExtrudeGeometry(createOctagonalShape(width, depth, cut), {
+      depth: height,
+      bevelEnabled: true,
+      bevelSegments: 4,
+      bevelSize: Math.min(height * 0.2, 0.045),
+      bevelThickness: Math.min(height * 0.16, 0.035),
+      curveSegments: 2,
+    });
+    result.rotateX(Math.PI / 2);
+    result.translate(0, height / 2, 0);
+    result.computeVertexNormals();
+    return result;
+  }, [cut, depth, height, width]);
+
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  return (
+    <mesh geometry={geometry} position={[0, y, 0]} castShadow receiveShadow>
+      {children}
+    </mesh>
+  );
+}
+
+function CornerHardware({ x, z, rotation = 0 }: { x: number; z: number; rotation?: number }) {
+  return (
+    <group position={[x, 0.47, z]} rotation={[0, rotation, 0]}>
+      <RoundedBox args={[0.34, 0.34, 0.045]} radius={0.025} smoothness={4}>
+        <meshStandardMaterial color="#88724c" roughness={0.48} metalness={0.84} />
+      </RoundedBox>
+      <mesh position={[-0.11, 0.1, 0.027]}>
+        <circleGeometry args={[0.018, 16]} />
+        <meshStandardMaterial color="#b49a65" roughness={0.4} metalness={0.92} />
+      </mesh>
+      <mesh position={[0.11, -0.1, 0.027]}>
+        <circleGeometry args={[0.018, 16]} />
+        <meshStandardMaterial color="#b49a65" roughness={0.4} metalness={0.92} />
+      </mesh>
+    </group>
+  );
+}
+
 export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHoverChange, onActivate, onActivationPosition }: MoonSeaMusicBoxProps) {
   const rootRef = useRef<THREE.Group>(null);
-  const moonstoneRef = useRef<THREE.MeshPhysicalMaterial>(null);
-  const seamRef = useRef<THREE.MeshStandardMaterial>(null);
-  const innerLightRef = useRef<THREE.PointLight>(null);
+  const lidRef = useRef<THREE.Group>(null);
+  const lidMaterialRef = useRef<THREE.MeshPhysicalMaterial>(null);
+  const innerSeaMaterialRef = useRef<THREE.MeshStandardMaterial>(null);
+  const sealMaterialRef = useRef<THREE.MeshStandardMaterial>(null);
   const hovered = useRef(false);
   const elapsed = useRef(skipIntro ? 20 : 0);
   const projectedCenter = useRef(new THREE.Vector3());
   const previousOrigin = useRef<TransitionOrigin>({ x: -100, y: -100 });
   const [isHovered, setIsHovered] = useState(false);
-  const boxShape = useMemo(() => makeOctagonalShape(3.6, 2.15, 0.3), []);
-  const lidShape = useMemo(() => makeOctagonalShape(3.42, 1.98, 0.26), []);
-  const stars = useMemo(() => {
-    const values = new Float32Array(18 * 3);
-    for (let index = 0; index < 18; index += 1) {
-      const angle = index * 2.399;
-      const radius = 0.18 + (index % 6) * 0.18;
-      values[index * 3] = Math.cos(angle) * radius * 1.3;
-      values[index * 3 + 1] = 1.15 + Math.sin(index * 1.7) * 0.035;
-      values[index * 3 + 2] = Math.sin(angle) * radius * 0.58;
-    }
-    return values;
-  }, []);
+  const lacquerTexture = useMemo(() => createBlackLacquerTexture(), []);
+  const moonstoneTexture = useMemo(() => createMoonstoneTexture(), []);
+  const innerSeaTexture = useMemo(() => createStarSeaTexture(), []);
 
-  useFrame(({ camera, clock }, delta) => {
+  useEffect(() => () => {
+    lacquerTexture.dispose();
+    moonstoneTexture.dispose();
+    innerSeaTexture.dispose();
+    document.body.style.cursor = "";
+  }, [innerSeaTexture, lacquerTexture, moonstoneTexture]);
+
+  useFrame(({ camera }, delta) => {
     elapsed.current += delta;
-    const reveal = THREE.MathUtils.smoothstep(elapsed.current, 3.6, 6.8);
+
     if (rootRef.current) {
-      const target = Math.max(0.001, reveal * (activating ? 1.035 : 1));
-      rootRef.current.scale.setScalar(THREE.MathUtils.damp(rootRef.current.scale.x, target, 1.9, delta));
-      rootRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * 0.18) * 0.008;
+      rootRef.current.visible = skipIntro || elapsed.current >= 3.65;
     }
-    if (moonstoneRef.current) {
-      moonstoneRef.current.emissiveIntensity = THREE.MathUtils.damp(moonstoneRef.current.emissiveIntensity, activating ? 0.42 : hovered.current ? 0.18 : 0.075, 2.2, delta);
+
+    if (lidRef.current) {
+      const targetRotation = activating ? -0.98 : 0;
+      lidRef.current.rotation.x = THREE.MathUtils.damp(lidRef.current.rotation.x, targetRotation, activating ? 1.5 : 2.6, delta);
     }
-    if (seamRef.current) {
-      seamRef.current.emissiveIntensity = THREE.MathUtils.damp(seamRef.current.emissiveIntensity, activating ? 1.7 : hovered.current ? 0.46 : 0.08, 2.8, delta);
+
+    if (lidMaterialRef.current) {
+      lidMaterialRef.current.emissiveIntensity = THREE.MathUtils.damp(
+        lidMaterialRef.current.emissiveIntensity,
+        activating ? 0.2 : hovered.current ? 0.075 : 0.018,
+        1.8,
+        delta,
+      );
+      lidMaterialRef.current.opacity = THREE.MathUtils.damp(lidMaterialRef.current.opacity, activating ? 0.48 : hovered.current ? 0.9 : 0.97, 1.6, delta);
     }
-    if (innerLightRef.current) {
-      innerLightRef.current.intensity = THREE.MathUtils.damp(innerLightRef.current.intensity, activating ? 2.4 : hovered.current ? 0.72 : 0.18, 2.3, delta);
+
+    if (innerSeaMaterialRef.current) {
+      innerSeaMaterialRef.current.emissiveIntensity = THREE.MathUtils.damp(
+        innerSeaMaterialRef.current.emissiveIntensity,
+        activating ? 1.18 : hovered.current ? 0.48 : 0.16,
+        1.8,
+        delta,
+      );
     }
+
+    if (sealMaterialRef.current) {
+      sealMaterialRef.current.emissiveIntensity = THREE.MathUtils.damp(
+        sealMaterialRef.current.emissiveIntensity,
+        activating ? 0.72 : hovered.current ? 0.12 : 0.015,
+        2.2,
+        delta,
+      );
+    }
+
     if (activating && rootRef.current) {
-      rootRef.current.localToWorld(projectedCenter.current.set(0, 1.05, 0.12));
+      rootRef.current.localToWorld(projectedCenter.current.set(0, 0.72, 0.36));
       projectedCenter.current.project(camera);
-      const origin = { x: (projectedCenter.current.x * 0.5 + 0.5) * 100, y: (-projectedCenter.current.y * 0.5 + 0.5) * 100 };
+      const origin = {
+        x: (projectedCenter.current.x * 0.5 + 0.5) * 100,
+        y: (-projectedCenter.current.y * 0.5 + 0.5) * 100,
+      };
       if (Math.abs(origin.x - previousOrigin.current.x) > 0.18 || Math.abs(origin.y - previousOrigin.current.y) > 0.18) {
         previousOrigin.current = origin;
         onActivationPosition(origin);
@@ -94,46 +171,82 @@ export function MoonSeaMusicBox({ position, activating, skipIntro = false, onHov
 
   const handleClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
-    onActivate(1);
+    if (!activating) onActivate(1);
   };
 
   return (
-    <group ref={rootRef} position={position} scale={skipIntro ? 1 : 0.001}>
-      <mesh position={[0, 0.33, 0]}>
-        <cylinderGeometry args={[2.02, 2.3, 0.62, 8]} />
-        <meshPhysicalMaterial color="#05080e" roughness={0.46} metalness={0.34} clearcoat={0.32} clearcoatRoughness={0.52} />
+    <group
+      ref={rootRef}
+      position={position}
+      rotation={[0, -0.055, 0]}
+      scale={0.9}
+      onPointerEnter={(event) => handlePointer(event, true)}
+      onPointerLeave={(event) => handlePointer(event, false)}
+      onClick={handleClick}
+    >
+      <OctagonalLayer width={4.08} depth={2.66} height={0.09} cut={0.47} y={0.045}>
+        <meshStandardMaterial color="#665337" roughness={0.5} metalness={0.86} />
+      </OctagonalLayer>
+      <OctagonalLayer width={3.96} depth={2.55} height={0.18} cut={0.44} y={0.14}>
+        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.018} color="#0c1420" roughness={0.34} metalness={0.16} clearcoat={0.72} clearcoatRoughness={0.28} />
+      </OctagonalLayer>
+      <OctagonalLayer width={3.84} depth={2.44} height={0.72} cut={0.41} y={0.56}>
+        <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.026} color="#20344b" roughness={0.31} metalness={0.2} clearcoat={0.8} clearcoatRoughness={0.24} />
+      </OctagonalLayer>
+      <OctagonalLayer width={3.91} depth={2.5} height={0.055} cut={0.43} y={0.895}>
+        <meshStandardMaterial color="#7e6845" roughness={0.47} metalness={0.88} />
+      </OctagonalLayer>
+
+      <OctagonalLayer width={3.22} depth={1.84} height={0.04} cut={0.32} y={0.94}>
+        <meshStandardMaterial ref={innerSeaMaterialRef} map={innerSeaTexture} color="#6681a2" emissive="#19345a" emissiveIntensity={0.16} roughness={0.6} />
+      </OctagonalLayer>
+
+      <group ref={lidRef} position={[0, 0.94, -1.27]}>
+        <group position={[0, 0, 1.27]}>
+          <OctagonalLayer width={3.96} depth={2.55} height={0.15} cut={0.44} y={0.075}>
+            <meshPhysicalMaterial bumpMap={lacquerTexture} bumpScale={0.018} color="#263c54" roughness={0.29} metalness={0.2} clearcoat={0.74} clearcoatRoughness={0.27} />
+          </OctagonalLayer>
+          <OctagonalLayer width={3.68} depth={2.27} height={0.035} cut={0.39} y={0.17}>
+            <meshStandardMaterial color="#7d6847" roughness={0.48} metalness={0.88} />
+          </OctagonalLayer>
+          <OctagonalLayer width={3.48} depth={2.08} height={0.09} cut={0.35} y={0.22}>
+            <meshPhysicalMaterial
+              ref={lidMaterialRef}
+              map={moonstoneTexture}
+              bumpMap={moonstoneTexture}
+              bumpScale={0.032}
+              color="#d8ddd9"
+              roughness={0.52}
+              metalness={0.01}
+              transmission={0.045}
+              thickness={0.8}
+              ior={1.39}
+              clearcoat={0.28}
+              clearcoatRoughness={0.48}
+              emissive="#122947"
+              emissiveIntensity={0.018}
+              transparent
+              opacity={0.97}
+            />
+          </OctagonalLayer>
+        </group>
+      </group>
+
+      <CornerHardware x={-1.6} z={1.23} />
+      <CornerHardware x={1.6} z={1.23} />
+      <CornerHardware x={-1.92} z={0.88} rotation={Math.PI / 4} />
+      <CornerHardware x={1.92} z={0.88} rotation={-Math.PI / 4} />
+
+      <RoundedBox args={[0.72, 0.38, 0.065]} radius={0.035} smoothness={5} position={[0, 0.55, 1.285]}>
+        <meshStandardMaterial ref={sealMaterialRef} color="#85704c" roughness={0.44} metalness={0.9} emissive={sanctuaryPalette.champagneGold} emissiveIntensity={0.015} />
+      </RoundedBox>
+      <mesh position={[0, 0.55, 1.327]}>
+        <circleGeometry args={[0.055, 24]} />
+        <meshStandardMaterial color="#32291d" roughness={0.58} metalness={0.68} />
       </mesh>
-      <mesh position={[0, 0.67, 0]} rotation={[-Math.PI / 2, 0, 0]} onPointerEnter={(event) => handlePointer(event, true)} onPointerLeave={(event) => handlePointer(event, false)} onClick={handleClick}>
-        <extrudeGeometry args={[boxShape, { depth: 0.66, bevelEnabled: true, bevelSegments: 3, bevelSize: 0.08, bevelThickness: 0.08 }]} />
-        <meshPhysicalMaterial color="#070b12" roughness={0.34} metalness={0.26} clearcoat={0.52} clearcoatRoughness={0.4} />
-        <Edges threshold={28} color={sanctuaryPalette.agedGold} />
-      </mesh>
 
-      <mesh position={[0, 1.085, 0.03]} rotation={[-Math.PI / 2, 0, 0]}>
-        <extrudeGeometry args={[lidShape, { depth: 0.15, bevelEnabled: true, bevelSegments: 3, bevelSize: 0.08, bevelThickness: 0.06 }]} />
-        <meshPhysicalMaterial ref={moonstoneRef} color="#b7c3cf" roughness={0.42} metalness={0.02} transmission={0.22} thickness={0.82} ior={1.4} clearcoat={0.32} clearcoatRoughness={0.42} emissive="#193154" emissiveIntensity={0.075} transparent opacity={0.92} />
-      </mesh>
-
-      <mesh position={[0, 1.052, 1.085]} scale={[1.12, 0.018, 0.024]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial ref={seamRef} color={sanctuaryPalette.agedGold} roughness={0.5} metalness={0.82} emissive={sanctuaryPalette.champagneGold} emissiveIntensity={0.08} />
-      </mesh>
-
-      {[[-1.56, -0.78], [1.56, -0.78], [-1.56, 0.78], [1.56, 0.78]].map(([x, z], index) => (
-        <mesh key={index} position={[x, 0.76, z]} rotation={[0, Math.PI / 4, 0]}>
-          <boxGeometry args={[0.24, 0.72, 0.24]} />
-          <meshStandardMaterial color={sanctuaryPalette.agedGold} roughness={0.58} metalness={0.72} />
-        </mesh>
-      ))}
-
-      <points position={[0, 0, 0.02]}>
-        <bufferGeometry><bufferAttribute attach="attributes-position" args={[stars, 3]} /></bufferGeometry>
-        <pointsMaterial color={sanctuaryPalette.moonWhite} size={0.028} transparent opacity={isHovered ? 0.36 : 0.16} depthWrite={false} sizeAttenuation />
-      </points>
-      <pointLight ref={innerLightRef} position={[0, 1.2, 0.1]} color={sanctuaryPalette.moonBlue} intensity={0.18} distance={4.6} decay={2.3} />
-
-      <Html center position={[0, 0.62, 1.18]} distanceFactor={8.7} zIndexRange={[24, 8]} style={{ pointerEvents: "none" }}>
-        <div className={`reliquary-plaque${isHovered ? " is-awake" : ""}`}>
+      <Html center position={[0, 0.55, 1.365]} distanceFactor={8.2} zIndexRange={[24, 8]} style={{ pointerEvents: "none" }}>
+        <div className={`reliquary-engraving${skipIntro ? " is-restored" : ""}${isHovered ? " is-awake" : ""}`}>
           <strong>《月下星海》</strong>
           <span>MIAO JIN</span>
         </div>
